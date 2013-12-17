@@ -1,0 +1,25 @@
+{
+  "name": "arpita_agarwal-ciscoucs",
+  "version": "0.1.0",
+  "summary": "",
+  "author": "",
+  "description": "",
+  "dependencies": [],
+  "types": [],
+  "checksums": {
+    "Modulefile": "a565486767946c859c6b759ab595eb61",
+    "README.markdown": "7c313cbfe979524bb7e3d20567363046",
+    "Rakefile": "f37e6131fe7de9a49b09d31596f5fbf1",
+    "lib\\puppet\\provider\\ciscoucs.rb": "c84b93c9ac5551ba5108f76ecce76284",
+    "lib\\puppet\\util\\network_device\\ciscoucs.rb": "4a9dbbdecc30debab5768bd7b7eb3e45",
+    "lib\\puppet\\util\\network_device\\ciscoucs\\device.rb": "f4ead095141991f89586ff469f8c4f1f",
+    "lib\\puppet\\util\\network_device\\ciscoucs\\facts.rb": "970573e24255d2ec1f9066b5e8923a3a",
+    "manifests\\init.pp": "a7371853bb6ae110066be081dcfd06f9",
+    "spec\\spec.opts": "a600ded995d948e393fbe2320ba8e51c",
+    "spec\\spec_helper.rb": "3ea886dd135e120afa31e0aab12e85b0",
+    "tests\\init.pp": "db4611f5ffeea0408214280e92d2e808"
+  },
+  "source": "",
+  "project_page": "",
+  "license": ""
+}
