@@ -13,17 +13,18 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:name, :namevar => true) do
-    desc "name of server profile"
+    desc "Name of service profile"
+    validate do |value|
+      if value.strip.length == 0
+        raise ArgumentError, "Invalid service profile name."
+      end
+    end
   end
 
-  #newproperty(:power_state) do
-  # desc 'whether or not power should be enabled'
-  #newvalues(:on, :off)
-  #    defaultto(:on)
-  # end
+  newproperty(:power_state) do
+    desc 'Power state of a service profile'
+    newvalues(:up, :down)
+    #      defaultto(:up)
+  end
 
 end
-
-# property - on/off
-# operation - create/destroy
-# service profile_template - operation

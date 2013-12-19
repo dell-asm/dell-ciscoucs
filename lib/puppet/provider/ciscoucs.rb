@@ -1,5 +1,5 @@
-#require 'puppet_x/puppetlabs/transport'
-#require 'puppet_x/puppetlabs/transport/ciscoucs'
+require 'rest-client'
+
 begin
   require 'puppet_x/puppetlabs/transport'
 rescue LoadError => e
@@ -16,22 +16,25 @@ rescue LoadError => e
   require File.join module_lib, 'puppet_x/puppetlabs/transport/ciscoucs'
 end
 
-class Puppet::Provider::CiscoUCS < Puppet::Provider
+class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
     @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
     @transport.cookie
   end
 
+  def url
+    @transport.url
+  end
+  
   # Helper function for execution of Cisco UCS API commands
-  def post
-    # begin
-    #  result ||= RestClient.post @url, connectionxml, :content_type => 'text/xml'
-
-    #rescue RestClient::Exception => e
-    # Puppet.debug "Failed REST #{m} to URL #{url}:\n#{data}\nXML Format:\n#{Gyoku.xml data}"
-    #raise Puppet::Error, "\n#{e.exception}:\n#{e.response}"
-    #end
-    #Puppet.debug "VShield REST API #{m} #{url} with #{data.inspect} result:\n#{result.inspect}"
+  def post(request_xml)
+    begin
+      result ||= RestClient.post url, request_xml, :content_type => 'text/xml'
+    rescue RestClient::Exception => e
+     Puppet.debug "Failed REST #{m} to URL #{url}:\nXML Format:\n#{request_xml}"
+    raise Puppet::Error, "\n#{e.exception}:\n#{e.response}"
+    end
+    Puppet.debug "Cisco UCS Post: #{url} \n Request:\n#{request_xml} Response:\n#{result.inspect}"
 
   end
 end
