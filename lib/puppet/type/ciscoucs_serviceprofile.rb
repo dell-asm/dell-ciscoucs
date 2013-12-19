@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ciscoucs_serverprofile) do
-  @doc = 'Create server profile on cisco ucs device'
+Puppet::Type.newtype(:ciscoucs_serviceprofile) do
+  @doc = 'Create service profile on cisco ucs device'
   ensurable do
     newvalue(:present) do
       provider.create

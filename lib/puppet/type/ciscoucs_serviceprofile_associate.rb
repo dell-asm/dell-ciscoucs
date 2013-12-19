@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ciscoucs_serverprofile_associate) do
-  @doc = 'Associate server profile on cisco ucs device'
+Puppet::Type.newtype(:ciscoucs_serviceprofile_associate) do
+  @doc = 'Associate service profile on cisco ucs device'
   
   ensurable do
     newvalue(:present) do
