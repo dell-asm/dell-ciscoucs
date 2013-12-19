@@ -6,7 +6,7 @@ transport { 'ciscoucs':
   server   => '192.168.24.130',
 }
 
-ciscoucs_serverprofile { 'name':
+ciscoucs_serviceprofile { 'name':
    name => 'test_123', 
   ensure    => absent,
   transport  => Transport['ciscoucs'],

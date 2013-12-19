@@ -7,7 +7,7 @@ transport { 'ciscoucs':
 }
 
 
-ciscoucs_serverprofile { 'name':
+ciscoucs_serviceprofile { 'name':
    name => 'test_123', 
   ensure    => present,
   transport  => Transport['ciscoucs'],
