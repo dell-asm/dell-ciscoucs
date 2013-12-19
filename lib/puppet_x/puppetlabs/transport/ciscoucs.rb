@@ -14,7 +14,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def connect
-      @cookie = @authenticate.getCookie
+      @cookie = @authenticate.getcookie
     end
 
     def close

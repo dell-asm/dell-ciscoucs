@@ -26,7 +26,7 @@ module PuppetX
         @@instances.each do |i|
           i.close if i.respond_to? :close
         end
-      rescue
+      
       end
 
       private

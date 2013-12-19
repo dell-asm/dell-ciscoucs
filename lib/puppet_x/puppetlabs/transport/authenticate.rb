@@ -37,7 +37,7 @@ module PuppetX::Puppetlabs::Transport
       RestClient.post @url, closexml, :content_type => 'text/xml'
     end
 
-    def getCookie
+    def getcookie
       unless @cookie
         login
       else
