@@ -7,9 +7,8 @@ Puppet::Type.type(:ciscoucs_serverprofile_power).provide(:default, :parent => Pu
   
 
   def create
-    self.transport
-    @transport
-    serverProfilePowerOnXML = '<configConfMo dn="org-root/ls-TestSTN/power" cookie="' + @transport + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-TestSTN/power" state="admin-up"> </lsPower> </inConfig> </configConfMo>'
+    cookie
+    serverProfilePowerOnXML = '<configConfMo dn="org-root/ls-TestSTN/power" cookie="' + cookie + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-TestSTN/power" state="admin-up"> </lsPower> </inConfig> </configConfMo>'
     puts serverProfilePowerOnXML
     
     ucsPowerResp = RestClient.post url, serverProfilePowerOnXML, :content_type => 'text/xml'
@@ -19,10 +18,8 @@ Puppet::Type.type(:ciscoucs_serverprofile_power).provide(:default, :parent => Pu
   end
 
   def destroy
-      self.transport
-      @transport
-      
-      serverProfilePowerOffXML = '<configConfMo dn="org-root/ls-TestSTN/power" cookie="' + @transport + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-TestSTN/power" state="admin-down"> </lsPower> </inConfig> </configConfMo>'
+    cookie      
+      serverProfilePowerOffXML = '<configConfMo dn="org-root/ls-TestSTN/power" cookie="' + cookie + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-TestSTN/power" state="admin-down"> </lsPower> </inConfig> </configConfMo>'
       puts serverProfilePowerOffXML
       
       ucsPowerResp = RestClient.post url, serverProfilePowerOffXML, :content_type => 'text/xml'

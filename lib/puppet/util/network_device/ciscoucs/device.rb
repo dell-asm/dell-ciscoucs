@@ -27,10 +27,13 @@ require 'rexml/document'
       connectionxml = '<aaaLogin inName="#{@username}" inPassword="#{@password}"/>'
       responsexml ||= RestClient.post @url, connectionxml, :content_type => 'text/xml'
       
+      puts responsexml
+      
       # Create an XML doc and parse it to get the cookie.
       logindoc = REXML::Document.new(responsexml)
       root = logindoc.root
       @transport = root.attributes['outCookie']
+       puts "login in device.rb-----------" + @transport
     end
     
     def close

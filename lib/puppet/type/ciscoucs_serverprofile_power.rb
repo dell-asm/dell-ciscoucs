@@ -14,10 +14,13 @@ Puppet::Type.newtype(:ciscoucs_serverprofile_power) do
   end
 
 
-  newproperty(:enabled) do
+  newparam
+  
+  
+  newproperty(:power_state) do
     desc 'whether or not power should be enabled'
-    newvalues(:true, :false)
-    defaultto(:true)
+    newvalues(:on, :off)
+    defaultto(:on)
   end
 
 
