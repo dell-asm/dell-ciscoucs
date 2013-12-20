@@ -6,11 +6,18 @@ require File.join(provider_path, 'ciscoucs')
 Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   @doc = "Manage association of service profile on Cisco UCS device."
 
+  include PuppetX::Puppetlabs::Transport
+  @doc = "Associate server profile on Cisco UCS device."
   def create
-    self.transport
-    @transport
     name=resource[:name]
       
+    organizationname = resource[:organizationname]
+    serviceprofilename = resource[:serviceprofilename]
+    dnorganizationname = resource[:dnorganizationname]
+    dnserviceprofilename = resource[:dnserviceprofilename]
+    serverchesisid = resource[:serverchesisid]
+    serverslot = resource[:serverslot]
+            
     @profile_associate_input_xml =
     '<configConfMos
           cookie="'+cookie+'"
@@ -54,16 +61,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
               </inConfigs>
           </configConfMos>';
     puts @profile_associate_input_xml;
-    @profile_associate_output_xml = RestClient.post @url, @profile_associate_input_xml, :content_type => 'text/xml';
+    @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
     puts "Server profile associate- " + @profile_associate_output_xml;
     
   end
   
     def destroy
-        self.transport
-        @transport
         
-      request_xml = '<configConfMos cookie="' + @transport + '" inHierarchical ="false">
+      request_xml = '<configConfMos cooki inHierarchical ="false">
           <inConfigs>
       <pair key="org-root/ls-test/pn-req">
           <lsRequirement          
@@ -80,10 +85,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
               
         puts "Server profile disassociate- " + response_xml
       end
+     
       
   def exists?
       #a = resource[:name] ? false : true
       false
       #Puppet.debug "------- output ------" + a.to_s
     end
+    
 end
