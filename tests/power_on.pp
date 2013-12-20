@@ -1,6 +1,6 @@
 include ciscoucs
 
-transport { 'ciscoucs':
+transport_ciscoucs { 'ciscoucs':
   username => 'admin',
   password => 'admin',
   server   => '192.168.24.130',
@@ -10,6 +10,6 @@ transport { 'ciscoucs':
 ciscoucs_serviceprofile { 'name':
    name => 'test_123', 
   ensure    => present,
-  transport  => Transport['ciscoucs'],
+  transport  => Transport_ciscoucs['ciscoucs'],
 }
 

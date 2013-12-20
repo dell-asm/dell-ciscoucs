@@ -1,7 +1,7 @@
 require 'pathname'
 
 mod = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s).path rescue Pathname.new(__FILE__).parent.parent.parent.parent.parent
-require File.join mod, 'lib/puppet/type/transport'
+require File.join mod, 'lib/puppet/type/transport_ciscoucs'
 require File.join mod, 'lib/puppet_x/puppetlabs/transport'
 require File.join mod, 'lib/puppet_x/puppetlabs/transport/ciscoucs'
 require File.join mod, 'lib/puppet/provider/ciscoucs'

@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:transport) do
+Puppet::Type.newtype(:transport_ciscoucs) do
   @doc = "Manage transport connectivity info such as username, password, server."
 
   newparam(:name, :namevar => true) do
