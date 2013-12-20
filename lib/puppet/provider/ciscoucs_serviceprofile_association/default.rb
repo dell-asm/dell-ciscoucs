@@ -8,6 +8,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Associate server profile on Cisco UCS device."
+  
+   
   def create
     name=resource[:name]
       
@@ -67,13 +69,50 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
   
     def destroy
+      
+      name=resource[:name]
+            
+          organizationname = resource[:organizationname]
+          serviceprofilename = resource[:serviceprofilename]
+          dnorganizationname = resource[:dnorganizationname]
+          dnserviceprofilename = resource[:dnserviceprofilename]
+          serverchesisid = resource[:serverchesisid]
+          serverslot = resource[:serverslot]
+                  
+          @profile_associate_input_xml =
+          '<configConfMos
+                cookie="'+cookie+'"
+                inHierarchical="false">
+                    <inConfigs>
+                <pair key="org-'+organizationname+'/ls-'+serviceprofilename+'">
+                        <lsBinding
+                        dn="org-'+organizationname+'/ls-'+serviceprofilename+'"
+                        status="deleted" >
+                        </lsBinding>
+                </pair>
+                    </inConfigs>
+                </configConfMos>';
+          puts @profile_associate_input_xml;
+          @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
+          puts "Server profile associate- " + @profile_associate_output_xml;
+      
       end
      
       
-  def exists?
-      #a = resource[:name] ? false : true
-      false
-      #Puppet.debug "------- output ------" + a.to_s
+  def exists?   
+      ens = resource[:ensure]
+      result = false;
+      puts ens
+      
+    if ens == "present"
+       puts "x is greater than 2"
+    elsif ens == "absent"
+       puts "x is 1"
+    else
+       puts "I can't guess the number"
     end
+        
+    return $result;
+   end
     
 end
