@@ -1,6 +1,8 @@
 require 'puppet_x/puppetlabs/transport/authenticate'
 
+
 module PuppetX::Puppetlabs::Transport
+  # "Base class for ciscoucs"
   class Ciscoucs
     attr_accessor :cookie, :url
     attr_reader :name, :user, :password, :host

@@ -23,8 +23,8 @@ module PuppetX
       end
 
       def self.cleanup
-        @@instances.each do |i|
-          i.close if i.respond_to? :close
+        @@instances.each do |index|
+          index.close if index.respond_to? :close
         end
       
       end
@@ -33,7 +33,7 @@ module PuppetX
 
       def self.find(name, provider)
         Puppet.debug "------ in find-------" + provider.to_s.capitalize
-        @@instances.find{ |x| x.is_a? PuppetX::Puppetlabs::Transport::const_get(provider.to_s.capitalize) and x.name == name }
+        @@instances.find{ |counter| counter.is_a? PuppetX::Puppetlabs::Transport::const_get(provider.to_s.capitalize) and counter.name == name }
         Puppet.debug "------ in find-------" + @@instances
       end
 

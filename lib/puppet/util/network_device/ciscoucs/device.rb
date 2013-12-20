@@ -1,7 +1,8 @@
 require 'rest_client' if Puppet.features.restclient? and ! Puppet.run_mode.master?
 require 'rexml/document'
 
-  class Puppet::Util::NetworkDevice::CiscoUCS::CiscoUCS
+# "Base class for ciscoucs device"  
+class Puppet::Util::NetworkDevice::CiscoUCS::CiscoUCS
     #attr_accessor :cookie
     attr_reader :cookie
     def initialize(opts)

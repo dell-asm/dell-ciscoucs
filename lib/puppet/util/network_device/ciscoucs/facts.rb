@@ -1,7 +1,8 @@
 require 'puppet/util/network_device/ciscoucs'
 
+# "Base class for ciscoucs facts"
 class Puppet::Util::NetworkDevice::ciscoucs::Facts
-
+  
   attr_reader :transport
 
   CISCOUCS_WSDL = 'System.SystemInfo'
@@ -33,14 +34,14 @@ class Puppet::Util::NetworkDevice::ciscoucs::Facts
     soap = SOAP::Mapping::Object.new
 
     system_info = @transport[CISCOUCS_WSDL].get_system_information
-    attributes  = system_info.methods.reject{|k| k =~ /=$/} - soap.methods
+    attributes  = system_info.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
     attributes.each { |key| @facts[key] = system_info[key] }
 
     hardware_info = @transport[CISCOUCS_WSDL].get_hardware_information
-    attributes    = hardware_info.first.methods.reject{|k| k =~ /=$/} - soap.methods
+    attributes    = hardware_info.first.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
     attributes.each { |key| @facts["hardware_#{key}"] = hardware_info.first[key] }
     hardware_info.each do |hardware|
-      attributes = hardware.methods.reject{|k| k =~ /=$/} - soap.methods
+      attributes = hardware.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
       attributes.each do |key|
         fact_key = key == 'name' ? "hardware_#{hardware.name}" : "hardware_#{hardware.name}_#{key}"
         @facts[fact_key] = hardware[key]
@@ -59,7 +60,7 @@ class Puppet::Util::NetworkDevice::ciscoucs::Facts
             'os_machine'       => 'hardwaremodel',
             'uptime'           => 'uptime_seconds',
     }
-    @facts = Hash[@facts.map {|k, v| [map[k] || k, v] }]\
+    @facts = Hash[@facts.map {|key_one, value_one| [map[key_one] || key_one, value_one] }]\
 
     if @facts['fqdn'] then
       fqdn = @facts['fqdn'].split('.', 2)

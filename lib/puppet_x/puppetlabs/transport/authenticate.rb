@@ -1,7 +1,9 @@
 require 'rest_client'
 require 'rexml/document'
 
+
 module PuppetX::Puppetlabs::Transport
+  # "Base class for authenticate"
   class Authenticate
     def initialize(url, username, password)
       @url = url
