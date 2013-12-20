@@ -101,18 +101,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       
   def exists?   
       ens = resource[:ensure]
+      result = false;    
+    if (ens.to_s =="present") 
       result = false;
-      puts ens
-      
-    if ens == "present"
-       puts "x is greater than 2"
-    elsif ens == "absent"
-       puts "x is 1"
-    else
-       puts "I can't guess the number"
-    end
-        
-    return $result;
+    elsif (ens.to_s =="absent")
+      result = true;
+    end     
+    return result;
    end
     
 end
