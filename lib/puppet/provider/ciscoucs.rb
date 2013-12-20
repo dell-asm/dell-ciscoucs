@@ -11,7 +11,7 @@ rescue LoadError => error
 end
 
 begin
-  require 'puppet_x/puppetlabs/transport/vsphere'
+  require 'puppet_x/puppetlabs/transport/ciscoucs'
 rescue LoadError => error
   require 'pathname'
   module_lib = Pathname.new(__FILE__).parent.parent.parent
@@ -21,7 +21,8 @@ end
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
     @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
-    @transport.cookie
+    value = @transport.cookie
+    value.to_s
   end
 
   def url
@@ -33,10 +34,10 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     begin
       result ||= RestClient.post url, request_xml, :content_type => 'text/xml'
     rescue RestClient::Exception => error
-     Puppet.debug "Failed REST #{m} to URL #{url}:\nXML Format:\n#{request_xml}"
+     #Puppet.debug "Failed REST #{m} to URL #{url}:\nXML Format:\n#{request_xml}"
     raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
     end
-    Puppet.debug "Cisco UCS Post: #{url} \n Request:\n#{request_xml} Response:\n#{result.inspect}"
+    #Puppet.debug "Cisco UCS Post: #{url} \n Request:\n#{request_xml} Response:\n#{result.inspect}"
 
   end
 end
