@@ -3,7 +3,7 @@ provider_path = Pathname.new(__FILE__).parent.parent
 Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
-Puppet::Type.type(:ciscoucs_serviceprofile_associate).provide(:default, :parent => Puppet::Provider::CiscoUCS) do
+Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   @doc = "Manage association of service profile on Cisco UCS device."
 
   def create
@@ -16,13 +16,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_associate).provide(:default, :parent 
           cookie="'+cookie+'"
           inHierarchical="false">
               <inConfigs>
-          <pair key="org-'+organization_name+'/ls-'+service_profile_name+'">
+          <pair key="org-'+organizationname+'/ls-'+serviceprofilename+'">
               <lsServer
               agentPolicyName=""
               biosProfileName=""
               bootPolicyName=""
               descr=""
-              dn="org-'+dn_organization_name+'/ls-'+dn_service_profile_name+'"
+              dn="org-'+dnorganizationname+'/ls-'+dnserviceprofilename+'"
               dynamicConPolicyName=""
               extIPPoolName="ext-mgmt"
               extIPState="none"
@@ -44,7 +44,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_associate).provide(:default, :parent 
               uuid="0"
               vconProfileName="">
                   <lsBinding
-                  pnDn="sys/'+server_chesis_id+'/'+server_slot+'"
+                  pnDn="sys/'+serverchesisid+'/'+serverslot+'"
                   restrictMigration="no"
                   rn="pn"
                   >
