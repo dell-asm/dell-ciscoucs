@@ -67,23 +67,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
   
     def destroy
-        
-      request_xml = '<configConfMos cooki inHierarchical ="false">
-          <inConfigs>
-      <pair key="org-root/ls-test/pn-req">
-          <lsRequirement          
-          dn="org-root/ls-test/pn-req"          
-          status="deleted">
-          </lsRequirement>
-      </pair>
-          </inConfigs>
-      </configConfMos>'
-
-        puts request_xml
-        
-      response_xml = RestClient.post url, request_xml, :content_type => 'text/xml'
-              
-        puts "Server profile disassociate- " + response_xml
       end
      
       
