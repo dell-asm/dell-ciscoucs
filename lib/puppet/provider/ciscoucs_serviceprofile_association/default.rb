@@ -80,4 +80,10 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
               
         puts "Server profile disassociate- " + response_xml
       end
+      
+  def exists?
+      #a = resource[:name] ? false : true
+      false
+      #Puppet.debug "------- output ------" + a.to_s
+    end
 end
