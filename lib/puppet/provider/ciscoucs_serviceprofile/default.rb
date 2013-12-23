@@ -10,21 +10,26 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."
   def create
-    name = resource[:name]
+    name = resource[:profile_name]
+    if resource [:template_name]
+      # create profile from template
+    else
+      # create a profile
+    end
     server_profile_power_on_xml = '<configConfMo dn="org-root/ls-'+name+'/power" cookie="' + cookie + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-'+name+'/power" state="admin-up"> </lsPower> </inConfig> </configConfMo>'
-    ucs_power_resp = post server_profile_power_on_xml
+    response_xml = post request_xml
   end
 
   def destroy
-    name = resource[:name]
-    server_profile_power_off_xml = '<configConfMo dn="org-root/ls-'+name+'/power" cookie="' + cookie + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-'+name+'/power" state="admin-down"> </lsPower> </inConfig> </configConfMo>'
-    ucs_power_resp = RestClient.post url, server_profile_power_off_xml, :content_type => 'text/xml'
+    # todo: delete profile 
   end
 
   def exists?
-    #a = resource[:name] ? false : true
-    false
-    #Puppet.debug "------- output ------" + a.to_s
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="org-root/ls-'+resource[:name]+'" />'
+    response_xml = post request_xml
+    doc = REXML::Document.new(response_xml)
+    root = doc.root
+    value  = doc.elements["/configResolveDn/outConfig"].has_elements?
   end
 
   def power_state
