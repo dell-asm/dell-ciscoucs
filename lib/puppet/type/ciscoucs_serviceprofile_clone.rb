@@ -23,7 +23,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
     end
   end
 
-  newparam(:source) do
+  newparam(:sourceserviceprofile) do
     desc "name of server dn"
 	validate do |value|
       if value.strip.length == 0
@@ -32,7 +32,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
     end
   end
 
- newparam(:target) do
+ newparam(:targetorganizationname) do
     desc "name of server profile"
 	validate do |value|
       if value.strip.length == 0

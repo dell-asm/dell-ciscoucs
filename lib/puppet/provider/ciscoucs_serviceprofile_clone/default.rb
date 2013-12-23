@@ -1,4 +1,5 @@
 require 'pathname'
+require 'rexml/document'
 
 mod = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s).path rescue Pathname.new(__FILE__).parent.parent.parent.parent.parent
 require File.join mod, 'lib/puppet/type/transport_ciscoucs'
@@ -13,12 +14,26 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   @doc = "Create server profile on Cisco UCS device."
   def create
   puts "inside create method"
-    dn = resource[:source]
-	inServerName = resource[:clonename]
-	inTargetOrg = resource[:target]
-	cloneServerProfileXML = '<lsClone dn="org-root/ls-'+dn+'" cookie="' + cookie + '" inTargetOrg="org-root/org-'+inTargetOrg+'" inServerName="'+inServerName+'" inHierarchical="false"></lsClone>'
-    ucsCloneServerResp = post cloneServerProfileXML
-	puts "ucsCloneServerResp..." + ucsCloneServerResp
+    sourceserviceprofile = resource[:sourceserviceprofile]
+	clonename = resource[:clonename]
+	targetorganizationname = resource[:targetorganizationname]
+	cloneserverprofilexml = '<lsClone dn="'+sourceserviceprofile+'" cookie="' + cookie + '" inTargetOrg="'+targetorganizationname+'" inServerName="'+clonename+'" inHierarchical="false"></lsClone>'
+    ucscloneserverresp = post cloneserverprofilexml
+	puts "ucscloneserverresp..." + ucscloneserverresp
+
+    cloneresponse = REXML::Document.new(ucscloneserverresp)
+    root = cloneresponse.root
+    #errorCode = root.attributes['errorCode']
+	#puts "errorCode..." + errorCode
+
+    if root.attributes['status'].nil?
+	if root.attributes['errorCode'].eql?("103")
+        Puppet.notice "Cannot create clone, service profile already exists."
+	end
+	if root.attributes['errorCode'].eql?("102")
+        Puppet.notice "Cannot create clone, as the source service profile does not exist."
+    end
+  end
 
   end
 
@@ -28,14 +43,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 
   def exists?
 	puts "inside exist method"
-    #@property_hash[:ensure] == :present
-	  def exists?
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="org-root/ls-'+resource[:inServerName]+'" />'
-    response_xml = post request_xml
-    doc = REXML::Document.new(response_xml)
-    root = doc.root
-    value  = doc.elements["/configResolveDn/outConfig"].has_elements?
-  end
   end
 
 end
