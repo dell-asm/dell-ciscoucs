@@ -6,7 +6,7 @@ transport_ciscoucs { 'ciscoucs':
   server   => '192.168.247.132',
 }
 
-ciscoucs_serviceprofile_clone { 'inservername':
+ciscoucs_serviceprofile_clone { 'clonename':
    clonename => 'clone', 
    ensure    => present,
    transport  => Transport_ciscoucs['ciscoucs'],
