@@ -20,7 +20,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     serverchesisid = resource[:serverchesisid]
     serverslot = resource[:serverslot]
             
-    profile_associate_input_xml =
+    @profile_associate_input_xml =
     '<configConfMos
           cookie="'+cookie+'"
           inHierarchical="false">
@@ -62,9 +62,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
           </pair>
               </inConfigs>
           </configConfMos>';
-    puts profile_associate_input_xml;
-    profile_associate_output_xml = post profile_associate_input_xml
-    puts "Server profile associate- " + profile_associate_output_xml;
+    puts @profile_associate_input_xml;
+    @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
+    puts "Server profile associate- " + @profile_associate_output_xml;
     
   end
   
@@ -79,7 +79,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
           serverchesisid = resource[:serverchesisid]
           serverslot = resource[:serverslot]
                   
-          profile_associate_input_xml =
+          @profile_associate_input_xml =
           '<configConfMos
                 cookie="'+cookie+'"
                 inHierarchical="false">
@@ -92,9 +92,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
                 </pair>
                     </inConfigs>
                 </configConfMos>';
-          puts profile_associate_input_xml;
-          profile_associate_output_xml = post profile_associate_input_xml
-          puts "Server profile associate- " + profile_associate_output_xml
+          puts @profile_associate_input_xml;
+          @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
+          puts "Server profile associate- " + @profile_associate_output_xml;
       
       end
      
