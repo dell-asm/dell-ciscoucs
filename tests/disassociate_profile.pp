@@ -7,7 +7,7 @@ transport { 'ciscoucs':
 }
 
 
-ciscoucs_serviceprofile_association { 'name':
+ciscoucs_serviceprofile_disassociation { 'name':
   ensure    => absent, 
   organizationname => 'root',
   serviceprofilename => 'DemoTestServiceProfile',
