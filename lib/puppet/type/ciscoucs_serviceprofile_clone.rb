@@ -2,12 +2,10 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   @doc = 'Clone service profile on cisco ucs device'
   ensurable do
     newvalue(:present) do 
-	  puts "newvalue(:present "
       provider.create
     end
 
     newvalue(:absent) do
-      puts "newvalue(:absent "
 	  provider.destroy
     end
 
