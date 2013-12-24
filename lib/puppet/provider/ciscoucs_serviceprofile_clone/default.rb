@@ -33,10 +33,10 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 
     if root.attributes['status'].nil?
 	if root.attributes['errorCode'].eql?("103")
-        Puppet.notice "Cannot create clone, service profile already exists."
+        raise Puppet::Error, "Cannot create clone, service profile already exists."
 	end
 	if root.attributes['errorCode'].eql?("102")
-        Puppet.notice "Cannot create clone, as the source service profile or target organization name does not exist."
+        raise Puppet::Error, "Cannot create clone, as the source service profile or target organization name does not exist."
     end
   end
 
