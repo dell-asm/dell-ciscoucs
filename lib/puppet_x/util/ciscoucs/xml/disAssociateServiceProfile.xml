@@ -1,0 +1,10 @@
+<configConfMos cookie="" inHierarchical="true">
+    <inConfigs>
+        <pair key="">
+            <lsServer descr="" dn="" >
+                <lsBinding rn="pn" status="deleted">
+                </lsBinding>
+            </lsServer>
+        </pair>
+    </inConfigs>
+</configConfMos>

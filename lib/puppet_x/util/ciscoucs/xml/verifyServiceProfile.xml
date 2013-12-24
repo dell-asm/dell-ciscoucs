@@ -1,0 +1,6 @@
+<configResolveClass cookie="" classId="lsServer">
+    <inFilter>
+        <eq class="lsServer" property="dn" value="" />
+    </inFilter>
+</configResolveClass>
+

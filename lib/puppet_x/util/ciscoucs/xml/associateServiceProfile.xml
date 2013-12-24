@@ -1,0 +1,10 @@
+<configConfMos cookie="" inHierarchical="true">
+    <inConfigs>
+        <pair key="">
+            <lsServer descr="Service Profile applied by Gale Resource Adapter" dn="">
+                <lsBinding pnDn="" rn="pn">
+                </lsBinding>
+            </lsServer>
+        </pair>
+    </inConfigs>
+</configConfMos>

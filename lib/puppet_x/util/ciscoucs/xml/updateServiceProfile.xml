@@ -1,0 +1,28 @@
+<configConfMos
+cookie="1290515265/b86ce0df-99e0-4477-9808-82c7b27604c5"
+inHierarchical="false">
+    <inConfigs>
+<pair key="org-root/ls-11">
+    <lsServer
+    agentPolicyName=""
+    biosProfileName=""
+    bootPolicyName=""
+    descr="Test Update"
+    dn="org-root/ls-11"
+    dynamicConPolicyName=""
+    hostFwPolicyName=""
+    identPoolName=""
+    localDiskPolicyName=""
+    mgmtAccessPolicyName=""
+    mgmtFwPolicyName=""
+    scrubPolicyName=""
+    solPolicyName=""
+    srcTemplName=""
+    statsPolicyName="default"
+    status="modified"
+    uuid="0"
+    vconProfileName="">
+    </lsServer>
+</pair>
+    </inConfigs>
+</configConfMos>

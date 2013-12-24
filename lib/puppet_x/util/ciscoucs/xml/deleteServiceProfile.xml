@@ -1,0 +1,28 @@
+<configConfMos
+cookie=""
+inHierarchical="true">
+    <inConfigs>
+<pair key="">
+    <lsServer
+    agentPolicyName=""
+    biosProfileName=""
+    bootPolicyName=""
+    descr=""
+    dn=""
+    dynamicConPolicyName=""
+    hostFwPolicyName=""
+    identPoolName=""
+    localDiskPolicyName=""
+    mgmtAccessPolicyName=""
+    mgmtFwPolicyName=""
+    scrubPolicyName=""
+    solPolicyName=""
+    srcTemplName=""
+    statsPolicyName=""
+    status="deleted"
+    uuid=""
+    vconProfileName="">
+    </lsServer>
+</pair>
+    </inConfigs>
+</configConfMos>
