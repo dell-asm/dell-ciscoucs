@@ -28,9 +28,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_disassociation).provide(:default, :pa
        </inConfigs>
      </configConfMos>';
      
-    puts @profile_associate_input_xml;
     @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
-    puts "Server profile associate- " + @profile_associate_output_xml;
+    
   end
 
   #Method for destroy
