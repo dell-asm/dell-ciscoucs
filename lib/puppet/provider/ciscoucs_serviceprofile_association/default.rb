@@ -32,6 +32,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     </configConfMos>';
 
     @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
+    
+    puts @profile_associate_output_xml;
 
   end
 
@@ -45,7 +47,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     serverchesisid = resource[:serverchesisid]
     serverslot = resource[:serverslot]
 
-    @profile_associate_input_xml =
+    @profile_disassociate_input_xml =
     '<configConfMos cookie="'+cookie+'" inHierarchical="false">
          <inConfigs>
             <pair key="org-'+organizationname+'/ls-'+serviceprofilename+'">
@@ -55,8 +57,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
           </inConfigs>
         </configConfMos>';
 
-    @profile_associate_output_xml = RestClient.post url, @profile_associate_input_xml, :content_type => 'text/xml';
+    @profile_disassociate_output_xml = RestClient.post url, @profile_disassociate_input_xml, :content_type => 'text/xml';
 
+    puts @profile_disassociate_output_xml;
   end
 
   #check If exist
