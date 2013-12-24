@@ -19,12 +19,16 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 	targetorganizationname = resource[:targetorganizationname]
 	cloneserverprofilexml = '<lsClone dn="'+sourceserviceprofile+'" cookie="' + cookie + '" inTargetOrg="'+targetorganizationname+'" inServerName="'+clonename+'" inHierarchical="false"></lsClone>'
     ucscloneserverresp = post cloneserverprofilexml
-	puts "ucscloneserverresp..." + ucscloneserverresp
+	#puts "ucscloneserverresp..." + ucscloneserverresp
 
     cloneresponse = REXML::Document.new(ucscloneserverresp)
     root = cloneresponse.root
     #errorCode = root.attributes['errorCode']
 	#puts "errorCode..." + errorCode
+
+	if root.attributes['status'].eql?("created")
+        Puppet.notice "Clone service profile successfully created."
+	end
 
     if root.attributes['status'].nil?
 	if root.attributes['errorCode'].eql?("103")
@@ -38,11 +42,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   end
 
   def destroy
-  puts "inside destroy method"
+  #puts "inside destroy method"
   end
 
   def exists?
-	puts "inside exist method"
+	#puts "inside exist method"
   end
 
 end

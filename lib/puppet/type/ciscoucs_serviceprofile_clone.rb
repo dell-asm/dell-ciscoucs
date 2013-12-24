@@ -21,6 +21,11 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
         raise ArgumentError, "Invalid clone server name."
       end
     end
+	validate do |value|
+      unless value =~ /\A[a-zA-Z0-9\d_]+\Z/
+         raise ArgumentError, "%s is not a valid name." % value
+      end
+    end
   end
 
   newparam(:sourceserviceprofile) do

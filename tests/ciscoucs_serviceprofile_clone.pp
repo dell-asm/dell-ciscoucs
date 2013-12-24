@@ -7,7 +7,7 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile_clone { 'clonename':
-   clonename => 'clone2', 
+   clonename => 'clone_2', 
    ensure    => present,
    transport  => Transport_ciscoucs['ciscoucs'],
    sourceserviceprofile      => 'org-root/org-Finance/ls-testing',
