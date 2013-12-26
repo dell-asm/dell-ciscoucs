@@ -11,20 +11,17 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   @doc = "Associate server profile on Cisco UCS device."
   def create
     name=resource[:name]
-
-    organizationname = resource[:organizationname]
-    serviceprofilename = resource[:serviceprofilename]
-    dnorganizationname = resource[:dnorganizationname]
-    dnserviceprofilename = resource[:dnserviceprofilename]
     serverchesisid = resource[:serverchesisid]
-    serverslot = resource[:serverslot]
+    serverslot = resource[:serverslot]      
+    profile_dn = resource[:profile_dn]    
+    server_dn = resource[:server_dn]
 
     @profile_associate_input_xml =
     '<configConfMos cookie="'+cookie+'" inHierarchical="false">
         <inConfigs>
-            <pair key="org-'+organizationname+'/ls-'+serviceprofilename+'">
-                <lsServer dn="org-'+dnorganizationname+'/ls-'+dnserviceprofilename+'">
-                    <lsBinding pnDn="sys/'+serverchesisid+'/'+serverslot+'" rn="pn">
+            <pair key="'+profile_dn+'">
+                <lsServer dn="'+profile_dn+'">
+                    <lsBinding pnDn="'+server_dn+'" rn="pn">
                     </lsBinding>
                 </lsServer>
             </pair>
@@ -39,19 +36,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   def destroy
 
-    name=resource[:name]
-    organizationname = resource[:organizationname]
-    serviceprofilename = resource[:serviceprofilename]
-    dnorganizationname = resource[:dnorganizationname]
-    dnserviceprofilename = resource[:dnserviceprofilename]
-    serverchesisid = resource[:serverchesisid]
-    serverslot = resource[:serverslot]
+    name=resource[:name]      
+    profile_dn = resource[:profile_dn]
 
     @profile_disassociate_input_xml =
     '<configConfMos cookie="'+cookie+'" inHierarchical="false">
          <inConfigs>
-            <pair key="org-'+organizationname+'/ls-'+serviceprofilename+'">
-                <lsBinding dn="org-'+organizationname+'/ls-'+serviceprofilename+'" status="deleted" >
+            <pair key="'+profile_dn+'">
+                <lsBinding dn="'+profile_dn+'" status="deleted" >
                  </lsBinding>
             </pair>
           </inConfigs>

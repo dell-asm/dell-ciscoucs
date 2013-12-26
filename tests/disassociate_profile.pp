@@ -9,12 +9,12 @@ transport_ciscoucs { 'ciscoucs':
 
 ciscoucs_serviceprofile_association { 'name':
   ensure    => absent, 
-  organizationname => 'root',
-  serviceprofilename => 'DemoTestServiceProfile',
-  dnorganizationname => 'root',
-  dnserviceprofilename => 'DemoTestServiceProfile',
-  serverchesisid => 'chassis-1',
-  serverslot => 'blade-3',   
+  organization_name => 'root',
+  service_profile_name => 'DemoTestServiceProfile',
+  profile_dn => '',
+  server_chesis_id => 'chassis-1',
+  server_slot => 'blade-3',   
+  server_dn => '',
   transport  => Transport_ciscoucs['ciscoucs'],
 }
 

@@ -16,22 +16,24 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
   newparam(:name, :namevar => true) do
   end
 
-  newparam(:organizationname) do
+  newparam(:organization_name) do
   end
 
-  newparam(:serviceprofilename) do
+  newparam(:service_profile_name) do
+  end
+  
+  newparam(:profile_dn) do
+    defaultsto 'org-'+resource[:organization_name]+'/ls-'+resource[:service_profile_name];
   end
 
-  newparam(:dnorganizationname) do
+  newparam(:server_chesis_id) do
   end
 
-  newparam(:dnserviceprofilename) do
+  newparam(:server_slot) do
   end
-
-  newparam(:serverchesisid) do
+  
+  newparam(:server_dn) do
+    defaultsto 'sys/'+resource[:server_chesis_id]+'/'+resource[:server_slot];
   end
-
-  newparam(:serverslot) do
-  end
-
+  
 end
