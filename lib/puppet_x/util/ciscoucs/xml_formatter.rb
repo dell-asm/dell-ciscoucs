@@ -32,36 +32,37 @@ module  PuppetX
             # read file in block will close the file handle internally when block terminates
             content = File.open(xml_path, 'r') { |file| file.read }
           else
-            # Puppet::Error "Cannot read request xml template at location: " + xml_path
-            puts "no file found"
+            raise Puppet::Error, "Cannot read request xml template from location: " + xml_path
           end
           return content
         end
 
         def update_xml (parameters)
+          new_xml_content = ""
           xml_content = xml_template
 
-          # todo : check if the content exists
-          if xml_content != "" && xml_content.length > 0
-            doc = REXML::Document.new(xml_content.to_s)
-            doc.context[:attribute_quote] = :quote
-            r = doc.root
-            # get attributes
-            if parameters.kind_of?(Hash)
-              parameters.keys.each do |node_path, value|
-                if parameters[node_path].kind_of?(Hash)
-                  parameters[node_path].each do |attribute_name, attribute_value|
-                    # search xpath in xml file and add attribute name and value
-                    elem = r.elements[node_path]
-                    elem.attributes[attribute_name.to_s] = attribute_value.to_s
-                  end
+          if xml_content.to_s.strip.length == 0
+            raise Puppet::Error, "Empty xml template found for " + @command + " operation"
+          end
+
+          doc = REXML::Document.new(xml_content.to_s)
+          doc.context[:attribute_quote] = :quote
+          r = doc.root
+          # get attributes
+          if parameters.kind_of?(Hash)
+            parameters.keys.each do |node_path, value|
+              if parameters[node_path].kind_of?(Hash)
+                parameters[node_path].each do |attribute_name, attribute_value|
+                  # search xpath in xml file and add attribute name and value
+                  elem = r.elements[node_path]
+                  elem.attributes[attribute_name.to_s] = attribute_value.to_s
                 end
               end
             end
-            doc.to_s
           end
+          new_xml_content = doc.to_s
         end
-
+        return new_xml_content
       end
     end
   end
