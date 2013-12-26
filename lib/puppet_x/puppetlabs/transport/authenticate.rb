@@ -7,6 +7,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"
+  @@cookie = ""
   class Authenticate
     def initialize(url, username, password)
       @url = url
@@ -25,29 +26,35 @@ module PuppetX::Puppetlabs::Transport
       # check if response xml has come
       logindoc = REXML::Document.new(responsexml)
       root = logindoc.root
-      @cookie = root.attributes['outCookie']
+      @@cookie = root.attributes['outCookie']
     end
 
     def refresh
-      refresh_xml = '<aaaTokenLogin inName="#{@username}" inToken="#{@cookie}" />'
-      responsexml ||= RestClient.post @url, refresh_xml, :content_type => 'text/xml'
-      Puppet.debug responsexml
+      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaRefresh")
+      parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+      parameters['/aaaRefresh'][:inName] = @username
+      parameters['/aaaRefresh'][:inPassword] = @password
+      parameters['/aaaRefresh'][:inCookie] = @@cookie
+      requestxml = formatter.command_xml(parameters)
+      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+
       # Create an XML doc and parse it to get the cookie.
       refreshdoc = REXML::Document.new(responsexml)
       root = refreshdoc.root
-      @cookie = root.attributes['outCookie']
-
-      #TODO- store cookie in file per IPAddress
-
+      @@cookie = root.attributes['outCookie']
     end
 
     def logout
       Puppet.debug("#{self.class} closing connection to:  #{@host}")
-      closexml ='<aaaLogout inCookie="#{@cookie}"/>'
-      RestClient.post @url, closexml, :content_type => 'text/xml'
+      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaLogout")
+      parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+      parameters['/aaaLogout'][:inCookie] = @@cookie
+      requestxml = formatter.command_xml(parameters)
+      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
     end
 
     def getcookie
+=begin
       unless @cookie
         login
       else
@@ -57,6 +64,8 @@ module PuppetX::Puppetlabs::Transport
         end
       end
       return @cookie
+=end
+      login
     end
   end
 end
