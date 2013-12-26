@@ -29,6 +29,10 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     @transport.url
   end
   
+  def disconnect
+    @transport.close
+  end
+
   # Helper function for execution of Cisco UCS API commands
   def post(request_xml)
     begin
