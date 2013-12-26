@@ -21,11 +21,18 @@ module PuppetX::Puppetlabs::Transport
       parameters['/aaaLogin'][:inName] = @username
       parameters['/aaaLogin'][:inPassword] = @password
       requestxml = formatter.command_xml(parameters)
+      if requestxml.to_s.strip.length == 0
+        raise Puppet::Error, "Cannot create request xml for login operation"
+      end
       responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      if responsexml.to_s.strip.length == 0
+        raise Puppet::Error, "No response obtained from login operation"
+      end
       # Create an XML doc and parse it to get the cookie.
-      # check if response xml has come
-      logindoc = REXML::Document.new(responsexml)
-      root = logindoc.root
+      root = REXML::Document.new(responsexml).root
+      if root.attributes['outCookie'].nil?
+        raise Puppet::Error, "Cannot obtain cookie from response"
+      end
       @@cookie = root.attributes['outCookie']
     end
 
@@ -36,11 +43,18 @@ module PuppetX::Puppetlabs::Transport
       parameters['/aaaRefresh'][:inPassword] = @password
       parameters['/aaaRefresh'][:inCookie] = @@cookie
       requestxml = formatter.command_xml(parameters)
+      if requestxml.to_s.strip.length == 0
+        raise Puppet::Error, "Cannot create request xml for refresh operation"
+      end
       responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
-
+      if responsexml.to_s.strip.length == 0
+        raise Puppet::Error, "No response obtained from refresh operation"
+      end
       # Create an XML doc and parse it to get the cookie.
-      refreshdoc = REXML::Document.new(responsexml)
-      root = refreshdoc.root
+      root = REXML::Document.new(responsexml).root
+      if root.attributes['outCookie'].nil?
+        raise Puppet::Error, "Cannot obtain cookie from response"
+      end
       @@cookie = root.attributes['outCookie']
     end
 
@@ -50,7 +64,19 @@ module PuppetX::Puppetlabs::Transport
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogout'][:inCookie] = @@cookie
       requestxml = formatter.command_xml(parameters)
+      if requestxml.to_s.strip.length == 0
+        raise Puppet::Error, "Cannot create request xml for logout operation"
+      end      
       responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      if responsexml.to_s.strip.length == 0
+        raise Puppet::Error, "No response obtained from logout operation"
+      end
+      # Create an XML doc and parse it to get the cookie.
+      root = REXML::Document.new(responsexml).root
+      if root.attributes['outStatus'].nil?
+        raise Puppet::Error, "Cannot obtain logout status from response"
+      end
+      Puppet.notice "Status of logout operation- " + root.attributes['outStatus']
     end
 
     def getcookie
