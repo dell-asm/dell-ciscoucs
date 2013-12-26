@@ -1,6 +1,9 @@
 require 'rest_client'
 require 'rexml/document'
 
+ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"
@@ -12,9 +15,14 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def login
-      connectionxml = '<aaaLogin inName="' + @username + '" inPassword="'+ @password +'"/>'
-      responsexml = RestClient.post @url, connectionxml, :content_type => 'text/xml'
+      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaLogin")
+      parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+      parameters['/aaaLogin'][:inName] = @username
+      parameters['/aaaLogin'][:inPassword] = @password
+      requestxml = formatter.command_xml(parameters)
+      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
       # Create an XML doc and parse it to get the cookie.
+      # check if response xml has come
       logindoc = REXML::Document.new(responsexml)
       root = logindoc.root
       @cookie = root.attributes['outCookie']
