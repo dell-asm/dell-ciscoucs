@@ -38,7 +38,6 @@ module  PuppetX
         end
 
         def update_xml (parameters)
-          new_xml_content = ""
           xml_content = xml_template
 
           if xml_content.to_s.strip.length == 0
@@ -60,9 +59,9 @@ module  PuppetX
               end
             end
           end
-          new_xml_content = doc.to_s
+          doc.to_s
         end
-        return new_xml_content
+
       end
     end
   end

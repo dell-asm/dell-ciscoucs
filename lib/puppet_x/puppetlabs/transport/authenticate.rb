@@ -59,7 +59,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def logout
-      Puppet.debug("#{self.class} closing connection to:  #{@host}")
+      Puppet.debug("#{self.class} closing connection to:  #{@url}")
       formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaLogout")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogout'][:inCookie] = @@cookie
