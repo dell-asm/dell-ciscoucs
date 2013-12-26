@@ -20,7 +20,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
       end
     end
 	validate do |value|
-      unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+      unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\s]{1,}+\Z/
          raise ArgumentError, "%s is not a valid name." % value
       end
     end
