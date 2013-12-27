@@ -21,16 +21,24 @@ end
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
     @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
-    value = @transport.cookie
-    value.to_s
+    @login_value = @transport.cookie
+    @login_value.to_s
   end
 
   def url
     @transport.url
   end
-  
+
   def disconnect
     @transport.close
+  end
+
+  def check_profile_exists(dn)
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
+    response_xml = post request_xml
+    doc = REXML::Document.new(response_xml)
+    root = doc.root
+    value  = doc.elements["/configResolveDn/outConfig"].has_elements?
   end
 
   # Helper function for execution of Cisco UCS API commands
@@ -38,8 +46,8 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     begin
       result ||= RestClient.post url, request_xml, :content_type => 'text/xml'
     rescue RestClient::Exception => error
-     #Puppet.debug "Failed REST #{m} to URL #{url}:\nXML Format:\n#{request_xml}"
-    raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
+      #Puppet.debug "Failed REST #{m} to URL #{url}:\nXML Format:\n#{request_xml}"
+      raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
     end
     #Puppet.debug "Cisco UCS Post: #{url} \n Request:\n#{request_xml} Response:\n#{result.inspect}"
 
