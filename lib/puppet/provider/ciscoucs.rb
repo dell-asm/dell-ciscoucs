@@ -21,8 +21,8 @@ end
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
     @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
-    @login_value = @transport.cookie
-    @login_value.to_s
+    value = @transport.cookie
+    value.to_s
   end
 
   def url
@@ -37,8 +37,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
     response_xml = post request_xml
     doc = REXML::Document.new(response_xml)
-    root = doc.root
-    value  = doc.elements["/configResolveDn/outConfig"].has_elements?
+    return doc.elements["/configResolveDn/outConfig"].has_elements?
   end
 
   # Helper function for execution of Cisco UCS API commands

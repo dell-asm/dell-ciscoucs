@@ -9,7 +9,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."
+
   def create
+    puts "In create"
     name = resource[:profile_name]
     if resource [:template_name]
       # create profile from template
@@ -21,43 +23,103 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def destroy
-    # todo: delete profile 
+    # todo: delete profile
+    puts "In destroy"
   end
 
+  def dn
+    power_dn = ""
+    if resource[:name] && resource[:org]
+      power_dn = resource[:org]+"/ls-" + resource[:name]
+    elsif resource[:dn]
+      power_dn = resource[:dn]
+    end
+    return power_dn    
+  end
+
+  def power_dn
+    dn + "/power"
+  end
+  
   def exists?
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="org-root/ls-'+resource[:name]+'" />'
-    response_xml = post request_xml
-    doc = REXML::Document.new(response_xml)
-    root = doc.root
-    value  = doc.elements["/configResolveDn/outConfig"].has_elements?
+    check_profile_exists dn
   end
 
   def power_state
     Puppet.debug "Getting power state of the Service Profile."
     begin
-
+      # TODO: not sure what needs to be done here
     rescue Exception => exception
       puts exception.message
     end
   end
 
   def power_state=(value)
-    puts "Setting the power state of service profile."
-    begin
-      profile_name = resource[:name]
+    Puppet.debug "Setting the power state of service profile."
+    begin      
+      #power_dn = 'org-root/ls-test_123/power'
+      parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+      parameters['/configConfMo'][:dn] = power_dn
+      parameters['/configConfMo'][:cookie] = cookie
+      parameters['/configConfMo/inConfig/lsPower'][:dn] = power_dn
+
       # power off the service profile
       if value == :down
-        
-      # power on the service profile
-      elsif value == :on
-
+        Puppet.debug "Power down the service profile"
+        poweroff parameters
+        # power on the service profile
+      elsif value == :up
+        Puppet.debug "Power up the service profile"
+        poweron parameters
       end
 
+      disconnect
+
     rescue Exception => exception
-      flag = 1
       puts "Unable to perform the operation because the following exception occurred."
       puts exception.message
     end
+  end
+
+  def poweron(parameters)
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("powerOn")
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for power-on operation"
+    end
+    Puppet.debug "Sending power on request: \n" + requestxml
+
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from power-on operation"
+    end
+    Puppet.debug "Response from power on: \n" + responsexml
+    puts "Response from power on: \n" + responsexml
+    
+    # Create an XML doc and parse it to get the cookie.
+    root = REXML::Document.new(responsexml).root
+    #if root.attributes['outCookie'].nil?
+    # raise Puppet::Error, "Cannot obtain cookie from response"
+    #end
+
+  end
+
+  def poweroff(parameters)
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("powerOff")
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for power-on operation"
+    end
+    Puppet.debug "Sending power on request: \n" + requestxml
+    puts "Sending power on request: \n" + requestxml
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from power-on operation"
+    end
+    Puppet.debug "Response from power on: \n" + responsexml
+    puts "Response from power on: \n" + responsexml
+    # Create an XML doc and parse it to get the cookie.
+    root = REXML::Document.new(responsexml).root
   end
 
 end
