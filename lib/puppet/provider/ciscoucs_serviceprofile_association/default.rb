@@ -4,7 +4,6 @@ provider_path = Pathname.new(__FILE__).parent.parent
 Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
-
 Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   @doc = "Manage association of service profile on Cisco UCS device."
 
@@ -23,7 +22,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if server_dn == ""
       server_dn = 'sys/'+resource[:server_chesis_id]+'/'+resource[:server_slot];
     end
-    
+
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("associateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
@@ -33,7 +32,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Associated by ASM";
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:rn] = "pn";
     requestxml = formatter.command_xml(parameters);
-    
+
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Cannot create request xml for asoociate operation"
     end
@@ -41,13 +40,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from Associate operation"
     end
-    # Create an XML doc and parse it to get the cookie.
-    root = REXML::Document.new(responsexml).root
 
-    #if root.attributes['outCookie'].nil?
-    #  raise Puppet::Error, "Cannot obtain cookie from response"
-    #end
-    #@@cookie = root.attributes['outCookie']
+    puts 'Please wait... Server Profile is getting associated';
+    
   end
 
   def destroy
@@ -75,13 +70,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from Dis-associate operation"
     end
-    # Create an XML doc and parse it to get the cookie.
-    root = REXML::Document.new(responsexml).root
 
-    #if root.attributes['outCookie'].nil?
-    #  raise Puppet::Error, "Cannot obtain cookie from response"
-    #end
-    #@@cookie = root.attributes['outCookie']
+    puts 'Please wait... Server Profile is getting dis-associated';
 
   end
 
