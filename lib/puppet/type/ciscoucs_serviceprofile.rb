@@ -1,33 +1,64 @@
 Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   @doc = 'Create service profile on cisco ucs device'
-  ensurable do
-    newvalue(:present) do
-      provider.create
-    end
+  ensurable
 
-    newvalue(:absent) do
-      provider.destroy
+  newparam(:org) do
+    desc "Organization Name of service profile"
+    validate do |value|
+      if value.strip.length != 0
+    #    unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+     #     raise ArgumentError, "%s is not a valid value." % value
+      #  end
+      end
     end
-
-    defaultto(:present)
   end
 
-  newparam(:profile_name, :namevar => true) do
+  newparam(:name, :namevar => true) do
+    desc "Name of service profile"
+    validate do |value|
+      if value.strip.length != 0
+       # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+        #  raise ArgumentError, "%s is not a valid value." % value
+       # end
+      end
+    end
+  end
+
+  newparam(:dn) do
     desc "Name of service profile"
     validate do |value|
       if value.strip.length == 0
-        raise ArgumentError, "Invalid service profile name."
+        # if dn is empty then both org or profile name should exists.
+        if resource[:org].strip.length == 0 || resource[:name].strip.length == 0
+          raise ArgumentError, "Either dn or both org and profile name should be given in input."
+        end
+      else
+        #unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+         # raise ArgumentError, "%s is not a valid value." % value
+        #end
       end
     end
   end
 
-  newparam(:template_name) do
-      desc "Name of service profile"
-      validate do |value|
-        if value.strip.length == 0
-          raise ArgumentError, "Invalid service profile name."
-        end
-      end
-    end
-
+  newproperty(:power_state) do
+    desc 'Power state of a service profile'
+    newvalues(:up, :down)
+    defaultto(:up)
+  end
 end
+
+=begin
+"Template Name - Name of the Service Profile Template
+Organization Name - Organization name (e.g root)
+Profile name prefix - Profile Name Prefix
+Server Profile Template DN (Optional) - DN of the service profile (e.g. /org-root/ls-Template1)
+Count of Profile - Number of profiles to be initiated.
+UCS Connection Information - IP Address/Hostname, Username, Password"
+
+"Server Org Name - Server Organization name
+Server Chassis Id - Server Chassis ID
+Server Slot - Server Slot
+Server DN (optional) - Server DN
+UCS Connection Information - IP Address/Hostname, Username, Password"
+
+=end
