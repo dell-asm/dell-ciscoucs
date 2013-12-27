@@ -7,12 +7,12 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile_clone { 'sourceprofilename':
-   sourceprofilename => '', 
    ensure    => present,
    transport  => Transport_ciscoucs['ciscoucs'],
-   sourceserviceprofile      => 'testing',
+   sourceprofiledn => '',
+   targetprofiledn => '', 
+   sourceserviceprofilename      => 'testing',
    sourceorganization => 'org-root/org-Finance',
-   targetprofilename => '', 
-   targetrviceprofile      => 'clone10',
-   targetorganization => 'org-root/org-Finance',
+   targetserviceprofilename      => 'clone',
+   targetorganization => 'org-root/org-Finance/org-test1/org-test2',
 }

@@ -15,48 +15,47 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   def create
     #puts "inside create method"
 
-     if @resource[:sourceserviceprofile].strip.length == 0 && @resource[:sourceorganization].strip.length != 0
+     if @resource[:sourceserviceprofilename].strip.length == 0 && @resource[:sourceorganization].strip.length != 0
 		raise ArgumentError, "Invalid input arguments."
 	  end
 	  
-	  if @resource[:sourceserviceprofile].strip.length != 0 && @resource[:sourceorganization].strip.length == 0
+	  if @resource[:sourceserviceprofilename].strip.length != 0 && @resource[:sourceorganization].strip.length == 0
 		raise ArgumentError, "Invalid input arguments."
 	  end
 	  
-	  if @resource[:sourceserviceprofile].strip.length != 0 && @resource[:sourceorganization].strip.length != 0 && @resource[:targetprofilename].strip.length == 0
-		@sourceprofilename = resource[:sourceorganization]+'/ls-'+resource[:sourceserviceprofile];
+	  if @resource[:sourceserviceprofilename].strip.length != 0 && @resource[:sourceorganization].strip.length != 0 && @resource[:sourceprofiledn].strip.length == 0
+		@sourceprofiledn = resource[:sourceorganization]+'/ls-'+resource[:sourceserviceprofilename];
 	  else
-		@sourceprofilename = resource[:sourceprofilename]
+		@sourceprofiledn = resource[:sourceprofiledn]
 	  end
 
-	  if @resource[:targetrviceprofile].strip.length == 0 && @resource[:targetorganization].strip.length != 0
+	  if @resource[:targetserviceprofilename].strip.length == 0 && @resource[:targetorganization].strip.length != 0
 		raise ArgumentError, "Invalid input arguments."
 	  end
 	  
-	  if @resource[:targetrviceprofile].strip.length != 0 && @resource[:targetorganization].strip.length == 0
+	  if @resource[:targetserviceprofilename].strip.length != 0 && @resource[:targetorganization].strip.length == 0
 		raise ArgumentError, "Invalid input arguments."
 	  end 
 
-	  if @resource[:targetrviceprofile].strip.length != 0 && @resource[:targetorganization].strip.length != 0 && @resource[:targetprofilename].strip.length == 0
-		@targetprofilename = resource[:targetorganization]+'/ls-'+resource[:targetrviceprofile];
+	  if @resource[:targetserviceprofilename].strip.length != 0 && @resource[:targetorganization].strip.length != 0 && @resource[:targetprofiledn].strip.length == 0
+		@targetprofiledn = resource[:targetorganization]+'/ls-'+resource[:targetserviceprofilename];
 		else
-		@targetprofilename = resource[:targetprofilename]
+		@targetprofiledn = resource[:targetprofiledn]
 	  end
 
-	    @str = @targetprofilename
-		@targetprofilename = @str.split("/ls-").first
+	    @str = @targetprofiledn
+		@targetprofiledn = @str.split("/ls-").first
 		@clonename = @str.split("ls-").last
 
 		formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createServiceProfileClone")
 		parameters = PuppetX::Util::Ciscoucs::NestedHash.new
-		parameters['/lsClone'][:dn] = @sourceprofilename
-		parameters['/lsClone'][:inTargetOrg] = @targetprofilename
+		parameters['/lsClone'][:dn] = @sourceprofiledn
+		parameters['/lsClone'][:inTargetOrg] = @targetprofiledn
 		parameters['/lsClone'][:inServerName] = @clonename
 		parameters['/lsClone'][:cookie] = cookie
 		parameters['/lsClone'][:inHierarchical] = 'false'
 		cloneserverprofilexml = formatter.command_xml(parameters)
 		ucscloneserverresp = post cloneserverprofilexml
-
 		cloneresponse = REXML::Document.new(ucscloneserverresp)
 		root = cloneresponse.root
 

@@ -12,7 +12,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
     defaultto(:present)
   end
 
-  newparam(:sourceserviceprofile) do
+  newparam(:sourceserviceprofilename) do
     desc "name of source server profile name"
   end
 
@@ -20,18 +20,18 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
     desc "name of source organization"
   end
 
-  newparam(:sourceprofilename, :namevar => true) do
+  newparam(:sourceprofiledn, :namevar => true) do
     desc "name of server profile"
      validate do |value|
 	   if value.strip.length != 0
-	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,}+\Z/
+	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
                raise ArgumentError, "%s is not a valid name." % value
           end
 	  end
 	end
   end
 
- newparam(:targetrviceprofile) do
+ newparam(:targetserviceprofilename) do
     desc "name of target server profile name"
   end
 
@@ -39,11 +39,11 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
     desc "name of target organization"
   end
 
-  newparam(:targetprofilename) do
+  newparam(:targetprofiledn) do
     desc "name of server profile clone"	
      validate do |value|
 	   if value.strip.length != 0
-	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,}+\Z/
+	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
                raise ArgumentError, "%s is not a valid name." % value
           end
 	  end
