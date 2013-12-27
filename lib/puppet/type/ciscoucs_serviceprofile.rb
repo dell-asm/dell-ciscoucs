@@ -40,12 +40,25 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     end
   end
 
+  newparam(:source_template) do
+    desc "Source template name from which service profile needs to be created"
+  end
+  
+  newparam(:prefix) do
+    desc "Prefix to be applied for multiple profiles"
+  end
+  
+  newparam(:number_of_profiles) do
+      desc "Number of profiles to be created"
+    end
+    
   newproperty(:power_state) do
     desc 'Power state of a service profile'
     newvalues(:up, :down)
     defaultto(:up)
   end
 end
+
 
 =begin
 "Template Name - Name of the Service Profile Template
