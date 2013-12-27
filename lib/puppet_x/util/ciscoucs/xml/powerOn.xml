@@ -1,6 +1,6 @@
 <configConfMo dn="" cookie="" inHierarchical="false">
     <inConfig>
-        <lsPower dn="" state="up">
+        <lsPower dn="" state="admin-up">
         </lsPower>
     </inConfig>
 </configConfMo>
