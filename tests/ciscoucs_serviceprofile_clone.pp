@@ -6,11 +6,13 @@ transport_ciscoucs { 'ciscoucs':
   server   => '192.168.40.131',
 }
 
-ciscoucs_serviceprofile_clone { 'clonename':
-   clonename => 'clone 9', 
+ciscoucs_serviceprofile_clone { 'sourceprofilename':
+   sourceprofilename => '', 
    ensure    => present,
    transport  => Transport_ciscoucs['ciscoucs'],
-   sourceserviceprofile      => 'org-root/org-Finance/ls-testing',
-   targetorganizationname => 'org-root/org-Finance',
+   sourceserviceprofile      => 'testing',
+   sourceorganization => 'org-root/org-Finance',
+   targetprofilename => '', 
+   targetrviceprofile      => 'clone10',
+   targetorganization => 'org-root/org-Finance',
 }
-
