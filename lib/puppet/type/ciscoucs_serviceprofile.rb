@@ -6,9 +6,9 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     desc "Organization Name of service profile"
     validate do |value|
       if value.strip.length != 0
-    #    unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-     #     raise ArgumentError, "%s is not a valid value." % value
-      #  end
+        #    unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+        #     raise ArgumentError, "%s is not a valid value." % value
+        #  end
       end
     end
   end
@@ -17,9 +17,9 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     desc "Name of service profile"
     validate do |value|
       if value.strip.length != 0
-       # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+        # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
         #  raise ArgumentError, "%s is not a valid value." % value
-       # end
+        # end
       end
     end
   end
@@ -34,7 +34,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
         end
       else
         #unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-         # raise ArgumentError, "%s is not a valid value." % value
+        # raise ArgumentError, "%s is not a valid value." % value
         #end
       end
     end
@@ -42,23 +42,31 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
 
   newparam(:source_template) do
     desc "Source template name from which service profile needs to be created"
-  end
-  
-  newparam(:prefix) do
-    desc "Prefix to be applied for multiple profiles"
-  end
-  
-  newparam(:number_of_profiles) do
-      desc "Number of profiles to be created"
+    validate do |value|
+      if value.strip.length != 0
+        # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+        #  raise ArgumentError, "%s is not a valid value." % value
+        # end
+      end
     end
-    
+  end
+
+  newparam(:number_of_profiles) do
+    desc "Number of profiles to be created"
+    validate do |value|
+      # value should be an integer
+      unless value =~ /\A[0-9]+\Z/
+        raise ArgumentError, "%s is not a valid name." % value
+      end
+    end
+  end
+
   newproperty(:power_state) do
     desc 'Power state of a service profile'
     newvalues(:up, :down)
     defaultto(:up)
   end
 end
-
 
 =begin
 "Template Name - Name of the Service Profile Template
