@@ -6,8 +6,12 @@ transport_ciscoucs { 'ciscoucs':
   server   => '192.168.24.130',
 }
 
+
 ciscoucs_serviceprofile { 'name':
-   name => 'test_123', 
-  ensure    => absent,
-  transport  => Transport_ciscoucs['ciscoucs'],
+  name        => 'test_123',
+  org         => 'org-root',
+  #ensure      => present,
+  power_state => 'down',
+  transport   => Transport_ciscoucs['ciscoucs'],
 }
+

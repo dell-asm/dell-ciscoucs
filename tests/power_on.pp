@@ -8,8 +8,10 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_serviceprofile { 'name':
-   name => 'test_123', 
-  ensure    => present,
-  transport  => Transport_ciscoucs['ciscoucs'],
+  name        => 'test_123',
+  org         => 'org-root',
+  #ensure      => present,
+  power_state => 'up',
+  transport   => Transport_ciscoucs['ciscoucs'],
 }
 
