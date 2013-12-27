@@ -9,9 +9,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."
-
   def create
-    puts "In create"
+    if resource[:source_template].to_s.strip.length == 0
+      # create profile from server
+      create_profile_from_server
+    else
+      # create profile from template
+      create_profile_from_template
+    end
+      
     name = resource[:profile_name]
     if resource [:template_name]
       # create profile from template
@@ -22,9 +28,16 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     response_xml = post request_xml
   end
 
+  def create_profile_from_server
+    
+  end
+  
+  def create_profile_from_template
+    
+  end
+
   def destroy
     # todo: delete profile
-    puts "In destroy"
   end
 
   def dn
@@ -34,13 +47,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     elsif resource[:dn]
       power_dn = resource[:dn]
     end
-    return power_dn    
+    return power_dn
   end
 
   def power_dn
     dn + "/power"
   end
-  
+
   def exists?
     check_profile_exists dn
   end
@@ -56,8 +69,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   def power_state=(value)
     Puppet.debug "Setting the power state of service profile."
-    begin      
-      #power_dn = 'org-root/ls-test_123/power'
+    begin
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configConfMo'][:dn] = power_dn
       parameters['/configConfMo'][:cookie] = cookie
@@ -94,13 +106,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       raise Puppet::Error, "No response obtained from power-on operation"
     end
     Puppet.debug "Response from power on: \n" + responsexml
-    puts "Response from power on: \n" + responsexml
-    
-    # Create an XML doc and parse it to get the cookie.
-    root = REXML::Document.new(responsexml).root
-    #if root.attributes['outCookie'].nil?
-    # raise Puppet::Error, "Cannot obtain cookie from response"
-    #end
 
   end
 
@@ -111,15 +116,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       raise Puppet::Error, "Cannot create request xml for power-on operation"
     end
     Puppet.debug "Sending power on request: \n" + requestxml
-    puts "Sending power on request: \n" + requestxml
+
     responsexml = post requestxml
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from power-on operation"
     end
     Puppet.debug "Response from power on: \n" + responsexml
-    puts "Response from power on: \n" + responsexml
-    # Create an XML doc and parse it to get the cookie.
-    root = REXML::Document.new(responsexml).root
   end
 
 end
