@@ -88,11 +88,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   #check If exist
   def exists?
     ens = resource[:ensure]
-    result = false;
+    result = true;
     if (ens.to_s =="present")
       result = false;
-    elsif (ens.to_s =="absent")
-      result = true;
     end
     return result;
   end
