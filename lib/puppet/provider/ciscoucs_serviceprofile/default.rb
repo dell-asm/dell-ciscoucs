@@ -1,4 +1,5 @@
 require 'pathname'
+require 'rexml/document'
 
 provider_path = Pathname.new(__FILE__).parent.parent
 Puppet.debug provider_path
@@ -17,23 +18,84 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       # create profile from template
       create_profile_from_template
     end
-      
-    name = resource[:profile_name]
-    if resource [:template_name]
-      # create profile from template
-    else
-      # create a profile
-    end
-    server_profile_power_on_xml = '<configConfMo dn="org-root/ls-'+name+'/power" cookie="' + cookie + '" inHierarchical="false"> <inConfig> <lsPower dn="org-root/ls-'+name+'/power" state="admin-up"> </lsPower> </inConfig> </configConfMo>'
-    response_xml = post request_xml
   end
 
   def create_profile_from_server
-    
+
   end
-  
+
   def create_profile_from_template
-    
+    # check if the source template name contains 'ls-'
+    template_name = resource[:source_template]
+    if ! resource[:source_template].start_with?('ls-')
+      template_name = "ls-" + resource[:source_template]
+    end
+    prof_dn = resource[:org]+"/"+ template_name 
+
+    # check if the template exists
+    verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
+    verify_param['/configResolveClass'][:cookie] = cookie
+    verify_param['/configResolveClass/inFilter/eq'][:value] = prof_dn
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("verifyServiceProfileTemplate")
+    verify_temp_request_xml = formatter.command_xml(verify_param)
+
+    if verify_temp_request_xml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml to verify template"
+    end
+    Puppet.debug "Sending request xml: \n" + verify_temp_request_xml
+    verify_temp_response_xml = post verify_temp_request_xml
+    if verify_temp_response_xml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from verify template"
+    end
+    Puppet.debug "Response from verify template: \n" + verify_temp_response_xml
+    # parse and verify template response
+    doc = REXML::Document.new(verify_temp_response_xml)
+    begin
+      if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
+        raise Puppet::Error, "No such template exists: "+ resource[:source_template]
+      end
+
+      template_dn = doc.elements["/configResolveClass/outConfigs/lsServer"].attributes["dn"]
+
+      if(template_dn != prof_dn)
+        raise Puppet::Error, "No such template exists: "+ resource[:source_template]
+      end
+    rescue
+      raise Puppet::Error, "Error parsing xml"
+    end
+    Puppet.debug "Found matching template"
+
+    # create profile from template
+    count = 1
+    if resource[:number_of_profiles]
+      count = resource[:number_of_profiles]
+    end
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/lsInstantiateNTemplate'][:dn] = prof_dn
+    parameters['/lsInstantiateNTemplate'][:cookie] = cookie
+    parameters['/lsInstantiateNTemplate'][:inTargetOrg] = resource[:org]
+    parameters['/lsInstantiateNTemplate'][:inServerNamePrefixOrEmpty] = resource[:name]
+    parameters['/lsInstantiateNTemplate'][:inNumberOf] = count
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createServiceProfile")
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for create profile from template operation"
+    end
+    Puppet.debug "Sending create profile from template request xml: \n" + requestxml
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from create profile from template operation"
+    end
+    Puppet.debug "Response from create profile from template: \n" + responsexml
+
+    #parser response xml to check for errors
+    create_doc = REXML::Document.new(responsexml)
+    if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
+      raise Puppet::Error, "Following error occured while creatng profile : "+  create_doc.elements["/error"].attributes["errorDescr"]
+
+    else
+      Puppet.info("Successfully created profile "+ resource[:name]+ " from template " + resource[:source_template])
+    end
   end
 
   def destroy
