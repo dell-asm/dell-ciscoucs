@@ -1,0 +1,15 @@
+<configConfMos
+	cookie=""
+	inHierarchical="false">
+    	<inConfigs>
+		<pair key="">
+    			<vnicLanConnTempl
+    				dn="">
+    				<vnicEtherIf
+       	   				name=""
+           				rn="">
+        			</vnicEtherIf>
+    			</vnicLanConnTempl>
+		</pair>
+    	</inConfigs>
+</configConfMos>
