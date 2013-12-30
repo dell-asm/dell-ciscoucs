@@ -8,19 +8,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   @doc = "Manage association of service profile on Cisco UCS device."
 
   include PuppetX::Puppetlabs::Transport
-  @doc = "Associate server profile on Cisco UCS device."
+  @doc = "Associate or disassociate server profile on Cisco UCS device."
+
   def create
-
-    name=resource[:name]
-
-    profile_dn = resource[:profile_dn]
-    if profile_dn == ""
-      profile_dn = 'org-'+resource[:organization_name]+'/ls-'+resource[:service_profile_name];
-    end
-
-    server_dn = resource[:server_dn]
-    if server_dn == ""
-      server_dn = 'sys/'+resource[:server_chesis_id]+'/'+resource[:server_slot];
+    # check if the profile exists
+    if ! check_profile_exists profile_dn
+      raise Puppet::Error, "No such profile exists " + profile_dn
     end
 
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("associateServiceProfile")
@@ -29,50 +22,76 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
     parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = server_dn
-    parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Associated by ASM";
+    parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Association";
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:rn] = "pn";
     requestxml = formatter.command_xml(parameters);
 
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for asoociate operation"
+      raise Puppet::Error, "Cannot create request xml for associate profile operation"
     end
-    responsexml = RestClient.post url, requestxml, :content_type => 'text/xml'
+    Puppet.debug "Sending associate profile request xml: \n" + requestxml
+    responsexml = post requestxml
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from Associate operation"
+      raise Puppet::Error, "No response obtained from associate profile operation"
     end
-
-    puts 'Please wait... Server Profile is getting associated';
-    
+    Puppet.debug "Response from associate profile: \n" + responsexml
+    # todo: error handling
   end
 
   def destroy
-
-    name=resource[:name]
-    profile_dn = resource[:profile_dn]
-    if profile_dn == ""
-      profile_dn = 'org-'+resource[:organization_name]+'/ls-'+resource[:service_profile_name];
+    # check if the profile exists
+    if ! check_profile_exists profile_dn
+      raise Puppet::Error, "No such profile exists " + profile_dn
     end
-
+    
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("disAssociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
     parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
     parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:status] = "deleted";
-    parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Dis Associated by ASM";
+    parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Disassociation";
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:rn] = "pn";
     requestxml = formatter.command_xml(parameters);
 
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for Dis-Associate operation"
+      raise Puppet::Error, "Cannot create request xml for associate profile operation"
     end
-    responsexml = RestClient.post url, requestxml, :content_type => 'text/xml'
+    Puppet.debug "Sending associate profile request xml: \n" + requestxml
+    responsexml = post requestxml
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from Dis-associate operation"
+      raise Puppet::Error, "No response obtained from associate profile operation"
     end
+    Puppet.debug "Response from associate profile: \n" + responsexml
+    # todo: error handling
 
-    puts 'Please wait... Server Profile is getting dis-associated';
+  end
 
+  def server_dn
+    source_dn = ""
+    if (resource[:server_chassis_id] && resource[:server_chassis_id].strip.length > 0) &&
+    (resource[:server_slot]  && resource[:server_slot].strip.length > 0)
+      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot];
+    elsif (resource[:profile_dn] && resource[:profile_dn].strip.length > 0)
+      source_dn = resource[:profile_dn]
+    end
+    return source_dn
+  end
+
+  def profile_dn
+    source_dn = ""
+    if (resource[:organization_name] && resource[:organization_name].strip.length > 0) &&
+    (resource[:service_profile_name]  && resource[:service_profile_name].strip.length > 0)
+      # check if the profile name contains 'ls-'
+      profile_name = resource[:service_profile_name]
+      if ! profile_name.start_with?('ls-')
+        profile_name = "ls-" + profile_name
+      end
+      source_dn = resource[:organization_name] +"/"+ profile_name
+    elsif (resource[:server_dn] && resource[:server_dn].strip.length > 0)
+      source_dn = resource[:server_dn]
+    end
+    return source_dn
   end
 
   #check If exist
@@ -84,5 +103,5 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     return result;
   end
-
+  #question: do we have to delete the profile
 end

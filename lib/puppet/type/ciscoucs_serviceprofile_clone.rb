@@ -3,7 +3,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   ensurable
 
   newparam(:sourceserviceprofilename, :namevar => true) do
-    desc "name of source server profile name"
+    desc "Name of source server profile"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -14,7 +14,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:sourceorganization) do
-    desc "name of source organization"
+    desc "Name of source organization"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -25,7 +25,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:sourceprofiledn) do
-    desc "name of server profile"
+    desc "Source server profile DN"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -36,7 +36,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:targetserviceprofilename) do
-    desc "name of target server profile name"
+    desc "Name of target server profile"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -47,7 +47,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:targetorganization) do
-    desc "name of target organization"
+    desc "Name of target organization"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -58,7 +58,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:targetprofiledn) do
-    desc "name of server profile clone"
+    desc "Target server profile DN"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
