@@ -1,0 +1,6 @@
+<configResolveClass cookie="" inHierarchical="true" classId="lsbootPolicy">
+    <inFilter>
+        <eq class="lsbootPolicy" property="dn" value="" />
+    </inFilter>
+</configResolveClass>
+
