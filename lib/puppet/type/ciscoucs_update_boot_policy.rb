@@ -1,42 +1,45 @@
 Puppet::Type.newtype(:ciscoucs_update_boot_policy) do
-  @doc = 'Clone service profile on cisco ucs device'
-  ensurable do
-    newvalue(:present) do 
-      provider.create
-    end
+  @doc = 'Update boot policy on service profile'
 
-    newvalue(:absent) do
-	  provider.destroy
-    end
-
-    defaultto(:present)
-  end
-
-  newparam(:key) do
-    desc "dn of service profile"
-    validate do |value|
-	   if value.strip.length != 0
-	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-               raise ArgumentError, "%s is not a valid name." % value
-          end
-	  end
-	end
-  end
-
- newparam(:status) do
-    desc "status, either create or update"
-  end
+  ensurable
 
   newparam(:bootpolicyname, :namevar => true) do
-    desc "boot policy name"
+    desc "Name of the boot policy"
     validate do |value|
-	   if value.strip.length != 0
-	       unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-               raise ArgumentError, "%s is not a valid name." % value
-          end
-	  end
-	end
+      if (!value) || (value.strip.length == 0)
+        raise ArgumentError, "Invalid boot policy name."
+      else
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid name." % value
+        end
+      end
+    end
   end
 
+  newparam(:dn) do
+    desc "DN of service profile"
+    validate do |value|
+      if (!value) || (value.strip.length == 0)
+        raise ArgumentError, "Invalid DN."
+      else
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid name." % value
+        end
+      end
+    end
+  end
+
+  newparam(:organization) do
+    desc "Organization name for policy"
+    validate do |value|
+      if (!value) || (value.strip.length == 0)
+        raise ArgumentError, "Invalid organization name for policy."
+      else
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid name." % value
+        end
+      end
+    end
+  end
 end
 
