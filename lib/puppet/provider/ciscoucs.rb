@@ -34,10 +34,46 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_profile_exists(dn)
+    # todo: refactor this method
     request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
     response_xml = post request_xml
     doc = REXML::Document.new(response_xml)
     return doc.elements["/configResolveDn/outConfig"].has_elements?
+  end
+
+  def check_boot_policy_exists(dn)
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updateBootPolicy")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveClass'][:cookie] = cookie
+    parameters['/configResolveClass/inFilter/eq'][:value] = dn
+
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for checking boot policy"
+    end
+    Puppet.debug "Sending check boot policy request xml: \n" + requestxml
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from check boot policy"
+    end
+    Puppet.debug "Response from check boot policy: \n" + responsexml
+    doc = REXML::Document.new(responsexml)
+    begin
+      if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
+        return false
+      end
+
+      policy_dn = doc.elements["/configResolveClass/outConfigs/lsbootPolicy"].attributes["dn"]
+
+      if(policy_dn != dn)
+        return false
+      end
+    rescue
+      raise Puppet::Error, "Error parsing xml"
+    end
+    Puppet.debug "Found matching policy"
+    return true
+
   end
 
   # Helper function for execution of Cisco UCS API commands
