@@ -8,7 +8,7 @@ ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
 
-Puppet::Type.type(:update_boot_policy).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
+Puppet::Type.type(:ciscoucs_update_boot_policy).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."

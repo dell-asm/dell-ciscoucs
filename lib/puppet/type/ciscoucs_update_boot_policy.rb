@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:update_boot_policy) do
+Puppet::Type.newtype(:ciscoucs_update_boot_policy) do
   @doc = 'Clone service profile on cisco ucs device'
   ensurable do
     newvalue(:present) do 
