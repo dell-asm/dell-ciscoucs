@@ -1,0 +1,12 @@
+<configConfMos
+cookie=""
+inHierarchical="true">
+    <inConfigs>
+<pair key="">
+    <lsServer
+    bootPolicyName=""
+    status="created,modified">
+    </lsServer>
+</pair>
+    </inConfigs>
+</configConfMos>

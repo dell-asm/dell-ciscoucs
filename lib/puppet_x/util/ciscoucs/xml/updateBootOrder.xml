@@ -1,0 +1,14 @@
+<configConfMos inHierarchical="true" cookie="">
+  <inConfigs>
+    <pair key ="">
+      <lsbootPolicy>
+        <lsbootStorage order="" rn="storage">
+        </lsbootStorage>
+        <lsbootLan order="" rn="lan">
+        </lsbootLan>
+        <lsbootVirtualMedia order="" rn="read-only-vm"/>
+        <lsbootVirtualMedia order="" rn="read-write-vm"/>
+     </lsbootPolicy>
+   </pair>
+</inConfigs>
+</configConfMos>
