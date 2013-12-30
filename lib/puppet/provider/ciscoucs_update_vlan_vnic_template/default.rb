@@ -35,13 +35,13 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
     updatevlanidresponse = REXML::Document.new(responsexml)
     root = updatevlanidresponse.root
     updatevlanidresponse.elements.each("/configConfMos/outConfigs/pair/vnicLanConnTempl") {
-      |e| 
+      |e|
       if e.attributes["status"].eql?('modified')
         Puppet.notice "Vlan updated successfully in vNIC Template."
       elsif e.attributes["status"].eql?('created')
         Puppet.notice "Vlan updated successfully in newly created vNIC Template."
       else
-	raise Puppet::Error, "Unable to update VLAN in vNIC Template"
+        raise Puppet::Error, "Unable to update VLAN in vNIC Template"
       end
     }
 
@@ -57,7 +57,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
 
   def exists?
     # check if the source profile exists
-      return false
+    return false
   end
 
 end
