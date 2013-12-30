@@ -47,6 +47,7 @@ module  PuppetX
           doc = REXML::Document.new(xml_content.to_s)
           doc.context[:attribute_quote] = :quote
           r = doc.root
+          # TODO: add begin-rescue
           # get attributes
           if parameters.kind_of?(Hash)
             parameters.keys.each do |node_path, value|
