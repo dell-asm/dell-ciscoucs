@@ -1,4 +1,4 @@
-name    'arpita_agarwal-ciscoucs'
+name    'ciscoucs-ciscoucs'
 version '0.1.0'
 source ''
 author ''
