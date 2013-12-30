@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if (resource[:server_chassis_id].to_s.strip.length != 0 && resource[:server_slot].to_s.strip.length != 0)
       # create profile from server
       create_profile_from_server
-    else
+    elsif (resource[:source_template] && resource[:source_template].to_s.strip.length > 0)
       # create profile from template
       create_profile_from_template
     end
@@ -132,7 +132,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     power_dn = ""
     if (resource[:name] && resource[:name].strip.length > 0) && (resource[:org] && resource[:org].strip.length > 0)
       # check if the profile name contains 'ls-'
-      profile_name = resource[:name]
+      profile_name = resource[:name]      
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
@@ -150,7 +150,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   def exists?
     if ! check_profile_exists dn
       return false
-    elsif (resource[:power_state]) && (resource[:power_state].casecmp('up') || resource[:power_state].casecmp('down'))
+    elsif (resource[:power_state])
       return true
     end
   end
@@ -166,6 +166,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   def power_state=(value)
     Puppet.debug "Setting the power state of service profile."
+    #TODO Check if power operation is requested
     begin
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configConfMo'][:dn] = power_dn
