@@ -5,10 +5,10 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:org) do
     desc "Organization Name of service profile"
     validate do |value|
-      if value.strip.length != 0
-        #    unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-        #     raise ArgumentError, "%s is not a valid value." % value
-        #  end
+      if value && value.strip.length != 0
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid value." % value
+        end
       end
     end
   end
@@ -16,26 +16,21 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:name, :namevar => true) do
     desc "Name of service profile"
     validate do |value|
-      if value.strip.length != 0
-        # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-        #  raise ArgumentError, "%s is not a valid value." % value
-        # end
+      if value && value.strip.length != 0
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid value." % value
+        end
       end
     end
   end
 
   newparam(:dn) do
-    desc "Name of service profile"
+    desc "DN of service profile"
     validate do |value|
-      if value.strip.length == 0
-        # if dn is empty then both org or profile name should exists.
-        if resource[:org].strip.length == 0 || resource[:name].strip.length == 0
-          raise ArgumentError, "Either dn or both org and profile name should be given in input."
+      if value  &&  value.strip.length != 0
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid value." % value
         end
-      else
-        #unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-        # raise ArgumentError, "%s is not a valid value." % value
-        #end
       end
     end
   end
@@ -43,10 +38,10 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:source_template) do
     desc "Source template name from which service profile needs to be created"
     validate do |value|
-      if value.strip.length != 0
-        # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-        #  raise ArgumentError, "%s is not a valid value." % value
-        # end
+      if value && value.strip.length != 0
+        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
+          raise ArgumentError, "%s is not a valid value." % value
+        end
       end
     end
   end
@@ -54,9 +49,11 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:number_of_profiles) do
     desc "Number of profiles to be created"
     validate do |value|
-      # value should be an integer
-      unless value =~ /\A[0-9]+\Z/
-        raise ArgumentError, "%s is not a valid name." % value
+      if value && value.strip.length != 0
+        # value should be an integer
+        unless value =~ /\A[0-9]+\Z/
+          raise ArgumentError, "%s is not a valid name." % value
+        end
       end
     end
   end
@@ -66,6 +63,16 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     newvalues(:up, :down)
     defaultto(:up)
   end
+
+  validate do
+    if !self[:dn] || self[:dn].strip.length==0
+      # if dn is empty then both org or profile name should exists.
+      if (!self[:org] || self[:org].strip.length == 0) || (!self[:name] || self[:name].strip.length == 0)
+        raise ArgumentError, "Either dn or both org and profile name should be given in input."
+      end
+    end
+  end
+
 end
 
 =begin
