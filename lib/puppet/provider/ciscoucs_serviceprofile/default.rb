@@ -104,14 +104,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   def dn
     power_dn = ""
-    if resource[:name] && resource[:org]
+    if (resource[:name] && resource[:name].strip.length > 0) && (resource[:org] && resource[:org].strip.length > 0)
       # check if the profile name contains 'ls-'
       profile_name = resource[:name]
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
-      power_dn = resource[:org]+profile_name        
-    elsif resource[:dn]
+      power_dn = resource[:org]+ "/"+ profile_name        
+    elsif (resource[:dn] && resource[:dn].strip.length > 0)
       power_dn = resource[:dn]
     end
     return power_dn
