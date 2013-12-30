@@ -20,14 +20,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     end
   end
 
-  def create_profile_from_server
-    puts "inside profile server"
-    # check if the name contains 'ls-'   
-    service_profile_name = resource[:name]
-        if ! resource[:name].start_with?('ls-')
-          service_profile_name = "ls-" + resource[:name]
-        end
-    service_dn = resource[:org]+"/"+ service_profile_name 
+  def create_profile_from_server   
     
     # creating pnDN
     service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
