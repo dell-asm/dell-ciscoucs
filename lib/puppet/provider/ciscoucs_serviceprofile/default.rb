@@ -11,7 +11,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."
   def create
-    if resource[:source_template].to_s.strip.length == 0
+    if (resource[:server_chassis_id].to_s.strip.length != 0 && resource[:server_slot].to_s.strip.length != 0)
       # create profile from server
       create_profile_from_server
     else
@@ -21,7 +21,40 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def create_profile_from_server
-
+    puts "inside profile server"
+    # check if the name contains 'ls-'   
+    service_profile_name = resource[:name]
+        if ! resource[:name].start_with?('ls-')
+          service_profile_name = "ls-" + resource[:name]
+        end
+    service_dn = resource[:org]+"/"+ service_profile_name 
+    
+    # creating pnDN
+    service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
+      
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createServiceProfileFromServer")
+        parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+        parameters['/configConfMos'][:cookie] = cookie
+        parameters['/configConfMos/inConfigs/pair'][:key] = dn
+        parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = dn
+        parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = service_pnDn   
+               
+    requestxml = formatter.command_xml(parameters)
+   
+        if requestxml.to_s.strip.length == 0
+          raise Puppet::Error, "Cannot create request xml for create service profile from server operation"
+        end
+        Puppet.debug "Sending create service profile from server request xml: \n" + requestxml        
+        responsexml = post requestxml    
+        
+    #parse response xml to check for errors
+        create_doc = REXML::Document.new(responsexml)
+        if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
+          raise Puppet::Error, "Following error occured while creating service profile from server: "+  create_doc.elements["/error"].attributes["errorDescr"]
+    
+        else
+          Puppet.info("Successfully created service profile"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+        end    
   end
 
   def create_profile_from_template
@@ -122,7 +155,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def exists?
-    check_profile_exists dn
+    if ! check_profile_exists dn
+      return false
+    elsif (resource[:power_state]) && (resource[:power_state].casecmp('up') || resource[:power_state].casecmp('down'))
+      return true
+    end
   end
 
   def power_state

@@ -58,6 +58,27 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     end
   end
 
+  newparam(:server_chassis_id) do
+       desc "Server Chassis Id from which service profile needs to be created"
+       validate do |value|
+         if value.strip.length != 0
+           # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+           #  raise ArgumentError, "%s is not a valid value." % value
+           # end
+         end
+       end
+     end
+     
+   newparam(:server_slot) do
+         desc "Server Slot on which service profile needs to be created"
+         validate do |value|
+           if value.strip.length != 0
+             # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
+             #  raise ArgumentError, "%s is not a valid value." % value
+             # end
+           end
+         end
+    end
   newproperty(:power_state) do
     desc 'Power state of a service profile'
     newvalues(:up, :down)
