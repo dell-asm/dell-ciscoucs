@@ -1,0 +1,14 @@
+<configConfMos cookie="" inHierarchical="false">
+    <inConfigs>
+	<pair key="">
+    	<vnicEther
+    		dn="">
+    		<vnicEtherIf
+               		defaultNet=""
+        		name=""
+        		rn="">
+        	</vnicEtherIf>
+    	</vnicEther>
+	</pair>
+    </inConfigs>
+</configConfMos>

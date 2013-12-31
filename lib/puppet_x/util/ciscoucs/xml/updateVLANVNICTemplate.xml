@@ -6,6 +6,7 @@
     			<vnicLanConnTempl
     				dn="">
     				<vnicEtherIf
+  					defaultNet=""
        	   				name=""
            				rn="">
         			</vnicEtherIf>
