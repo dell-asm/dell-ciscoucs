@@ -35,10 +35,26 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
 
   def check_profile_exists(dn)
     # todo: refactor this method
+
     request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
     response_xml = post request_xml
     doc = REXML::Document.new(response_xml)
     return doc.elements["/configResolveDn/outConfig"].has_elements?
+  end
+
+  def check_vlan_exist(dn)
+
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
+    response_xml = post request_xml
+    doc = REXML::Document.new(response_xml)
+    Puppet.info "-------------------------------------"
+    Puppet.info "----------------------response xml---------------" +response_xml
+    #Puppet.info "----------------------returning xml response---------------"
+    if doc.elements["/configResolveDn/outConfig"].has_elements?
+      return true
+    else
+      return false
+    end
   end
 
   def check_boot_policy_exists(dn)
@@ -88,3 +104,4 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
 
   end
 end
+

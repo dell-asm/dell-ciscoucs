@@ -58,7 +58,7 @@ Puppet::Type.newtype(:ciscoucs_create_vlan) do
     desc "The vlan id sharing status . Valid options are: none, primary."
     validate do |value|
       if value.strip.length > 0
-        if !(value == "none" && value == "primary")
+        if (!value == "none" && !value == "primary")
           raise ArgumentError, "Invalid sharing type specified" % value
         end
       end
@@ -77,3 +77,4 @@ Puppet::Type.newtype(:ciscoucs_create_vlan) do
   end
 
 end
+

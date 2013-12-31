@@ -14,16 +14,11 @@ Puppet::Type.type(:ciscoucs_create_vlan).provide(:default, :parent => Puppet::Pr
   @doc = "Create vlan on Cisco UCS device."
   def create
     Puppet.info "create method call......"
-    dn = ""
-    if @resource[:fabric_id].strip.length >0
-      dn = "fabric/lan/#{@resource[:fabric_id]}/net-#{@resource[:name]}"
-    else
-      dn = "fabric/lan/net-#{@resource[:name]}"
-    end
+
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createvlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
-    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = dn
-    parameters['/configConfMos/inConfigs/pair'][:key] = dn
+    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
+    parameters['/configConfMos/inConfigs/pair'][:key] = get_dn
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:id] = @resource[:id]
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:mcastPolicyName] = @resource[:mcast_policy_name]
     parameters['/configConfMos'][:cookie] = cookie
@@ -52,12 +47,28 @@ Puppet::Type.type(:ciscoucs_create_vlan).provide(:default, :parent => Puppet::Pr
 
   end
 
+  def get_dn()
+    dn = ""
+    if @resource[:fabric_id].strip.length >0
+      dn = "fabric/lan/#{@resource[:fabric_id]}/net-#{@resource[:name]}"
+    else
+      dn = "fabric/lan/net-#{@resource[:name]}"
+    end
+    return dn
+  end
+
   def destroy
     #puts "inside destroy method"
   end
 
   def exists?
-    #puts "inside exist method"
+    if check_vlan_exist (get_dn)
+      Puppet.info " VLAN id already exist."
+      return true
+    else
+      return false
+    end
   end
 
 end
+
