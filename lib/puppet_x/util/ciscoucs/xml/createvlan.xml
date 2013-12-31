@@ -1,17 +1,9 @@
-<configConfMos
- cookie="$COOKIE$" inHierarchical="true">
-<inConfigs>
-<pair
-key="">
-<fabricVlan
-defaultNet="no"
-dn=""
-id=""
-name=""
-pubNwName=""
-sharing="none"
-status="">
-</fabricVlan>
-</pair>
-</inConfigs>
+<configConfMos cookie="" inHierarchical="true">
+	<inConfigs>
+		<pair key="">
+			<fabricVlan defaultNet="no" dn="" id="" name="" pubNwName=""
+				sharing="none" status="created">
+			</fabricVlan>
+		</pair>
+	</inConfigs>
 </configConfMos>
