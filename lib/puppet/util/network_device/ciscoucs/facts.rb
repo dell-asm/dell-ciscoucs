@@ -1,84 +1,227 @@
-require 'puppet/util/network_device/ciscoucs'
+require 'puppet/util/network_device/equallogic'
+require 'puppet/util/network_device/transport_equallogic'
+require 'json'
 
-# "Base class for ciscoucs facts"
-class Puppet::Util::NetworkDevice::ciscoucs::Facts
-  
-  attr_reader :transport
+module Puppet::Util::NetworkDevice::Ciscoucs
+  class Facts
+    attr_reader :transport
 
-  CISCOUCS_WSDL = 'System.SystemInfo'
+    $provider_path = Pathname.new(__FILE__).parent
+    $pythonFilePath = "#{$provider_path}/pythonEquallogic.py"
+    $volumeFilePath = "#{$provider_path}/volume"
+    $poolFilePath = "#{$provider_path}/pool"
+    $memberFilePath = "#{$provider_path}/member"
 
-  def initialize(transport)
-    @transport = transport
-  end
-
-  def to_64i(value)
-    (value.high.to_i << 32) + value.low.to_i
-  end
-
-  def retreive
-    @facts = {}
-    [ 'base_mac_address',
-      'group_id',
-      'hardware_information',
-      'marketing_name',
-      'pva_version',
-      'system_id',
-      'uptime',
-      'version'
-    ].each do |key|
-        @facts[key] = @transport[CISCOUCS_WSDL].send("get_#{key}".to_s)
+    def initialize(transport)
+      @transport = transport
     end
 
-    # Not sure if there's a cleaner way to get SOAP Mapping Object attributes.
-    # maybe if we use Savon to get a hash back instead of this kludge.
-    soap = SOAP::Mapping::Object.new
+    def retrieve
+      @facts = {}
+      @facts['General Settings'] = getgeneralsettinginfo
+      @facts['Storage Pools'] = getstoragepoolinfo
+      @facts['Group Members'] = getmembercountinfo
+      volumeList = getvolumelist
+      getvolumeproperties(volumeList)
+      @facts['Collections'] = getcollectioninfo
+      @facts
+    end
 
-    system_info = @transport[CISCOUCS_WSDL].get_system_information
-    attributes  = system_info.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
-    attributes.each { |key| @facts[key] = system_info[key] }
-
-    hardware_info = @transport[CISCOUCS_WSDL].get_hardware_information
-    attributes    = hardware_info.first.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
-    attributes.each { |key| @facts["hardware_#{key}"] = hardware_info.first[key] }
-    hardware_info.each do |hardware|
-      attributes = hardware.methods.reject{|key_one| key_one =~ /=$/} - soap.methods
-      attributes.each do |key|
-        fact_key = key == 'name' ? "hardware_#{hardware.name}" : "hardware_#{hardware.name}_#{key}"
-        @facts[fact_key] = hardware[key]
+    def getvolumeproperties(volumeList)
+      @volumePropertiesMap = {}
+      @volumeCountMap = {}
+      @volumeMap = {}
+      @snapshotPropertiesMap = {}
+      volumeCounter = 0
+      onlineVolumeCounter = 0
+      iSCSIConnCounter = 0
+      snapshotCounter = 0
+      onlinesnapshotCounter = 0
+      volumeList.each do |volume|
+        response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} poolvolumeinfo "#{volume}"`
+        if (response.match("% Error"))
+          raise Puppet::Error, "Failed to fetch the equallogic volume properties: #{response}"
+        end
+        response.split("\n").each do |line|
+          res = line.split(":")
+          name = res[0].to_s.strip
+          value = res[1].to_s.strip
+          if name == "Pool"
+            @volumePropertiesMap['Storage Pool'] = value
+          elsif name == "Size"
+            @volumePropertiesMap['Reported Size'] = value
+          elsif name == "VolReserve"
+            @volumePropertiesMap['Volume Reserve'] = value
+          elsif name == "Snap-Reserve"
+            @volumePropertiesMap['Snapshot Reserve'] = value
+          elsif name == "Space Borrowed"
+            @volumePropertiesMap['Borrowed Space'] = value
+          elsif name == "Status"
+            @volumePropertiesMap['Volume Status'] = value
+            if ("#{value}" == "online")
+              onlineVolumeCounter = onlineVolumeCounter + 1
+            end
+          elsif name == "ReplicationPartner"
+            @volumePropertiesMap['Replication Partner'] = value
+          elsif name == "SyncReplStatus"
+            @volumePropertiesMap['SyncRep Status'] = value
+          elsif name == "Snapshots"
+            @volumePropertiesMap['Number of Snapshot'] = value
+            snapshotCounter = snapshotCounter + value.to_i
+          elsif name == "Connections"
+            @volumePropertiesMap['ISCSI Connections'] = value
+            iSCSIConnCounter = iSCSIConnCounter + value.to_i
+          end
+        end
+        @volumeMap["#{volume}"] = JSON.pretty_generate(@volumePropertiesMap)
+        volumeCounter = volumeCounter + 1
+        onlinesnapshotCounter = getsnapshotcount(onlinesnapshotCounter,volume)
       end
+      @facts['VolumesProperties'] = JSON.pretty_generate(@volumeMap)
+      @volumeCountMap['Total Volumes'] = "#{volumeCounter}"
+      @volumeCountMap['Online'] = "#{onlineVolumeCounter}"
+      @volumeCountMap['ISCSI Connections'] = "#{iSCSIConnCounter}"
+      @facts['VolumesInfo'] = JSON.pretty_generate(@volumeCountMap)
+      @facts['Volumes'] = "#{volumeCounter}"
+      @facts['Snapshots'] = "#{snapshotCounter}"
+      @snapshotPropertiesMap['Online'] = "#{onlinesnapshotCounter}"
+      @facts['SnapshotsInfo'] = JSON.pretty_generate(@snapshotPropertiesMap)
     end
 
-    disk_info = @transport[CISCOUCS_WSDL].get_disk_usage_information
-    disk_info.usages.each do |disk|
-      @facts["disk_size_#{disk.partition_name.gsub('/','')}"] = "#{(to_64i(disk.total_blocks) * to_64i(disk.block_size))/1024/1024} MB"
-      @facts["disk_free_#{disk.partition_name.gsub('/', '')}"] = "#{(to_64i(disk.free_blocks) * to_64i(disk.block_size))/1024/1024} MB"
+    def getsnapshotcount(onlinesnapshotCounter,volume)
+      counter = 0
+      response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} snapshotshow "#{volume}"`
+      if (response.match("% Error"))
+        raise Puppet::Error, "Failed to fetch the equallogic snapshot properties: #{response}"
+      end
+      response.split("\n").each do |line|
+        if (counter < 2)
+          counter = counter + 1
+          next
+        end
+        if (line.to_s.strip.length > 0 )
+          res = line.to_s.strip.split(" ")
+          if (res[2].to_s.strip.length > 0 && "#{res[2]}" == "online" )
+            onlinesnapshotCounter = onlinesnapshotCounter + 1
+          end
+        end
+      end
+      onlinesnapshotCounter
     end
 
-    # cleanup of ciscoucs output to match existing facter key values.
-    map = { 'host_name'        => 'fqdn',
-            'base_mac_address' => 'macaddress',
-            'os_machine'       => 'hardwaremodel',
-            'uptime'           => 'uptime_seconds',
-    }
-    @facts = Hash[@facts.map {|key_one, value_one| [map[key_one] || key_one, value_one] }]\
+    def getcollectioninfo
+      @collectionMap = {}
+      counter = 0
+      volumeCollectionCounter = 0
+      snapCollectionCounter = 0
+      response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} volumecollectioninfoshow`
+      response.split("\n").each do |line|
+        if (counter < 2)
+          counter = counter + 1
+          next
+        end
+        if (line.to_s.strip.length > 0 && line =~ /^\S+/ )
+          volumeCollectionCounter = volumeCollectionCounter + 1
+        end
+      end
+      counter = 0
+      response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} snapcollectioninfoshow`
+      response.split("\n").each do |line|
+        if (counter < 2)
+          counter = counter + 1
+          next
+        end
+        if (line.to_s.strip.length > 0 && line =~ /^\S+/ )
+          snapCollectionCounter = snapCollectionCounter + 1
+        end
+      end
+      @collectionMap['Volume Collections'] = "#{volumeCollectionCounter}"
+      @collectionMap['Custom Snapshot Collections'] = "#{snapCollectionCounter}"
+      @collectionMap['Snapshot Collections'] = "#{@facts['Snapshots']}"
+      JSON.pretty_generate(@collectionMap)
+    end
 
-    if @facts['fqdn'] then
-      fqdn = @facts['fqdn'].split('.', 2)
-      @facts['hostname'] = fqdn.shift
-      @facts['domain']   = fqdn
+    def getmembercountinfo
+      memberCounter = 0
+      resp = `"#{$memberFilePath}" show`
+      if (resp.match("% Error"))
+        raise Puppet::Error, "Failed to fetch the equallogic pools: #{resp}"
+      end
+      resp.split("\n").each do |line|
+        member = line.to_s.strip
+        if ( member.size > 0 )
+          memberCounter = memberCounter + 1
+        end
+      end
+      memberCounter
     end
-    if @facts['uptime_seconds'] then
-      @facts['uptime']       = "#{String(@facts['uptime_seconds']/86400)} days" # String
-      @facts['uptime_hours'] = @facts['uptime_seconds'] / (60 * 60)             # Integer
-      @facts['uptime_days']  = @facts['uptime_hours'] / 24                      # Integer
+
+    def getvolumelist
+      counter = 0
+      volumeList = Array.new
+      resp = `"#{$volumeFilePath}" show`
+      resp.split("\n").each do |line|
+        if (counter < 3)
+          counter = counter + 1
+          next
+        else
+          volumeName = line.split(' ').first.to_s.strip
+          response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} volumeshow "#{volumeName}"`
+          if (response.match("% Error"))
+            next
+          end
+          volumeList.push(volumeName)
+        end
+      end
+      volumeList
     end
-    if @facts['hardware_cpus_versions']
-      @facts['hardware_cpus_versions'].each { |key| @facts["hardware_#{key.name.downcase.gsub(/\s/,'_')}"] = key.value }
-      @facts.delete('hardware_cpus_versions')
-      @facts.delete('hardware_information')
-      @facts.delete('versions')
+
+    def getstoragepoolinfo
+      @poolPropertiesMap = {}
+      @poolMap = {}
+      resp = `"#{$poolFilePath}" show`
+      if (resp.match("% Error"))
+        raise Puppet::Error, "Failed to fetch the equallogic pools: #{resp}"
+      end
+      counter = 0
+      resp.split("\n").each do |line|
+        if (counter < 3)
+          counter = counter + 1
+          next
+        else
+          res = line.split(' ')
+          memberName = res[0].to_s.strip
+          @poolPropertiesMap["Members"] = res[2].to_s.strip
+          @poolPropertiesMap["Total"] = res[4].to_s.strip
+          @poolMap["#{memberName}"] = @poolPropertiesMap
+        end
+      end
+      JSON.pretty_generate(@poolMap)
     end
-    @facts['timezone'] = @transport[CISCOUCS_WSDL].get_time_zone.time_zone
-    @facts
+
+    def getgeneralsettinginfo
+      @generalMap = {}
+      @groupPropertiesMap = {}
+      response = `python "#{$pythonFilePath}" #{@transport.host} #{@transport.user} #{@transport.password} discoverygrpparamsshow`
+      if (response.match("% Error"))
+        raise Puppet::Error, "Failed to fetch the equallogic group parameters: #{response}"
+      end
+      response.split("\n").each do |line|
+        res = line.split(":")
+        name = res[0].to_s.strip
+        value = res[1].to_s.strip
+        if name == "Name"
+          @generalMap['Group Name'] = value
+          @facts['Group Name'] = value
+        elsif name == "Group-Ipaddress"
+          @generalMap['IP Address'] = value
+        elsif name == "Management-Ipaddress"
+          @facts['Management IP'] = value
+        elsif name == "Location"
+          @generalMap['Location'] = value
+        end
+      end
+      JSON.pretty_generate(@generalMap)
+    end
   end
 end
