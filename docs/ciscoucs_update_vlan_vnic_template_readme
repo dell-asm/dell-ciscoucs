@@ -1,0 +1,63 @@
+# --------------------------------------------------------------------------
+# Access Mechanism 
+# --------------------------------------------------------------------------
+ 
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+ 
+# --------------------------------------------------------------------------
+#  Supported Functionality
+# --------------------------------------------------------------------------
+
+	Update Vlan Vnic Template
+ 
+# -------------------------------------------------------------------------
+# Functionality Description
+# -------------------------------------------------------------------------
+       
+	Update Vlan Vnic Template: This operation updates the specified vlan in the vnic template.
+
+# -------------------------------------------------------------------------
+# Summary of Parameters.
+# -------------------------------------------------------------------------
+	
+	ensure: (Required) This parameter is required to call the Create or Destroy method.
+		Possible values: Present/Absent
+		If the value of the ensure parameter is set to present, the module calls the Create method.
+		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
+
+	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+    
+	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+
+	vnictemplateorg: (Required) This parameter defines the name of the organisation to which vnic template belongs. 
+
+	vlanname: (Required) This parameter defines the vlan name which will be updated in vnic template. 
+
+	defaultnet: (Required) This parameter defines whether native vlan will be updated or not.
+		Possible values: yes/no
+
+# -------------------------------------------------------------------------
+# Parameter Signature 
+# -------------------------------------------------------------------------
+
+include ciscoucs
+
+	transport_ciscoucs { 'ciscoucs':
+		username => 'admin',
+		password => 'admin',
+		server   => '172.16.103.176',
+	}
+
+	ciscoucs_update_vlan_vnic_template { 'Test1234':
+		vnictemplateorg		=> 'org-root',
+		vlanname			=> 'test123456',
+		defaultnet			=> 'no',
+		ensure				=> present,
+		transport			=> Transport_ciscoucs['ciscoucs'],
+	} 
+   
+ 
+#-------------------------------------------------------------------------------------------------------------------------
+# End
+#-------------------------------------------------------------------------------------------------------------------------
+ 

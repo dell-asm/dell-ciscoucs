@@ -1,0 +1,74 @@
+# --------------------------------------------------------------------------
+# Access Mechanism 
+# --------------------------------------------------------------------------
+ 
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+ 
+# --------------------------------------------------------------------------
+#  Supported Functionality
+# --------------------------------------------------------------------------
+
+	Create VLAN 
+ 
+# -------------------------------------------------------------------------
+# Functionality Description
+# -------------------------------------------------------------------------
+       
+    Clone VLAN - This functionally allows user to create vlan.	 
+
+# -------------------------------------------------------------------------
+# Summary of Parameters.
+# -------------------------------------------------------------------------
+	
+	ensure: (Required) This parameter is required to call the Create or Destroy method.
+		Possible values: Present/Absent
+		If the value of the ensure parameter is set to present, the module calls the Create method.
+		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
+
+	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+    
+	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+
+	id: (Required) This parameter defines the vlan id that has to be created. 
+		Vlan id has to be numeral and can not be greater than 3967.
+
+	vlanPrefix: (Required) This parameter defines the prefix that will be used with vlan id. 
+		Prefix can be a combination of alphabets, numerals, "-" and "_". Its maximum possible length can be 33 characters.
+
+	mcast_policy_name: (Optional) This parameter defines the multicast policy name for vlan id.
+
+	sharing: (Optional) This parameter defines sharing status of vlan. 
+		Possible values: primary/none 
+		Default value  : none
+
+	fabric_id: (Optional) This parameter defines the fabric (A or B) on which vlan has to be created. Blank value of fabric id creates vlan on both the fabrics.
+		Possible values: A/B/""
+		Default value  : ""
+
+# -------------------------------------------------------------------------
+# Parameter Signature 
+# -------------------------------------------------------------------------
+
+include ciscoucs
+
+	transport_ciscoucs { 'ciscoucs':
+		username => 'admin',
+		password => 'admin',
+		server   => '10.2.0.66',
+	}
+
+
+	ciscoucs_create_vlan { 'testvlan':
+		ensure				=> present,
+		transport			=> Transport_ciscoucs['ciscoucs'],
+		id					=> '10',
+		mcast_policy_name	=> '',
+		sharing				=> 'none',
+		fabric_id			=> 'abc_22',
+	} 
+
+ 
+#-------------------------------------------------------------------------------------------------------------------------
+# End
+#-------------------------------------------------------------------------------------------------------------------------
+ 

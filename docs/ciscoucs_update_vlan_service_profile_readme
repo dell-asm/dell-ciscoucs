@@ -1,0 +1,65 @@
+# --------------------------------------------------------------------------
+# Access Mechanism 
+# --------------------------------------------------------------------------
+ 
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+ 
+# --------------------------------------------------------------------------
+#  Supported Functionality
+# --------------------------------------------------------------------------
+
+	Update Vlan Service Profile
+ 
+# -------------------------------------------------------------------------
+# Functionality Description
+# -------------------------------------------------------------------------
+       
+	Update Vlan Service Profile: This operation updates the specified vlan in the vnic of service profile.
+
+# -------------------------------------------------------------------------
+# Summary of Parameters.
+# -------------------------------------------------------------------------
+	
+	ensure: (Required) This parameter is required to call the Create or Destroy method.
+		Possible values: Present/Absent
+		If the value of the ensure parameter is set to present, the module calls the Create method.
+		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
+
+	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+    
+	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+
+	serviceprofileorg: (Required) This parameter defines the name of organisation to which service profile belongs.
+
+	vnic: (Required) This parameter defines the name of vnic present in service profile.
+
+	vlanname: (Required) This parameter defines the name of vlan which willl be updated in service profile.
+
+	defaultnet: (Required) This parameter defines whether native vlan will be updated or not.
+		Possible values: yes/no
+
+# -------------------------------------------------------------------------
+# Parameter Signature 
+# -------------------------------------------------------------------------
+
+include ciscoucs
+
+	transport_ciscoucs { 'ciscoucs':
+		username => 'admin',
+		password => 'admin',
+		server   => '172.16.103.176',
+	}
+
+	ciscoucs_update_vlan_service_profile { 'test1231':
+		serviceprofileorg	=> 'org-root',
+		vlanname			=> 'test12345678',
+		defaultnet			=> 'no',
+		vnic				=> 'eth0',
+		ensure				=> present,
+		transport			=> Transport_ciscoucs['ciscoucs']
+	}    
+ 
+#-------------------------------------------------------------------------------------------------------------------------
+# End
+#-------------------------------------------------------------------------------------------------------------------------
+ 
