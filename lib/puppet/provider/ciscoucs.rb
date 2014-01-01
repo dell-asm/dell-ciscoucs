@@ -37,8 +37,13 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     # todo: refactor this method
     request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
     response_xml = post request_xml
-    doc = REXML::Document.new(response_xml)
-    return doc.elements["/configResolveDn/outConfig"].has_elements?
+    begin
+      doc = REXML::Document.new(response_xml)
+      return doc.elements["/configResolveDn/outConfig"].has_elements?
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing check profile response" +  msg.to_s
+    end
+
   end
 
   def check_vlan_exist(dn)
@@ -66,8 +71,9 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from check boot policy"
     end
-    doc = REXML::Document.new(responsexml)
     begin
+      doc = REXML::Document.new(responsexml)
+
       if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
         return false
       end
@@ -77,8 +83,8 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
       if(policy_dn != dn)
         return false
       end
-    rescue
-      raise Puppet::Error, "Error parsing xml"
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing check boot policy response" +  msg.to_s
     end
     return true
 

@@ -37,16 +37,20 @@ Puppet::Type.type(:ciscoucs_update_boot_policy).provide(:default, :parent => Pup
     Puppet.debug "Response from update boot policy: \n" + responsexml
 
     #parser response xml to check for errors
-    doc = REXML::Document.new(responsexml)
+    begin
+      doc = REXML::Document.new(responsexml)
 
-    if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
-      raise Puppet::Error, "Following error occurred while updating boot policy : "+  doc.elements["/error"].attributes["errorDescr"]
-    #elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
-     # raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/lsClone"].attributes["errorDescr"]
-    #elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
-     # Puppet.info("Successfully updated boot policy "+ resource[:bootpolicyname])
-    else
-      raise Puppet::Error, "Unable to update boot policy " + resource[:bootpolicyname]
+      if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
+        raise Puppet::Error, "Following error occurred while updating boot policy : "+  doc.elements["/error"].attributes["errorDescr"]
+        #elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
+        # raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/lsClone"].attributes["errorDescr"]
+        #elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
+        # Puppet.info("Successfully updated boot policy "+ resource[:bootpolicyname])
+      else
+        raise Puppet::Error, "Unable to update boot policy " + resource[:bootpolicyname]
+      end
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing modify boot policy response" +  msg.to_s
     end
   end
 

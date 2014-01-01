@@ -24,16 +24,25 @@ module PuppetX::Puppetlabs::Transport
       if requestxml.to_s.strip.length == 0
         raise Puppet::Error, "Cannot create request xml for login operation"
       end
-      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      begin
+        responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      rescue RestClient::Exception => error
+        raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
+      end
+
       if responsexml.to_s.strip.length == 0
         raise Puppet::Error, "No response obtained from login operation"
       end
       # Create an XML doc and parse it to get the cookie.
-      root = REXML::Document.new(responsexml).root
-      if root.attributes['outCookie'].nil?
-        raise Puppet::Error, "Cannot obtain cookie from response"
+      begin
+        root = REXML::Document.new(responsexml).root
+        if root.attributes['outCookie'].nil?
+          raise Puppet::Error, "Cannot obtain cookie from response"
+        end
+        @@cookie = root.attributes['outCookie']
+      rescue Exception => msg
+        raise Puppet::Error, "Following error occurred while parsing login response" +  msg.to_s
       end
-      @@cookie = root.attributes['outCookie']
     end
 
     def refresh
@@ -46,16 +55,25 @@ module PuppetX::Puppetlabs::Transport
       if requestxml.to_s.strip.length == 0
         raise Puppet::Error, "Cannot create request xml for refresh operation"
       end
-      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      begin
+        responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      rescue RestClient::Exception => error
+        raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
+      end
+
       if responsexml.to_s.strip.length == 0
         raise Puppet::Error, "No response obtained from refresh operation"
       end
       # Create an XML doc and parse it to get the cookie.
-      root = REXML::Document.new(responsexml).root
-      if root.attributes['outCookie'].nil?
-        raise Puppet::Error, "Cannot obtain cookie from response"
+      begin
+        root = REXML::Document.new(responsexml).root
+        if root.attributes['outCookie'].nil?
+          raise Puppet::Error, "Cannot obtain cookie from response"
+        end
+        @@cookie = root.attributes['outCookie']
+      rescue Exception => msg
+        raise Puppet::Error, "Following error occurred while parsing refresh response" +  msg.to_s
       end
-      @@cookie = root.attributes['outCookie']
     end
 
     def logout
@@ -66,32 +84,39 @@ module PuppetX::Puppetlabs::Transport
       requestxml = formatter.command_xml(parameters)
       if requestxml.to_s.strip.length == 0
         raise Puppet::Error, "Cannot create request xml for logout operation"
-      end      
-      responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      end
+      begin
+        responsexml = RestClient.post @url, requestxml, :content_type => 'text/xml'
+      rescue RestClient::Exception => error
+        raise Puppet::Error, "\n#{error.exception}:\n#{error.response}"
+      end
+
       if responsexml.to_s.strip.length == 0
         raise Puppet::Error, "No response obtained from logout operation"
       end
       # Create an XML doc and parse it to get the cookie.
-      root = REXML::Document.new(responsexml).root
-      if root.attributes['outStatus'].nil?
-        raise Puppet::Error, "Cannot obtain logout status from response"
+      begin
+        root = REXML::Document.new(responsexml).root
+        if root.attributes['outStatus'].nil?
+          raise Puppet::Error, "Cannot obtain logout status from response"
+        end
+        Puppet.notice "Status of logout operation- " + root.attributes['outStatus']
+      rescue Exception => msg
+        raise Puppet::Error, "Following error occurred while parsing logout response" +  msg.to_s
       end
-      Puppet.notice "Status of logout operation- " + root.attributes['outStatus']
     end
 
     def getcookie
-=begin
-      unless @cookie
+      unless @@cookie
         login
       else
         refresh
-        if !@cookie
+        if !@@cookie
           login
         end
       end
-      return @cookie
-=end
-      login
+      return @@cookie
+      #      login
     end
   end
 end

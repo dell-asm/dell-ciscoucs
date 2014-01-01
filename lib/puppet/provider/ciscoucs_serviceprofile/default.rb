@@ -20,34 +20,37 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     end
   end
 
-  def create_profile_from_server   
-    
+  def create_profile_from_server
+
     # creating pnDN
     service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
-      
+
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createServiceProfileFromServer")
-        parameters = PuppetX::Util::Ciscoucs::NestedHash.new
-        parameters['/configConfMos'][:cookie] = cookie
-        parameters['/configConfMos/inConfigs/pair'][:key] = dn
-        parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = dn
-        parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = service_pnDn   
-               
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configConfMos'][:cookie] = cookie
+    parameters['/configConfMos/inConfigs/pair'][:key] = dn
+    parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = dn
+    parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = service_pnDn
+
     requestxml = formatter.command_xml(parameters)
-   
-        if requestxml.to_s.strip.length == 0
-          raise Puppet::Error, "Cannot create request xml for create service profile from server operation"
-        end
-        Puppet.debug "Sending create service profile from server request xml: \n" + requestxml        
-        responsexml = post requestxml    
-        
+
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for create service profile from server operation"
+    end
+    Puppet.debug "Sending create service profile from server request xml: \n" + requestxml
+    responsexml = post requestxml
+
     #parse response xml to check for errors
-        create_doc = REXML::Document.new(responsexml)
-        if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
-          raise Puppet::Error, "Following error occured while creating service profile from server: "+  create_doc.elements["/error"].attributes["errorDescr"]
-    
-        else
-          Puppet.info("Successfully created service profile"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
-        end    
+    begin
+      create_doc = REXML::Document.new(responsexml)
+      if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
+        raise Puppet::Error, "Following error occured while creating service profile from server: "+  create_doc.elements["/error"].attributes["errorDescr"]
+      else
+        Puppet.info("Successfully created service profile"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+      end
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing create profile from server response" +  msg.to_s
+    end
   end
 
   def create_profile_from_template
@@ -56,7 +59,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if ! resource[:source_template].start_with?('ls-')
       template_name = "ls-" + resource[:source_template]
     end
-    prof_dn = resource[:org]+"/"+ template_name 
+    prof_dn = resource[:org]+"/"+ template_name
 
     # check if the template exists
     verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -75,8 +78,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     end
     Puppet.debug "Response from verify template: \n" + verify_temp_response_xml
     # parse and verify template response
-    doc = REXML::Document.new(verify_temp_response_xml)
+
     begin
+      doc = REXML::Document.new(verify_temp_response_xml)
       if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
         raise Puppet::Error, "No such template exists: "+ resource[:source_template]
       end
@@ -115,12 +119,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Response from create profile from template: \n" + responsexml
 
     #parser response xml to check for errors
-    create_doc = REXML::Document.new(responsexml)
-    if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
-      raise Puppet::Error, "Following error occured while creatng profile : "+  create_doc.elements["/error"].attributes["errorDescr"]
-
-    else
-      Puppet.info("Successfully created profile "+ resource[:name]+ " from template " + resource[:source_template])
+    begin
+      create_doc = REXML::Document.new(responsexml)
+      if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
+        raise Puppet::Error, "Following error occured while creatng profile : "+  create_doc.elements["/error"].attributes["errorDescr"]
+      else
+        Puppet.info("Successfully created profile "+ resource[:name]+ " from template " + resource[:source_template])
+      end
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing create profile from template response" +  msg.to_s
     end
   end
 
@@ -132,11 +139,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     power_dn = ""
     if (resource[:name] && resource[:name].strip.length > 0) && (resource[:org] && resource[:org].strip.length > 0)
       # check if the profile name contains 'ls-'
-      profile_name = resource[:name]      
+      profile_name = resource[:name]
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
-      power_dn = resource[:org]+ "/"+ profile_name        
+      power_dn = resource[:org]+ "/"+ profile_name
     elsif (resource[:dn] && resource[:dn].strip.length > 0)
       power_dn = resource[:dn]
     end

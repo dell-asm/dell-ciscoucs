@@ -39,27 +39,31 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       end
       Puppet.debug "Response from discovery: \n" + responsexml
 
-      ucsBladesDoc = REXML::Document.new(responsexml)
-      count =1
-      ucsBladesDoc.elements.each("configResolveClass/outConfigs/*") {
-        |blade|
-        bladeName = blade.attributes["dn"]
-        bladeSerialNum = blade.attributes["serial"]
-        bladeSlotId = blade.attributes["slotId"]
-        bladeChassisId = blade.attributes["chassisId"]
+      begin
+        ucsBladesDoc = REXML::Document.new(responsexml)
+        count =1
+        ucsBladesDoc.elements.each("configResolveClass/outConfigs/*") {
+          |blade|
+          bladeName = blade.attributes["dn"]
+          bladeSerialNum = blade.attributes["serial"]
+          bladeSlotId = blade.attributes["slotId"]
+          bladeChassisId = blade.attributes["chassisId"]
 
-        collectionMap = {}
-        #collectionMap['BladeDN'] = bladeName
-        collectionMap['serialNumber'] = bladeSerialNum
-        collectionMap['slot'] = bladeSlotId
-        collectionMap['chassisId'] = bladeChassisId
-        blade_name = "Blade_"+count.to_s
+          collectionMap = {}
+          #collectionMap['BladeDN'] = bladeName
+          collectionMap['serialNumber'] = bladeSerialNum
+          collectionMap['slot'] = bladeSlotId
+          collectionMap['chassisId'] = bladeChassisId
+          blade_name = "Blade_"+count.to_s
 
-        @facts['ServerData'] = blade_name
-        @facts[blade_name] = collectionMap
-        count+=1
+          @facts['ServerData'] = blade_name
+          @facts[blade_name] = collectionMap
+          count+=1
 
-      }
+        }
+      rescue Exception => msg
+        raise Puppet::Error, "Following error occurred while parsing discovery response" +  msg.to_s
+      end
       # JSON.pretty_generate(@collectionMap)
 
       puts @facts.to_s

@@ -57,7 +57,7 @@ module  PuppetX
               end
             end
             doc.to_s
-          rescue Exception
+          rescue Exception => msg
             raise Puppet::Error, "Following error occurred while parsing " + @command + ".xml: " +  msg.to_s
           end
         end

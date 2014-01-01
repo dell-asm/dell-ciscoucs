@@ -37,17 +37,20 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     Puppet.debug "Response from clone profile: \n" + responsexml
 
     #parser response xml to check for errors
-    doc = REXML::Document.new(responsexml)
-    if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
-      raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/error"].attributes["errorDescr"]
-    elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
-      raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/lsClone"].attributes["errorDescr"]
-    elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
-      Puppet.info("Successfully cloned profile "+ clonename)
-    else
-      raise Puppet::Error, "Unable to clone profile " + clonename
+    begin
+      doc = REXML::Document.new(responsexml)
+      if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
+        raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/error"].attributes["errorDescr"]
+      elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
+        raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/lsClone"].attributes["errorDescr"]
+      elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
+        Puppet.info("Successfully cloned profile "+ clonename)
+      else
+        raise Puppet::Error, "Unable to clone profile " + clonename
+      end
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing clone profile response" +  msg.to_s
     end
-
   end
 
   def destroy
@@ -56,8 +59,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 
   def target_profile_dn
     target_dn = ""
-    if (resource[:targetserviceprofilename] && resource[:targetserviceprofilename].strip.length > 0) && 
-      (resource[:targetorganization] && resource[:targetorganization].strip.length > 0)      
+    if (resource[:targetserviceprofilename] && resource[:targetserviceprofilename].strip.length > 0) &&
+    (resource[:targetorganization] && resource[:targetorganization].strip.length > 0)
       # check if the profile name contains 'ls-'
       profile_name = resource[:targetserviceprofilename]
       if ! profile_name.start_with?('ls-')
@@ -72,8 +75,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 
   def source_profile_dn
     source_dn = ""
-    if (resource[:sourceserviceprofilename] && resource[:sourceserviceprofilename].strip.length > 0) && 
-      (resource[:sourceorganization]  && resource[:sourceorganization].strip.length > 0)
+    if (resource[:sourceserviceprofilename] && resource[:sourceserviceprofilename].strip.length > 0) &&
+    (resource[:sourceorganization]  && resource[:sourceorganization].strip.length > 0)
       # check if the profile name contains 'ls-'
       profile_name = resource[:sourceserviceprofilename]
       if ! profile_name.start_with?('ls-')
