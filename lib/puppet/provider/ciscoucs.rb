@@ -62,12 +62,10 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Cannot create request xml for checking boot policy"
     end
-    Puppet.debug "Sending check boot policy request xml: \n" + requestxml
     responsexml = post requestxml
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from check boot policy"
     end
-    Puppet.debug "Response from check boot policy: \n" + responsexml
     doc = REXML::Document.new(responsexml)
     begin
       if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
@@ -82,7 +80,6 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     rescue
       raise Puppet::Error, "Error parsing xml"
     end
-    Puppet.debug "Found matching policy"
     return true
 
   end
