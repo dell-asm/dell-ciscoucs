@@ -34,16 +34,25 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_profile_exists(dn)
-    # todo: refactor this method
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
-    response_xml = post request_xml
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("VerifyElementExists")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveDn'][:cookie] = cookie
+    parameters['/configResolveDn'][:dn] = dn
+
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for checking profile"
+    end
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from check profile"
+    end
     begin
-      doc = REXML::Document.new(response_xml)
+      doc = REXML::Document.new(responsexml)
       return doc.elements["/configResolveDn/outConfig"].has_elements?
     rescue Exception => msg
       raise Puppet::Error, "Following error occurred while parsing check profile response" +  msg.to_s
     end
-
   end
 
   def check_vlan_exist(dn)
