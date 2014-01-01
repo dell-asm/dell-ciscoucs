@@ -1,9 +1,9 @@
 require 'rest_client'
 require 'rexml/document'
 
-ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
+module_lib = Pathname.new(__FILE__).parent.parent.parent
+require File.join module_lib.to_s, '/util/ciscoucs/ciscoucs/nested_hash'
+require File.join module_lib.to_s, '/util/ciscoucs/ciscoucs/xml_formatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"

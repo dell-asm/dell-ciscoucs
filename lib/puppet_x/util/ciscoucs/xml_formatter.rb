@@ -1,8 +1,4 @@
-require 'pathname'
 require 'rexml/document'
-
-cisco_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
-module_lib = Pathname.new(__FILE__).parent.parent.parent
 
 module  PuppetX
   module Util
@@ -19,8 +15,8 @@ module  PuppetX
         private
 
         def xml_template_path
-          cisco_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
-          File.join cisco_module.path, 'lib/puppet_x/util/ciscoucs/xml'
+          module_lib = Pathname.new(__FILE__).parent.parent.parent
+          File.join module_lib.to_s, '/util/ciscoucs/xml'
 
         end
 
@@ -44,23 +40,26 @@ module  PuppetX
             raise Puppet::Error, "Empty xml template found for " + @command + " operation"
           end
 
-          doc = REXML::Document.new(xml_content.to_s)
-          doc.context[:attribute_quote] = :quote
-          r = doc.root
-          # TODO: add begin-rescue
-          # get attributes
-          if parameters.kind_of?(Hash)
-            parameters.keys.each do |node_path, value|
-              if parameters[node_path].kind_of?(Hash)
-                parameters[node_path].each do |attribute_name, attribute_value|
-                  # search xpath in xml file and add attribute name and value
-                  elem = r.elements[node_path]
-                  elem.attributes[attribute_name.to_s] = attribute_value.to_s
+          begin
+            doc = REXML::Document.new(xml_content.to_s)
+            doc.context[:attribute_quote] = :quote
+            r = doc.root
+            # get attributes
+            if parameters.kind_of?(Hash)
+              parameters.keys.each do |node_path, value|
+                if parameters[node_path].kind_of?(Hash)
+                  parameters[node_path].each do |attribute_name, attribute_value|
+                    # search xpath in xml file and add attribute name and value
+                    elem = r.elements[node_path]
+                    elem.attributes[attribute_name.to_s] = attribute_value.to_s
+                  end
                 end
               end
             end
+            doc.to_s
+          rescue Exception
+            raise Puppet::Error, "Following error occurred while parsing " + @command + ".xml: " +  msg.to_s
           end
-          doc.to_s
         end
 
       end
