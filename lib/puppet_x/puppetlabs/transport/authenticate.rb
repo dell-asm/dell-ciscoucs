@@ -2,8 +2,8 @@ require 'rest_client'
 require 'rexml/document'
 
 module_lib = Pathname.new(__FILE__).parent.parent.parent
-require File.join module_lib.to_s, '/util/ciscoucs/ciscoucs/nested_hash'
-require File.join module_lib.to_s, '/util/ciscoucs/ciscoucs/xml_formatter'
+require File.join module_lib.to_s, '/util/ciscoucs/nested_hash'
+require File.join module_lib.to_s, '/util/ciscoucs/xml_formatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"
