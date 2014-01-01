@@ -7,8 +7,8 @@ require File.join module_lib.to_s, '/util/ciscoucs/xml_formatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"
-  @@cookie = ""
   class Authenticate
+    @@cookie = ""
     def initialize(url, username, password)
       @url = url
       @username = username
@@ -107,11 +107,11 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def getcookie
-      unless @@cookie
+      if !@@cookie || @@cookie.strip.length == 0
         login
       else
         refresh
-        if !@@cookie
+        if !@@cookie || @@cookie.strip.length == 0
           login
         end
       end

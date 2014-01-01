@@ -14,14 +14,6 @@ Puppet::Type.newtype(:transport_ciscoucs) do
   newparam(:server) do
     defaultto('localhost')
   end
-
-  # TODO: for enabling http/https connection
-  #newparam(:options) do
-   # validate do |value|
-    #  fail("Option value must be a hash.") unless value.is_a? ::Hash
-#    end
- #   defaultto({})
-#  end
 end
 
 unless Puppet::Type.metaparams.include? :transport

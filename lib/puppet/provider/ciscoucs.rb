@@ -2,6 +2,13 @@
 
 require 'rest-client'
 
+module_lib = Pathname.new(__FILE__).parent.parent.parent
+require File.join module_lib.to_s, '/puppet_x/puppetlabs/transport'
+require  File.join module_lib.to_s, '/puppet_x/puppetlabs/transport/ciscoucs'
+
+=begin
+
+
 begin
   require 'puppet_x/puppetlabs/transport'
 rescue LoadError => error
@@ -17,6 +24,8 @@ rescue LoadError => error
   module_lib = Pathname.new(__FILE__).parent.parent.parent
   require File.join module_lib, 'puppet_x/puppetlabs/transport/ciscoucs'
 end
+
+=end
 
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie

@@ -50,7 +50,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
   end
 
   def destroy
-    # not needed
+    Puppet.notice("Method not supported")
   end
 
   def boot_policy_dn

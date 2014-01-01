@@ -54,7 +54,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   end
 
   def destroy
-    # not needed
+    Puppet.notice("Method not supported")
   end
 
   def target_profile_dn
