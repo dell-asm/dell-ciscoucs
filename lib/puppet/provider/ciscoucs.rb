@@ -53,7 +53,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_boot_policy_exists(dn)
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updateBootPolicy")
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("verifyBootPolicy")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = dn
