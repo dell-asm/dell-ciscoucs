@@ -1,8 +1,28 @@
-# Copyright (C) 2013 VMware, Inc.  All Rights Reserved.  All Rights Reserved.
+
+
 $ciscoucs = {
-  'username' => 'administrator',
-  'password' => 'iforgot@123',
-  'server'   => '172.16.100.167',
-  'options'  => { 'insecure' => true }
+  'username' => 'admin',
+  'password' =>  'admin',
+  'server'   => '192.168.114.131',
+  
 }
 
+
+$ciscoucs_serviceprofile = { 
+  'name'        => 'testServiceProfile',
+   'org'         => 'org-root',
+  'dn'        => '',
+  'power_state' => 'up',
+ 
+}
+
+
+$ciscoucs_clone = { 
+   'ensure'    => 'present',
+   'sourceprofiledn' => '',
+   'targetprofiledn' => '', 
+   'sourceserviceprofilename'      => 'testServiceProfile',
+   'sourceorganization' => 'org-root',
+   'targetserviceprofilename'      => 'testclone',
+   'targetorganization' => 'org-root/org-Finance/org-test1',
+}
