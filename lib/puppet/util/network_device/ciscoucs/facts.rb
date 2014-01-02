@@ -13,8 +13,10 @@ module Puppet::Util::NetworkDevice::Ciscoucs
     def retrieve
       Puppet.debug "Retrieving facts from CiscoUCS device"
       @facts = {}
+      collectionMap = {}
+      blademap = {}
       @facts['General Settings'] = getgeneralsettinginfo
-
+  
       formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("discover")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configResolveClass'][:classId] = 'computeBlade'
@@ -48,34 +50,34 @@ module Puppet::Util::NetworkDevice::Ciscoucs
           bladeSerialNum = blade.attributes["serial"]
           bladeSlotId = blade.attributes["slotId"]
           bladeChassisId = blade.attributes["chassisId"]
-
+          
           collectionMap = {}
-          #collectionMap['BladeDN'] = bladeName
+          collectionMap['bladeDN'] = bladeName
           collectionMap['serialNumber'] = bladeSerialNum
           collectionMap['slot'] = bladeSlotId
           collectionMap['chassisId'] = bladeChassisId
+          collectionMap['serviceProfile'] =  serviceProfile
           blade_name = "Blade_"+count.to_s
-
-          @facts['ServerData'] = blade_name
-          @facts[blade_name] = collectionMap
+          blademap[blade_name] = collectionMap
+          
+          @facts['ServerData'] = blademap
           count+=1
+
 
         }
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing discovery response" +  msg.to_s
-      end
-      # JSON.pretty_generate(@collectionMap)
-
+      end     
       puts @facts.to_s
       return  @facts
     end
 
     def getgeneralsettinginfo
-
       generalMap = {}
-      generalMap['UCS IP'] = @transport.host
-      generalMap
-
-    end
+           generalMap['UCS IP'] = @transport.host
+           #generalMap['UCS Version'] =  @transport.firmwareversion
+     
+          return  generalMap
+     end
   end
 end

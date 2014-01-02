@@ -22,5 +22,9 @@ module PuppetX::Puppetlabs::Transport
     def close
       @authenticate.logout
     end
+    
+    def firmwareversion
+      @authenticate.getfirmwareversion
+    end
   end
 end
