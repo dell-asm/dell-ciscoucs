@@ -1,0 +1,5 @@
+<configResolveClass cookie="" inHierarchical="false" classId="fabricVlan">
+    <inFilter>
+        <eq class="fabricVlan" property="name" value="" />
+    </inFilter>
+</configResolveClass>

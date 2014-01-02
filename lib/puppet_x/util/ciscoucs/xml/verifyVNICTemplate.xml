@@ -1,0 +1,5 @@
+<configResolveClass cookie="" inHierarchical="false" classId="vnicLanConnTempl">
+    <inFilter>
+        <eq class="vnicLanConnTempl" property="name" value="" />
+    </inFilter>
+</configResolveClass>

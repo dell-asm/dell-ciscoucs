@@ -8,7 +8,6 @@ require  File.join module_lib.to_s, '/puppet_x/puppetlabs/transport/ciscoucs'
 
 =begin
 
-
 begin
   require 'puppet_x/puppetlabs/transport'
 rescue LoadError => error
@@ -73,6 +72,76 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     else
       return false
     end
+  end
+
+  def check_vlan_exist_service_profile(dn,vlanname,defaultnet)
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" '"inHierarchical=true"'/>'
+    responsexml = post request_xml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from service profile"
+    end
+    vlanFound = false
+    defaultNetFound = false
+    spresponse = REXML::Document.new(responsexml)
+    root = spresponse.root
+    spresponse.elements.each("/configResolveDn/outConfig/lsServer/vnicEther/vnicEtherIf") {
+      |e|
+
+      if (!e.attributes["name"].eql?("#{vlanname}"))
+        next
+      end
+
+      if ( e.attributes["name"].eql?("#{vlanname}"))
+        vlanFound = true
+      end
+
+      if ( e.attributes["defaultNet"].eql?("#{defaultnet}"))
+        defaultNetFound = true
+      end
+
+    }
+
+    if (vlanFound == true && defaultNetFound == true)
+      return true
+    else
+      return false
+    end
+
+  end
+
+  def check_vlan_exist_vnic_template(dn,vlanname,defaultnet)
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" '"inHierarchical=true"'/>'
+    responsexml = post request_xml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from vnic template"
+    end
+    vlanFound = false
+    defaultNetFound = false
+    spresponse = REXML::Document.new(responsexml)
+    root = spresponse.root
+    spresponse.elements.each("/configResolveDn/outConfig/topRoot/orgOrg/vnicLanConnTempl/vnicEtherIf") {
+      |e|
+
+      if (!e.attributes["name"].eql?("#{vlanname}"))
+        next
+      end
+
+      if ( e.attributes["name"].eql?("#{vlanname}"))
+        vlanFound = true
+      end
+
+      if ( e.attributes["defaultNet"].eql?("#{defaultnet}"))
+        defaultNetFound = true
+      end
+
+    }
+
+    if (vlanFound == true && defaultNetFound == true)
+      return true
+    else
+      return false
+    end
+
   end
 
   def check_boot_policy_exists(dn)
