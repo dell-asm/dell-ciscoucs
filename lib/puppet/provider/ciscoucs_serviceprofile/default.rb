@@ -244,7 +244,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       raise Puppet::Error, "Unable to create a request XML for verifying the current power state."
     end
     responsexml = post requestxml
-    disconnect
+    
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response to verify the current power state."
     end
