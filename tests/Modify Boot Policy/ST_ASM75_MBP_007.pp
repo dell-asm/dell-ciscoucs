@@ -11,7 +11,7 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_modify_serviceprofile_boot_policy { 'serviceprofilename':
-   ensure    => "${ciscoucs_modify_serviceprofile_boot_policy['modify']}",,
+   ensure    => "${ciscoucs_modify_serviceprofile_boot_policy['ensure']}",,
    transport  => Transport_ciscoucs['ciscoucs'],
    bootpolicydn => "",
    bootpolicyname => "{ciscoucs_modify_serviceprofile_boot_policy['bootpolicyname']}",
