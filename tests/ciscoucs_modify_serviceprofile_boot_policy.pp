@@ -1,18 +1,20 @@
 include ciscoucs
 
+import 'data.pp'
+
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.40.131',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}", 
 }
 
-ciscoucs_modify_serviceprofile_boot_policy { 'serviceprofilename':
-   ensure    => modify,
-   transport  => Transport_ciscoucs['ciscoucs'],
-   bootpolicydn => 'org-root/boot-policy-test_boot_policy',
-   bootpolicyname => 'test_boot_policy',
-   bootpolicyorganization => 'org-root',
-   serviceprofiledn => 'org-root/ls-testing',
-   serviceprofilename => 'testing',
-   serviceprofileorganization => 'org-root',
+ciscoucs_modify_serviceprofile_boot_policy {"${ciscoucs_serviceprofile_boot_policy['serviceprofilename']}":
+   ensure    => "${ciscoucs_serviceprofile_boot_policy['ensure']}",
+   transport  => "${ciscoucs_serviceprofile_boot_policy['transport']}",
+   bootpolicydn => "${ciscoucs_serviceprofile_boot_policy['bootpolicydn']}",
+   bootpolicyname => "${ciscoucs_serviceprofile_boot_policy['bootpolicyname']}",
+   bootpolicyorganization => "${ciscoucs_serviceprofile_boot_policy['bootpolicyorganization']}",
+   serviceprofiledn => "${ciscoucs_serviceprofile_boot_policy['serviceprofiledn']}",
+   serviceprofilename => "${ciscoucs_serviceprofile_boot_policy['serviceprofilename']}",
+   serviceprofileorganization => "${ciscoucs_serviceprofile_boot_policy['serviceprofileorganization']}",
 }

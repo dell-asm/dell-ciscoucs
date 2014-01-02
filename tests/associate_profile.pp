@@ -1,20 +1,21 @@
 include ciscoucs
 
+import 'data.pp'
+
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.145.130',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}", 
 }
 
-
 ciscoucs_serviceprofile_association { 'name':
-  ensure    => present, 
-  organization_name => 'root',
-  service_profile_name => 'DemoTestServiceProfile',
-  profile_dn => '',
-  server_chassis_id => 'chassis-1',
-  server_slot_id => 'blade-3',   
-  server_dn => '',
-  transport  => Transport_ciscoucs['ciscoucs'],
+  ensure    => "${ciscoucs_profile_association_dissociation['ensure_present']}", 
+  organization_name => "${ciscoucs_profile_association_dissociation['organization_name']}",
+  service_profile_name => "${ciscoucs_profile_association_dissociation['service_profile_name']}",
+  profile_dn => "${ciscoucs_profile_association_dissociation['profile_dn']}",
+  server_chassis_id => "${ciscoucs_profile_association_dissociation['server_chassis_id']}",
+  server_slot_id => "${ciscoucs_profile_association_dissociation['server_slot_id']}",   
+  server_dn => "${ciscoucs_profile_association_dissociation['server_dn']}",
+  transport  => "${ciscoucs_profile_association_dissociation['transport']}",
 }
 
