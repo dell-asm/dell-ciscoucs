@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:ciscoucs_create_vlan) do
+Puppet::Type.newtype(:ciscoucs_vlan) do
   @doc = "cisco ucs create vlan"
   ensurable
 
@@ -22,7 +22,7 @@ Puppet::Type.newtype(:ciscoucs_create_vlan) do
       unless value =~ /\d+/
         raise ArgumentError, "The %s is an invalid vlan id." % value
       end
-      if value.to_i > 3967
+      if (value.to_i > 3967 || value.to_i <= 0)
         raise ArgumentError, "VLAN Id cannot greater than 3967. VLAN id given is "% value
       end
     end
@@ -56,25 +56,13 @@ Puppet::Type.newtype(:ciscoucs_create_vlan) do
 
   newparam(:sharing) do
     desc "The vlan id sharing status . Valid options are: none, primary."
-    validate do |value|
-      if value.strip.length > 0
-        if (!value == "none" && !value == "primary")
-          raise ArgumentError, "Invalid sharing type specified" % value
-        end
-      end
-    end
+    newvalues(:none, :primary)
+    defaultto(:none)
   end
 
   newparam(:status) do
     desc "The vlan id operation status . Valid options are: created, deleted."
-    validate do |value|
-      if value.strip.length > 0
-        if (!value == "created" && !value == "deleted")
-          raise ArgumentError, "Invalid status type specified" % value
-        end
-      end
-    end
+    newvalues(:created, :deleted)
   end
-
 end
 
