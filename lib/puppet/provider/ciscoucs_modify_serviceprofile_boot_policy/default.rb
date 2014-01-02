@@ -88,10 +88,13 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
     # check if the source profile exists
     if check_profile_exists service_profile_dn
       # source profile exists, execute modify service profile operation
-      return false
+      # check the ensure input value
+      if (resource[:ensure].to_s =="modify")
+        return false;
+      end
+      return true;
     end
     # error
-    #todo : check the ensure value before sending the error
     raise Puppet::Error, "No such profile exists  " + service_profile_dn
   end
 

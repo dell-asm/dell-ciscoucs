@@ -1,9 +1,15 @@
 Puppet::Type.newtype(:ciscoucs_modify_serviceprofile_boot_policy) do
-  @doc = 'Clone service profile on cisco ucs device'
-  ensurable
+  @doc = 'Modify service profile boot policy on cisco ucs device'
+  
+  ensurable do
+     newvalue(:modify) do
+       provider.create
+     end 
+     defaultto(:modify)
+   end
 
  newparam(:serviceprofilename, :namevar => true) do
-    desc "Name of server profile"
+    desc "Name of service profile"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -25,7 +31,7 @@ Puppet::Type.newtype(:ciscoucs_modify_serviceprofile_boot_policy) do
   end
 
   newparam(:serviceprofiledn) do
-    desc "Source server profile DN"
+    desc "Source service profile DN"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
