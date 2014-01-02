@@ -211,7 +211,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Sending power on request: \n" + requestxml
 
     responsexml = post requestxml
-    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Power-on operation."
     end
@@ -228,7 +227,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Sending power on request: \n" + requestxml
 
     responsexml = post requestxml
-    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Power-on operation."
     end
