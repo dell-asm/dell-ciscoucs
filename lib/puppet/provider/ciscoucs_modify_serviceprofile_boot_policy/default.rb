@@ -42,7 +42,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
       elsif doc.elements["/configConfMos"] &&  doc.elements["/configConfMos"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occurred while modifying the boot policy on the service profile: "+  doc.elements["/configConfMos"].attributes["errorDescr"]
       else
-        Puppet.info("Successfully modified the boot policy: "+ bootpolicyname)
+        Puppet.notice("Successfully modified the boot policy: "+ bootpolicyname)
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the Modify Boot Policy operation response." +  msg.to_s

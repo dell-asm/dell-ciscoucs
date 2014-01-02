@@ -45,7 +45,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
       elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occurred while cloning the profile: "+  doc.elements["/lsClone"].attributes["errorDescr"]
       elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
-        Puppet.info("Successfully cloned the profile: "+ clonename)
+        Puppet.notice("Successfully cloned the profile: "+ clonename)
       else
         raise Puppet::Error, "Unable to clone the profile: " + clonename
       end
