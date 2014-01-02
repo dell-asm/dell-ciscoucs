@@ -13,7 +13,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def create
     # check if the profile exists
     if ! check_profile_exists profile_dn
-      raise Puppet::Error, "No such profile exists " + profile_dn
+      raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
 
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("associateServiceProfile")
@@ -27,13 +27,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     requestxml = formatter.command_xml(parameters);
 
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for associate profile operation"
+      raise Puppet::Error, "Unable to create a request XML for the Associate Service Profile operation."
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from associate profile operation"
+      raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
     Puppet.debug "Response from associate profile: \n" + responsexml
     # todo: error handling
@@ -42,7 +42,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def destroy
     # check if the profile exists
     if ! check_profile_exists profile_dn
-      raise Puppet::Error, "No such profile exists " + profile_dn
+      raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
     
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("disAssociateServiceProfile")
@@ -56,13 +56,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     requestxml = formatter.command_xml(parameters);
 
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for associate profile operation"
+      raise Puppet::Error, "Unable to create a request XML for the Associate Service Profile operation."
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from associate profile operation"
+      raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
     Puppet.debug "Response from associate profile: \n" + responsexml
     # todo: error handling
@@ -72,8 +72,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def server_dn
     source_dn = ""
     if (resource[:server_chassis_id] && resource[:server_chassis_id].strip.length > 0) &&
-    (resource[:server_slot_id]  && resource[:server_slot_id].strip.length > 0)
-      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot_id];
+    (resource[:server_slot]  && resource[:server_slot].strip.length > 0)
+      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot];
     elsif (resource[:profile_dn] && resource[:profile_dn].strip.length > 0)
       source_dn = resource[:profile_dn]
     end
@@ -89,7 +89,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
-      source_dn = "org-"+resource[:organization_name] +"/"+ profile_name
+      source_dn = resource[:organization_name] +"/"+ profile_name
     elsif (resource[:server_dn] && resource[:server_dn].strip.length > 0)
       source_dn = resource[:server_dn]
     end

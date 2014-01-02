@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
   def create
     # check if the boot policy exists
     if ! check_boot_policy_exists boot_policy_dn
-      raise Puppet::Error, "No such boot policy exits " + boot_policy_dn
+      raise Puppet::Error, "The " + boot_policy_dn + " boot policy does not exist." 
     end
 
     str = boot_policy_dn
@@ -26,26 +26,26 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
     parameters['/configConfMos'][:cookie] = cookie
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for modify boot policy operation"
+      raise Puppet::Error, "Unable to create the request XML for the Modify Boot Policy operation."
     end
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from modify boot policy operation"
+      raise Puppet::Error, "Unable to get response from the Modify Boot Policy operation."
     end
 
     #parser response xml to check for errors
     begin
       doc = REXML::Document.new(responsexml)
       if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
-        raise Puppet::Error, "Following error occurred while modifying boot policy on service profile : "+  doc.elements["/error"].attributes["errorDescr"]
+        raise Puppet::Error, "Unable to perform the operation because the following issue occured while modifying the boot policy on the service profile: "+  doc.elements["/error"].attributes["errorDescr"]
       elsif doc.elements["/configConfMos"] &&  doc.elements["/configConfMos"].attributes["errorCode"]
-        raise Puppet::Error, "Following error occurred while modifying boot policy on service profile : "+  doc.elements["/configConfMos"].attributes["errorDescr"]
+        raise Puppet::Error, "Unable to perform the operation because the following issue occurred while modifying the boot policy on the service profile: "+  doc.elements["/configConfMos"].attributes["errorDescr"]
       else
-        Puppet.info("boot policy modified Successfully  "+ bootpolicyname)
+        Puppet.info("Successfully modified the boot policy: "+ bootpolicyname)
       end
     rescue Exception => msg
-      raise Puppet::Error, "Following error occurred while parsing modify boot policy response" +  msg.to_s
+      raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the Modify Boot Policy operation response." +  msg.to_s
     end
   end
 
@@ -95,7 +95,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
       return true;
     end
     # error
-    raise Puppet::Error, "No such profile exists  " + service_profile_dn
+    raise Puppet::Error, "The " + service_profile_dn + " service profile does not exist."
   end
 
 end

@@ -27,13 +27,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     parameters['/lsClone'][:inHierarchical] = 'false'
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for clone profile operation"
+      raise Puppet::Error, "Unable to create the request XML for the Clone Profile operation."
     end
     Puppet.debug "Sending clone profile request xml: \n" + requestxml
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from clone profile operation"
+      raise Puppet::Error, "Unable to get a response from the Clone Profile operation."
     end
     Puppet.debug "Response from clone profile: \n" + responsexml
 
@@ -41,16 +41,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     begin
       doc = REXML::Document.new(responsexml)
       if doc.elements["/error"] &&  doc.elements["/error"].attributes["errorCode"]
-        raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/error"].attributes["errorDescr"]
+        raise Puppet::Error, "Unable to perform the operation because the following issue occurred while cloning the profile: "+  doc.elements["/error"].attributes["errorDescr"]
       elsif doc.elements["/lsClone"] &&  doc.elements["/lsClone"].attributes["errorCode"]
-        raise Puppet::Error, "Following error occurred while cloning profile : "+  doc.elements["/lsClone"].attributes["errorDescr"]
+        raise Puppet::Error, "Unable to perform the operation because the following issue occurred while cloning the profile: "+  doc.elements["/lsClone"].attributes["errorDescr"]
       elsif doc.elements["/lsClone/outConfig/lsServer"] &&  doc.elements["/lsClone/outConfig/lsServer"].attributes["status"].eql?('created')
-        Puppet.info("Successfully cloned profile "+ clonename)
+        Puppet.info("Successfully cloned the profile: "+ clonename)
       else
-        raise Puppet::Error, "Unable to clone profile " + clonename
+        raise Puppet::Error, "Unable to clone the profile: " + clonename
       end
-    rescue Exception => msg
-      raise Puppet::Error, "Following error occurred while parsing clone profile response" +  msg.to_s
     end
   end
 
@@ -97,7 +95,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
       return false
     end
     # error
-    raise Puppet::Error, "No such profile exists " + source_profile_dn
+    raise Puppet::Error, "The " + source_profile_dn + " service profile does not exist."
   end
 
 end
