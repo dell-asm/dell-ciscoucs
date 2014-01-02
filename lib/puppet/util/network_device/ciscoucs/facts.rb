@@ -46,6 +46,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
         count =1
         ucsBladesDoc.elements.each("configResolveClass/outConfigs/*") {
           |blade|
+          serviceProfile = blade.attributes["assignedToDn"]
           bladeName = blade.attributes["dn"]
           bladeSerialNum = blade.attributes["serial"]
           bladeSlotId = blade.attributes["slotId"]
@@ -75,7 +76,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
     def getgeneralsettinginfo
       generalMap = {}
            generalMap['UCS IP'] = @transport.host
-           #generalMap['UCS Version'] =  @transport.firmwareversion
+           generalMap['UCS Version'] =  @transport.firmwareversion
      
           return  generalMap
      end
