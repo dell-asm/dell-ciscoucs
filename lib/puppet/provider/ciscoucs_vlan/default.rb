@@ -28,6 +28,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:status] = @resource[:status]
     createvlanidxml = formatter.command_xml(parameters)
     ucscreatevlanidresp = post createvlanidxml
+    disconnect
     createvlanidresponse = REXML::Document.new(ucscreatevlanidresp)
     root = createvlanidresponse.root
     createvlanidresponse.elements.each("/configConfMos/outConfigs/pair/fabricVlan") {
@@ -65,6 +66,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:status] = @resource[:status]
     createvlanidxml = formatter.command_xml(parameters)
     ucscreatevlanidresp = post createvlanidxml
+    disconnect
     createvlanidresponse = REXML::Document.new(ucscreatevlanidresp)
     root = createvlanidresponse.root
     createvlanidresponse.elements.each("/configConfMos/outConfigs/pair/fabricVlan") {

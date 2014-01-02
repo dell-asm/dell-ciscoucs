@@ -28,6 +28,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
     end
     Puppet.debug "Sending update vlan service profile request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from  update vlan service profile"
     end

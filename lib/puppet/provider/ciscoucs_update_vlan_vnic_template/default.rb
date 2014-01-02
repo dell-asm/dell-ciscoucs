@@ -28,6 +28,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
     end
     Puppet.debug "Sending update vlan vnic template request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from  update vlan vnic template"
     end
@@ -86,6 +87,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
       raise Puppet::Error, "Cannot create request xml for verify vnic template operation"
     end
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from  verify vnic template"
     end
@@ -101,7 +103,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
     # check if the source profile exists
     if checkvlan
       if checkvnictemplate
-        source_profile_dn = ""#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}""
+        source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"
         if check_vlan_exist_vnic_template(source_profile_dn,@resource[:vlanname],@resource[:defaultnet])
           Puppet.debug("VLAN already updated in vNIC Template")
           return true
