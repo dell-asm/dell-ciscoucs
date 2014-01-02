@@ -64,12 +64,12 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 
-ciscoucs_serviceprofile { 'serviceprofilename':
-   name => $serviceprofilename['name'], 
-   org => $serviceprofilename['org'], 
-   dn => $serviceprofilename['dn'], 
-   power_state => $serviceprofilename['on'],  
-   transport  => Transport_ciscoucs['ciscoucs'],
+ciscoucs_serviceprofile { 'name':
+   name  => ${ciscoucs_serviceprofile['name']}, 
+   org   => ${ciscoucs_serviceprofile['org']}, 
+   dn    => ${ciscoucs_serviceprofile['dn']}, 
+   power_state   => ${ciscoucs_serviceprofile['power_state_on']},  
+   transport   => Transport_ciscoucs['ciscoucs'],
 }
 
 
@@ -83,12 +83,12 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 
-ciscoucs_serviceprofile { 'serviceprofilename':
-   name => $serviceprofilename['name'], 
-   org => $serviceprofilename['org'], 
-   dn => $serviceprofilename['dn'], 
-   power_state => $serviceprofilename['off'],  
-   transport  => Transport_ciscoucs['ciscoucs'],
+ciscoucs_serviceprofile { 'name':
+  name   => ${ciscoucs_serviceprofile['name']},
+  org    => ${ciscoucs_serviceprofile['org']},
+  dn     => ${ciscoucs_serviceprofile['dn']},
+  power_state   => ${ciscoucs_serviceprofile['power_state_off']},
+  transport   => Transport_ciscoucs['ciscoucs'],
 }
 
 
