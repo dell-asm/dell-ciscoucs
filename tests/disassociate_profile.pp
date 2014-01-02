@@ -12,8 +12,8 @@ ciscoucs_serviceprofile_association { 'name':
   organization_name => 'root',
   service_profile_name => 'DemoTestServiceProfile',
   profile_dn => '',
-  server_chesis_id => 'chassis-1',
-  server_slot => 'blade-3',   
+  server_chassis_id => 'chassis-1',
+  server_slot_id => 'blade-3',   
   server_dn => '',
   transport  => Transport_ciscoucs['ciscoucs'],
 }

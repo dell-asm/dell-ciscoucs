@@ -72,8 +72,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def server_dn
     source_dn = ""
     if (resource[:server_chassis_id] && resource[:server_chassis_id].strip.length > 0) &&
-    (resource[:server_slot]  && resource[:server_slot].strip.length > 0)
-      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot];
+    (resource[:server_slot_id]  && resource[:server_slot_id].strip.length > 0)
+      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot_id];
     elsif (resource[:profile_dn] && resource[:profile_dn].strip.length > 0)
       source_dn = resource[:profile_dn]
     end
@@ -89,7 +89,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
-      source_dn = resource[:organization_name] +"/"+ profile_name
+      source_dn = "org-"+resource[:organization_name] +"/"+ profile_name
     elsif (resource[:server_dn] && resource[:server_dn].strip.length > 0)
       source_dn = resource[:server_dn]
     end
