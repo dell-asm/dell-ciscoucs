@@ -7,7 +7,7 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_modify_serviceprofile_boot_policy { 'serviceprofilename':
-   ensure    => present,
+   ensure    => modify,
    transport  => Transport_ciscoucs['ciscoucs'],
    bootpolicydn => 'org-root/boot-policy-test_boot_policy',
    bootpolicyname => 'test_boot_policy',
