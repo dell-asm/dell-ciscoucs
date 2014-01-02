@@ -119,7 +119,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     defaultNetFound = false
     spresponse = REXML::Document.new(responsexml)
     root = spresponse.root
-    spresponse.elements.each("/configResolveDn/outConfig/topRoot/orgOrg/vnicLanConnTempl/vnicEtherIf") {
+    spresponse.elements.each("/configResolveDn/outConfig/vnicLanConnTempl/vnicEtherIf") {
       |e|
 
       if (!e.attributes["name"].eql?("#{vlanname}"))

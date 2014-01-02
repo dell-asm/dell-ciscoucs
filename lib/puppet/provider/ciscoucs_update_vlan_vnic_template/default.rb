@@ -87,7 +87,6 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
       raise Puppet::Error, "Cannot create request xml for verify vnic template operation"
     end
     responsexml = post requestxml
-    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from  verify vnic template"
     end
