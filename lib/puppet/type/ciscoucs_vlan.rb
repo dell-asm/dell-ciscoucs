@@ -19,7 +19,7 @@ Puppet::Type.newtype(:ciscoucs_vlan) do
   newparam(:id) do
     desc "vlan id to be created. Must be numeric"
     validate do |value|
-      unless value =~ /\d+/
+      unless value =~ /^\d+$/
         raise ArgumentError, "The %s is an invalid vlan id." % value
       end
       if (value.to_i > 3967 || value.to_i <= 0)
@@ -29,7 +29,7 @@ Puppet::Type.newtype(:ciscoucs_vlan) do
   end
 
   newparam(:fabric_id) do
-    desc "fabric id at which vlan would be provisioned. "
+    desc "fabric id at which vlan would be provisioned."
     newvalues(:A, :B, :' ')
     defaultto(' ')
   end
