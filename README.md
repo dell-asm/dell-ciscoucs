@@ -25,8 +25,6 @@ connectivity used to manage the resource:
 }
 
 
-
-
 See tests folder for additional examples.
 
 ## References
@@ -34,8 +32,7 @@ Following functionality related readme's are kept at docs folder.
 
 1) ciscoucs_clone_service_profile_readme.md: This readme file talks about following ciscoucs functionalities.
    a) This functionally allows user to create only one service profile with similar values to an existing service profile. 
-      Error message is displayed when user try to create multiple Service Profile with the same name, which is already present.	 
- 
+      Error message is displayed when user try to create multiple Service Profile with the same name, which is already present.	  
    
 2) ciscoucs_serviceprofile_power_readme.md: This readme file talks about following ciscoucs functionalities.
    a) Power On: Changes the power state to UP for a service profile.  
@@ -47,7 +44,18 @@ Following functionality related readme's are kept at docs folder.
    b)  Disassociate Service Profile- Disassociate service profile allows user to disassociate service profile on server pool or chassis slot. 
        In case while disassociating service profile on a server pool or chassis slot any error occurred, than proper error message will be generated.
 	 
-   
+4) ciscousc_discovery_readme.md: Cisco UCS discvoery will populate the UCS manager version and its IP with information of all available servers.
+	 Server information will include following details - 
+	 - Name
+	 - Blade dn
+	 - Serial number
+	 - Slot
+	 - Service Profile
+	 - Chassis ID
+
+5) ciscousc_modify_serviceprofile_boot_policy_readme.md:  It assigns an existing boot policy to the service profile. If you choose this option, Cisco UCS Manager displays the details of the policy.
+
+6)  ciscousc_updatelan_boot_order_readme.md:  It describes how to set the server boot order.
 
    
 
