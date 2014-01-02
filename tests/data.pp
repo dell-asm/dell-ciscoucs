@@ -8,9 +8,9 @@ $ciscoucs = {
 }
 
 
-$ciscoucs_serviceprofile = { 
+$ciscoucs_poweronoff = { 
   'name'        => 'testServiceProfile',
-   'org'         => 'org-root',
+  'org'         => 'org-root',
   'dn'        => '',
   'power_state' => 'up',
  

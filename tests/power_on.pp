@@ -10,10 +10,9 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile { 'name':
-  name        => "${ciscoucs_serviceprofile['name']}",
-  org         => "${ciscoucs_serviceprofile['org']}",
-  dn         => "${ciscoucs_serviceprofile['dn']}",
-  power_state => "${ciscoucs_serviceprofile['power_state']}",
- # transport   => Transport_ciscoucs['ciscoucs'],
+  name        => "${ciscoucs_poweronoff['name']}",
+  org         => "${ciscoucs_poweronoff['org']}",
+  dn         => "${ciscoucs_poweronoff['dn']}",
+  power_state => "${ciscoucs_poweronoff['power_state']}",
 }
 
