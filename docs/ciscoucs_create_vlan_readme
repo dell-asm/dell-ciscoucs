@@ -39,6 +39,9 @@
 		Possible values: Primary/None 
 		Default value  : None
 
+	status: (Required) This parameter defines the whether the VLAN has to be created or deleted.
+		Possible values: created/deleted
+
 	fabric_id: (Optional) This parameter defines the fabric (A or B) on which a VLAN is to be created. If the fabric id value is not entered, a VLAN gets created on both the fabrics.
 		Possible values: A/B/""
 		Default value  : ""
@@ -63,6 +66,7 @@ Include Cisco UCS
 		mcast_policy_name	=> '',
 		sharing				=> 'none',
 		fabric_id			=> 'abc_22',
+		status				=> 'created',
 	} 
 
  
