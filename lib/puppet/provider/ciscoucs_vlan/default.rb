@@ -80,10 +80,10 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
 
   def exists?
     if check_vlan_exist(get_dn)
-      Puppet.debug " Duplicate VLAN Name/Prefix found."
+      Puppet.debug "VLAN Name/Prefix exist in UCS."
       return true
     else
-      Puppet.debug " VLAN id does not exist."
+      Puppet.debug "VLAN id does not exist."
       return false
     end
   end
