@@ -29,7 +29,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
       raise Puppet::Error, "Cannot create request xml for modify boot policy operation"
     end
     responsexml = post requestxml
-    #puts "responsexml..." +responsexml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from modify boot policy operation"
     end

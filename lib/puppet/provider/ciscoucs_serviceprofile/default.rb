@@ -21,7 +21,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def create_profile_from_server
-
     # creating pnDN
     service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
 
@@ -39,7 +38,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     end
     Puppet.debug "Sending create service profile from server request xml: \n" + requestxml
     responsexml = post requestxml
-
+    disconnect
     #parse response xml to check for errors
     begin
       create_doc = REXML::Document.new(responsexml)
@@ -113,6 +112,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     end
     Puppet.debug "Sending create profile from template request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from create profile from template operation"
     end
@@ -211,6 +211,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Sending power on request: \n" + requestxml
 
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from power-on operation"
     end
@@ -227,6 +228,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Sending power on request: \n" + requestxml
 
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from power-on operation"
     end
@@ -244,6 +246,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       raise Puppet::Error, "Cannot create request xml for checking current power state"
     end
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from check current power state"
     end

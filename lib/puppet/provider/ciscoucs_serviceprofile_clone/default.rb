@@ -31,6 +31,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     end
     Puppet.debug "Sending clone profile request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from clone profile operation"
     end

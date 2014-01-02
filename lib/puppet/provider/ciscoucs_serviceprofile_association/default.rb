@@ -31,6 +31,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from associate profile operation"
     end
@@ -59,6 +60,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
+    disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from associate profile operation"
     end
