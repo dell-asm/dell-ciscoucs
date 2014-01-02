@@ -13,6 +13,6 @@ ciscoucs_serviceprofile { 'name':
   name        => "${ciscoucs_serviceprofile['name']}",
   org         => "${ciscoucs_serviceprofile['org']}",
   dn         => "${ciscoucs_serviceprofile['dn']}",
-  power_state => "${ciscoucs_serviceprofile['power_state']}",
+  power_state => "${ciscoucs_serviceprofile['power_state_on']}",
   transport   => Transport_ciscoucs['ciscoucs'],
 }
