@@ -1,18 +1,22 @@
 include ciscoucs
 
+import 'data.pp'
+
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.24.130',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
 }
 
 
 ciscoucs_serviceprofile { 'name':
-  name            => 'create_prof',
-  org             => 'org-root',
-  ensure          => present,
-  source_template => 'test_temp',
-  #power_state    => 'up',
-  transport       => Transport_ciscoucs['ciscoucs'],
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "${ciscoucs_serviceprofile['org']}",
+  dn         => "${ciscoucs_serviceprofile['dn']}",
+  ensure  => "${ciscoucs_serviceprofile['ensure']}",
+  source_template => "${ciscoucs_serviceprofile['source_template']}",
+  transport   => Transport_ciscoucs['ciscoucs'],
 }
+
 

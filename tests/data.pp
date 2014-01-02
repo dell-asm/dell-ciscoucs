@@ -4,18 +4,20 @@ $ciscoucs = {
   'testcase' => '001',
   'username' => 'admin',
   'password' =>  'admin',
-  'server'   => '192.168.114.131',
-  
+  'server'   => '192.168.114.131',  
 }
 
 
-$ciscoucs_poweronoff = { 
-  'name'        => 'testServiceProfile',
+$ciscoucs_serviceprofile = { 
+  'name'        => 'abhijServiceProfile',
   'org'         => 'org-root',
   'dn'        => '',
   'power_state_on' => 'up',
   'power_state_off' => 'down',
- 
+  'ensure'          => 'present',
+  'source_template' => 'template1',
+  'server_chassis_id' => 'chassis-1',
+  'server_slot' => 'blade-1',   
 }
 
 
