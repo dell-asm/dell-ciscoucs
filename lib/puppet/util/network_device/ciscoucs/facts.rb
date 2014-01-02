@@ -46,11 +46,11 @@ module Puppet::Util::NetworkDevice::Ciscoucs
         count =1
         ucsBladesDoc.elements.each("configResolveClass/outConfigs/*") {
           |blade|
-          serviceProfile = blade.attributes["assignedToDn"]
           bladeName = blade.attributes["dn"]
           bladeSerialNum = blade.attributes["serial"]
           bladeSlotId = blade.attributes["slotId"]
           bladeChassisId = blade.attributes["chassisId"]
+          serviceProfile = blade.attributes["assignedToDn"]
           
           collectionMap = {}
           collectionMap['bladeDN'] = bladeName
@@ -61,11 +61,11 @@ module Puppet::Util::NetworkDevice::Ciscoucs
           blade_name = "Blade_"+count.to_s
           blademap[blade_name] = collectionMap
           
-          @facts['ServerData'] = blademap
           count+=1
 
 
         }
+        @facts['ServerData'] = blademap
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing discovery response" +  msg.to_s
       end     
