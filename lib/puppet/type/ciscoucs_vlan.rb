@@ -30,13 +30,8 @@ Puppet::Type.newtype(:ciscoucs_vlan) do
 
   newparam(:fabric_id) do
     desc "fabric id at which vlan would be provisioned. "
-    validate do |value|
-      if value.strip.length > 0
-        unless value =~ /[a|b|A|B]/
-          raise ArgumentError, "The %s is an invalid fabric id." % value
-        end
-      end
-    end
+    newvalues(:A, :B, :' ')
+    defaultto(' ')
   end
 
   newparam(:mcast_policy_name) do

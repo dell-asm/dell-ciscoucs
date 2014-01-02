@@ -45,7 +45,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
 
   def get_dn()
     dn = ""
-    if @resource[:fabric_id].strip.length >0
+    if @resource[:fabric_id].to_s.length >0
       dn = "fabric/lan/#{@resource[:fabric_id]}/net-#{@resource[:name]}"
     else
       dn = "fabric/lan/net-#{@resource[:name]}"
