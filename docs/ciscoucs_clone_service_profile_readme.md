@@ -52,16 +52,15 @@ transport_ciscoucs { 'ciscoucs':
   server   => $ciscoucs['server'],
 }
  
-ciscoucs_serviceprofile_clone { 'serviceprofileclone':
-   clonename => $serviceprofileclone [clone_name], 
-   ensure    => present,
+ciscoucs_serviceprofile_clone { 'sourceprofilename':
+   ensure    =>  ${ciscoucs_clone['ensure']},
    transport  => Transport_ciscoucs['ciscoucs'],
-   sourceprofiledn => '',
-   targetprofiledn => '',
-   sourceserviceprofilename      => 'testing',
-   sourceorganization => 'org-root/org-Finance',
-   targetserviceprofilename      => 'clone',
-   targetorganization => 'org-root/org-Finance/org-test1/org-test2',
+   sourceprofiledn => ${ciscoucs_clone['sourceprofiledn']},
+   targetprofiledn => ${ciscoucs_clone['targetprofiledn']}, 
+   sourceserviceprofilename      => ${ciscoucs_clone['sourceserviceprofilename']},
+   sourceorganization => ${ciscoucs_clone['sourceorganization']},
+   targetserviceprofilename   => ${ciscoucs_clone['targetserviceprofilename']},
+   targetorganization => ${ciscoucs_clone['targetorganization']},
 }
 
 # --------------------------------------------------------------------------
