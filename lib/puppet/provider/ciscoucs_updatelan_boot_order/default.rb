@@ -35,7 +35,7 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
         end
     
        
-        puts "response XML ::::::::::::::" +responsexml
+      puts "response XML ::::::::::::::" +responsexml
    
     ucsbootorderDoc = REXML::Document.new(responsexml)
     
@@ -101,15 +101,68 @@ puts "#{@rnarray}"
 
 puts "Lan required order ::::::::"+resource[:lanorder] 
 
-  lancurorder=@rnarray.find_index { |e| e.match( /lan/ ) }.to_i+1
+  lancurorder=@rnarray.find_index { |e| e.match( /lan/ ) }.to_i
 puts "Lan Current order :::::::::::::::::::::"+lancurorder.to_s
 
-arr = [ "a","b","c" ] 
-arr.shuffle! until arr[1] == 'a' && arr[0]=='b'
+=begin
+arr = [ "i","ro","s","l","rw" ] 
+arr.insert(1, arr.delete_at(3))
+#arr.shuffle! until arr[1] == 'a' && arr[0]=='b'
 #p arr #=> ["b", "a", "c"]
 puts arr
+=end
+puts "------------------------------------------------------------------Re-Ordered Array"
+@rnarray.insert(resource[:lanorder].to_i-1, @rnarray.delete_at(lancurorder.to_i))
+puts "#{@rnarray}"
 
+
+
+
+
+
+for elm in @rnarray do
+  if elm == "iscsi"
+  ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"].attributes['order'] = @rnarray.find_index { |e| e.match( /iscsi/ ) }.to_i
+  end
+  if elm == "lan"
+    ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"].attributes['order'] = @rnarray.find_index { |e| e.match( /lan/ ) }.to_i
+    end
+  if elm == "storage"
+    ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"].attributes['order'] = @rnarray.find_index { |e| e.match( /storage/ ) }.to_i
+    end
+  if elm == "read-write-vm"
+    puts "read-write-vm"
+    puts @rnarray.find_index { |e| e.match( /read-write-vm/ ) }.to_i
+    element = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"]
+    if element.attributes["access"].eql?('read-write')
+      puts 'read-write'
+      element.attributes['order'] = @rnarray.find_index { |e| e.match( /read-write-vm/ ) }.to_i
+    end
+  end
+  if elm == "read-only-vm"
+    puts "read-only-vm"
+    puts  @rnarray.find_index { |e| e.match( /read-only-vm/ ) }.to_i
+    element = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"]
+    $i = 0
+      while ! element.attributes["access"].eql?('read-only')
+        puts("Inside the loop i =>>>>>>>>>>>>>>>>>>>>> #$i" )
+        element = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"]
+      end
+    puts 'read-only'
+    element.attributes['order'] = @rnarray.find_index { |e| e.match( /read-only-vm/ ) }.to_i
+    
+  end
   
+
+end
+  
+  
+  puts "seding ---------"
+  ucsbootorderDoc.context[:attribute_quote] = :quote
+  puts ucsbootorderDoc
+  responsexml1 = post ucsbootorderDoc
+  puts"#########################################################################################################################3"
+  puts responsexml1
 end 
      
     
