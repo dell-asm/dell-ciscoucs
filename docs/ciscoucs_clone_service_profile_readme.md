@@ -28,7 +28,7 @@ This module uses the rest-client gem ( Version 1.6.7) to interact with the cisco
    targetprofiledn - Complete path of target profile (clone profile) including clone profile name.
    sourceserviceprofilename - Name of service profile by which user wants to create a clone.
    sourceorganization - Path till source service profile.
-   targetserviceprofilename - Name of colne profile.
+   targetserviceprofilename - Name of clone profile.
    targetorganization - Path till clone profile.
    
    Note:- Sourceprofiledn is a combination of sourceorganization and sourceserviceprofilename, hence user needs to give values of either Sourceprofiledn or sourceorganization and 

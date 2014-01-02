@@ -26,24 +26,30 @@ This module uses the rest-client gem ( Version 1.6.7) to interact with the cisco
 # Summary of Parameters.
 # -------------------------------------------------------------------------
     
-	ensure: (Required) This parameter is required to call the Create or Destroy method.
-    Possible values: Present/Absent
-    If the value of the ensure parameter is set to present, the module calls the Create method.
-    If the value of the ensure parameter is set to absent, the module calls the Destroy method.
-
-    name: (Required) This parameter defines the name or IP address of the host that needs to be added or removed from the datacenter/cluster in the vCenter. If this parameter is not provided explicitly in the manifest file, then the title of the type 'vc_host' is used.    
+    username: (Required) This parameter defines the username as a part of the credentials of the host.            
     
-	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+	password: (Required) This parameter defines the password as a part of the credentials of the host.  
+	
+	server: (Required) This parameter defines the ip address the host.   
+	
+    name: This parameter defines the name of the service profile.
     
-	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+    org: Source service profile path.
+    
+    dn: Complete path of source service profile including service profile name.
+    
+	power_state: Initial state of the service profile that needs to be changed.
+	             Up to change the initial state to On
+	             Down to change the initial state to Off
+	             
+	             
+	Note:- dn is a combination of name and org, hence user needs to give values of either dn or both name and 
+          org as a parameter. 
+          If dn is not given by user than dn will be internally automatically created by combination of org and name.
+   
+    Example:- if org is ' org-root' and name is 'testServiceProfile' then dn will be org-root/ls-testServiceProfile'
+   
 
-	path: (Required) This parameter defines the path where the host needs to be added. The path should be an absolute path. If it is a datacenter path, then the host is added to the datacenter. If it is a cluster path, then the host is added to the respective Cluster. 
-            
-    sslthumbprint: (Optional) This parameter defines the SSL thumbprint of the host.
-            
-	secure: (Optional) This parameter defines whether or not the vCenter server must require SSL thumbprint verification of host. 
-    Possible values: True/False
-    Default: False
             
 # -------------------------------------------------------------------------
 # Parameter Signature 
@@ -60,9 +66,12 @@ transport_ciscoucs { 'ciscoucs':
 
 ciscoucs_serviceprofile { 'serviceprofilename':
    name => $serviceprofilename['name'], 
-  ensure    => present,
-  transport  => Transport_ciscoucs['ciscoucs'],
+   org => $serviceprofilename['org'], 
+   dn => $serviceprofilename['dn'], 
+   power_state => $serviceprofilename['on'],  
+   transport  => Transport_ciscoucs['ciscoucs'],
 }
+
 
 
 For Power off:
@@ -75,9 +84,11 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_serviceprofile { 'serviceprofilename':
-  name => $serviceprofilename['name'], 
-  ensure    => absent,
-  transport  => Transport_ciscoucs['ciscoucs'],
+   name => $serviceprofilename['name'], 
+   org => $serviceprofilename['org'], 
+   dn => $serviceprofilename['dn'], 
+   power_state => $serviceprofilename['off'],  
+   transport  => Transport_ciscoucs['ciscoucs'],
 }
 
 
