@@ -2,19 +2,19 @@
 # Access Mechanism 
 # --------------------------------------------------------------------------
  
-	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the Cisco UCS.
  
 # --------------------------------------------------------------------------
 #  Supported Functionality
 # --------------------------------------------------------------------------
 
-	Update Vlan Vnic Template
+	Update VLAN vNIC Template
  
 # -------------------------------------------------------------------------
 # Functionality Description
 # -------------------------------------------------------------------------
        
-	Update Vlan Vnic Template: This operation updates the specified vlan in the vnic template.
+	Update VLAN vNIC Template: This operation updates the specified VLAN in the vNIC template.
 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
@@ -25,22 +25,22 @@
 		If the value of the ensure parameter is set to present, the module calls the Create method.
 		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
 
-	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+	username: (Required) This parameter defines the username of the host.            
     
-	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+	password: (Required) This parameter defines the password of the host.            
 
-	vnictemplateorg: (Required) This parameter defines the name of the organisation to which vnic template belongs. 
+	vnictemplateorg: (Required) This parameter defines the name of the organization to which the vNIC template belongs. 
 
-	vlanname: (Required) This parameter defines the vlan name which will be updated in vnic template. 
+	vlanname: (Required) This parameter defines the VLAN name which is updated in the vNIC template. 
 
-	defaultnet: (Required) This parameter defines whether native vlan will be updated or not.
-		Possible values: yes/no
+	defaultnet: (Required) This parameter defines whether or not the native VLAN is updated.
+		Possible values: Yes/No
 
 # -------------------------------------------------------------------------
 # Parameter Signature 
 # -------------------------------------------------------------------------
 
-include ciscoucs
+Include Cisco UCS
 
 	transport_ciscoucs { 'ciscoucs':
 		username => 'admin',

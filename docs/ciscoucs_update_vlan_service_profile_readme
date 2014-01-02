@@ -2,19 +2,19 @@
 # Access Mechanism 
 # --------------------------------------------------------------------------
  
-	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the Cisco UCS.
  
 # --------------------------------------------------------------------------
 #  Supported Functionality
 # --------------------------------------------------------------------------
 
-	Update Vlan Service Profile
+	Update VLAN Service Profile
  
 # -------------------------------------------------------------------------
 # Functionality Description
 # -------------------------------------------------------------------------
        
-	Update Vlan Service Profile: This operation updates the specified vlan in the vnic of service profile.
+	Update VLAN Service Profile: This operation updates the specified VLAN in the vNIC of the service profile.
 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
@@ -25,24 +25,24 @@
 		If the value of the ensure parameter is set to present, the module calls the Create method.
 		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
 
-	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+	username: (Required) This parameter defines the username of the host.            
     
-	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+	password: (Required) This parameter defines the password of the host.            
 
-	serviceprofileorg: (Required) This parameter defines the name of organisation to which service profile belongs.
+	serviceprofileorg: (Required) This parameter defines the name of the organisation to which the service profile belongs.
 
-	vnic: (Required) This parameter defines the name of vnic present in service profile.
+	vnic: (Required) This parameter defines the name of the vNIC present in THE service profile.
 
-	vlanname: (Required) This parameter defines the name of vlan which willl be updated in service profile.
+	vlanname: (Required) This parameter defines the name of the VLAN to be updated in the service profile.
 
-	defaultnet: (Required) This parameter defines whether native vlan will be updated or not.
-		Possible values: yes/no
+	defaultnet: (Required) This parameter defines whether or not the native VLAN gets updated.
+		Possible values: Yes/No
 
 # -------------------------------------------------------------------------
 # Parameter Signature 
 # -------------------------------------------------------------------------
 
-include ciscoucs
+Include Cisco UCS
 
 	transport_ciscoucs { 'ciscoucs':
 		username => 'admin',

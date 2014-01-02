@@ -2,7 +2,7 @@
 # Access Mechanism 
 # --------------------------------------------------------------------------
  
-	This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+	This module uses the rest-client gem ( Version 1.6.7) to interact with the Cisco UCS.
  
 # --------------------------------------------------------------------------
 #  Supported Functionality
@@ -14,7 +14,7 @@
 # Functionality Description
 # -------------------------------------------------------------------------
        
-    Clone VLAN - This functionally allows user to create vlan.	 
+    Clone VLAN - This functionally allows the user to create a VLAN.	 
 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
@@ -22,26 +22,24 @@
 	
 	ensure: (Required) This parameter is required to call the Create or Destroy method.
 		Possible values: Present/Absent
-		If the value of the ensure parameter is set to present, the module calls the Create method.
-		If the value of the ensure parameter is set to absent, the module calls the Destroy method.
+		If the value of the ensure parameter is set to Present, the module calls the Create method.
+		If the value of the ensure parameter is set to Absent, the module calls the Destroy method.
 
-	username: (Required) This parameter defines the username as a part of the credentials of the host.            
+	username: (Required) This parameter defines the username of the host.            
     
-	password: (Required) This parameter defines the password as a part of the credentials of the host.            
+	password: (Required) This parameter defines the password of the host.            
 
-	id: (Required) This parameter defines the vlan id that has to be created. 
-		Vlan id has to be numeral and can not be greater than 3967.
+	id: (Required) This parameter defines the VLAN Id that is to be created. A valid VLAN Id must be a numeral and must not exceed 3967.
 
-	vlanPrefix: (Required) This parameter defines the prefix that will be used with vlan id. 
-		Prefix can be a combination of alphabets, numerals, "-" and "_". Its maximum possible length can be 33 characters.
+	vlanPrefix: (Required) This parameter defines the prefix to be used with the VLAN Id. A valid prefix can be a combination of alphabets, numerals, "-" and "_", and the length of a prefix cannot exceed 33 characters. 
 
-	mcast_policy_name: (Optional) This parameter defines the multicast policy name for vlan id.
+	mcast_policy_name: (Optional) This parameter defines the multicast policy name for the VLAN Id.
 
-	sharing: (Optional) This parameter defines sharing status of vlan. 
-		Possible values: primary/none 
-		Default value  : none
+	sharing: (Optional) This parameter defines the sharing status of the VLAN. 
+		Possible values: Primary/None 
+		Default value  : None
 
-	fabric_id: (Optional) This parameter defines the fabric (A or B) on which vlan has to be created. Blank value of fabric id creates vlan on both the fabrics.
+	fabric_id: (Optional) This parameter defines the fabric (A or B) on which a VLAN is to be created. If the fabric id value is not entered, a VLAN gets created on both the fabrics.
 		Possible values: A/B/""
 		Default value  : ""
 
@@ -49,7 +47,7 @@
 # Parameter Signature 
 # -------------------------------------------------------------------------
 
-include ciscoucs
+Include Cisco UCS
 
 	transport_ciscoucs { 'ciscoucs':
 		username => 'admin',
