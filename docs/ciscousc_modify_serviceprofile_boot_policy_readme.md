@@ -2,10 +2,10 @@
 # Access Mechanism 
 # --------------------------------------------------------------------------
  
-This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Ciscousc.
+   This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Ciscousc.
  
 # --------------------------------------------------------------------------
-#  Supported Functionality
+# Supported Functionality
 # --------------------------------------------------------------------------
 
 - modify serviceprofile boot policy
@@ -14,20 +14,19 @@ This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the C
 # Functionality Description
 # -------------------------------------------------------------------------
        
-     
+    It assigns an existing boot policy to the service profile. If you choose this option, Cisco UCS Manager displays the details of the policy.
 	 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
 # -------------------------------------------------------------------------
-   bootpolicyname - Name of the boot policy which user wants to modify.
-   bootpolicyorganization - Source boot policy path.
-   ensure -   
-       Possible values: present/absent 
-   
-   bootpolicydn - It's a combination of bootpolicyorganization and bootpolicyname. Either user have to provide value of bootpolicydn or values of bootpolicyorganization and bootpolicyname  as an input.
-   serviceprofilename -  Name of the service profile which user wants to apply.
-   serviceprofileorganization - Source service profile path.
-   serviceprofiledn - It's a combination of serviceprofileorganization and serviceprofilename. Either user have to provide value of serviceprofiledn or values of serviceprofileorganization and serviceprofilename as an input.
+    bootpolicyname - Name of the boot policy which user wants to modify.
+    bootpolicyorganization - Source boot policy path.
+    ensure -   
+        value: modify   
+    bootpolicydn - It's a combination of bootpolicyorganization and bootpolicyname. Either user have to provide value of bootpolicydn or values of bootpolicyorganization and bootpolicyname  as an input.
+    serviceprofilename -  Name of the service profile which user wants to apply.
+    serviceprofileorganization - Source service profile path.
+    serviceprofiledn - It's a combination of serviceprofileorganization and serviceprofilename. Either user have to provide value of serviceprofiledn or values of serviceprofileorganization and serviceprofilename as an input.
  
 # -------------------------------------------------------------------------
 # Parameter Signature 
