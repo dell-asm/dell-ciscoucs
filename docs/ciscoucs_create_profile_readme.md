@@ -98,7 +98,10 @@ ciscoucs_serviceprofile { 'name':
 # Usage
 # --------------------------------------------------------------------------
    
-   Refer in the test directory.
+    Refer in the test directory.
+   
+   # puppet apply create_profile_server.pp
+   # puppet apply create_profile_template.pp
    
   
 
