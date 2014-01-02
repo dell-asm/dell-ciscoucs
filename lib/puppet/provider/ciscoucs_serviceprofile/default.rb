@@ -132,7 +132,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def destroy
-    # todo: delete profile
+    Puppet.notice("Method not supported")
   end
 
   def dn
@@ -163,9 +163,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def power_state
-    Puppet.debug "Getting power state of the Service Profile."
     begin
-      # TODO: not sure what needs to be done here
+      Puppet.debug "Getting power state of the Service Profile."
+      power = current_power_state
+      if power == 'up' && resource[:power_state].to_s == 'up'
+        Puppet.info ("Power state is already up")
+      elsif power == 'down' and resource[:power_state].to_s == 'down'
+        Puppet.info ("Power state is already down")
+      end
+      return power
     rescue Exception => exception
       puts exception.message
     end
@@ -173,13 +179,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   def power_state=(value)
     Puppet.debug "Setting the power state of service profile."
-    #TODO Check if power operation is requested
     begin
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configConfMo'][:dn] = power_dn
       parameters['/configConfMo'][:cookie] = cookie
       parameters['/configConfMo/inConfig/lsPower'][:dn] = power_dn
-
       # power off the service profile
       if value == :down
         Puppet.debug "Power down the service profile"
@@ -229,4 +233,27 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     Puppet.debug "Response from power on: \n" + responsexml
   end
 
+  def current_power_state
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("VerifyElementExists")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveDn'][:cookie] = cookie
+    parameters['/configResolveDn'][:dn] = dn
+
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for checking current power state"
+    end
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from check current power state"
+    end
+    begin
+      doc = REXML::Document.new(responsexml)
+      if doc.elements["/configResolveDn/outConfig"].has_elements? && doc.elements["/configResolveDn/outConfig/lsServer"].has_elements?
+        return doc.elements["/configResolveDn/outConfig/lsServer/lsPower"].attributes["state"]
+      end
+    rescue Exception => msg
+      raise Puppet::Error, "Following error occurred while parsing check current power state" +  msg.to_s
+    end
+  end
 end

@@ -82,7 +82,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newproperty(:power_state) do
     desc 'Power state of a service profile'
     newvalues(:up, :down)
-    defaultto(:up)
+    #defaultto(:up)
   end
 
   validate do
