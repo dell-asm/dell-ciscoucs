@@ -6,7 +6,7 @@ require File.join(provider_path, 'ciscoucs')
 
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   include PuppetX::Puppetlabs::Transport
@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
   def create
     source_profile_dn = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}/ether-#{@resource[:vnic]}"
     source_profile_rn = "if-#{resource[:vlanname]}"
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("updateVLANServiceProfile")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("updateVLANServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/vnicEther'][:dn] = "#{source_profile_dn}"
     parameters['/configConfMos/inConfigs/pair/vnicEther/vnicEtherIf'][:defaultNet] = @resource[:defaultnet]
@@ -57,7 +57,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
   end
 
   def checkvlan
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyVLAN")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyVLAN")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:vlanname]

@@ -6,7 +6,7 @@ require File.join(provider_path, 'ciscoucs')
 
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   include PuppetX::Puppetlabs::Transport
@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
   def create
     source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"
     source_profile_rn = "if-#{resource[:vlanname]}"
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("updateVLANVNICTemplate")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("updateVLANVNICTemplate")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl'][:dn] = "#{source_profile_dn}"
     parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:defaultNet] = @resource[:defaultnet]
@@ -57,7 +57,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
   end
 
   def checkvlan
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyVLAN")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyVLAN")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:vlanname]
@@ -78,7 +78,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_vnic_template).provide(:default, :parent
   end
 
   def checkvnictemplate
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyVNICTemplate")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyVNICTemplate")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:name]

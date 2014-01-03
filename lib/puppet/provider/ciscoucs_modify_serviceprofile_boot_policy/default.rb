@@ -5,7 +5,7 @@ require File.join(provider_path, 'ciscoucs')
 
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
@@ -19,7 +19,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
 
     str = boot_policy_dn
     bootpolicyname = str.split("boot-policy-").last
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("modifyBootPolicy")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("modifyBootPolicy")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/lsServer'][:bootPolicyName] = bootpolicyname
     parameters['/configConfMos/inConfigs/pair'][:key] = service_profile_dn

@@ -24,7 +24,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     # creating pnDN
     service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
 
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createServiceProfileFromServer")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfileFromServer")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
     parameters['/configConfMos/inConfigs/pair'][:key] = dn
@@ -64,7 +64,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
     verify_param['/configResolveClass'][:cookie] = cookie
     verify_param['/configResolveClass/inFilter/eq'][:value] = prof_dn
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyServiceProfileTemplate")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyServiceProfileTemplate")
     verify_temp_request_xml = formatter.command_xml(verify_param)
 
     if verify_temp_request_xml.to_s.strip.length == 0
@@ -105,7 +105,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     parameters['/lsInstantiateNTemplate'][:inTargetOrg] = resource[:org]
     parameters['/lsInstantiateNTemplate'][:inServerNamePrefixOrEmpty] = resource[:name]
     parameters['/lsInstantiateNTemplate'][:inNumberOf] = count
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createServiceProfile")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfile")
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Create Profile from Template operation."
@@ -203,7 +203,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def poweron(parameters)
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("powerOn")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("powerOn")
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Power-on operation."
@@ -219,7 +219,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def poweroff(parameters)
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("powerOff")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("powerOff")
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Power-on operation."
@@ -234,7 +234,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def current_power_state
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("VerifyElementExists")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("VerifyElementExists")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveDn'][:cookie] = cookie
     parameters['/configResolveDn'][:dn] = dn

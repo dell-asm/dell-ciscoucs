@@ -7,14 +7,14 @@ require File.join(provider_path, 'ciscoucs')
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require (File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash')
 
-require (File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter')
+require (File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter')
 
 Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Create VLAN on Cisco UCS device."
   def create
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createvlan")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createvlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
     parameters['/configConfMos/inConfigs/pair'][:key] = get_dn
@@ -54,7 +54,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
 
   def destroy
     Puppet.debug("destroy method call")
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("deletevlan")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("deletevlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
     parameters['/configConfMos/inConfigs/pair'][:key] = get_dn

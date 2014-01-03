@@ -3,7 +3,7 @@ require 'rexml/document'
 
 module_lib = Pathname.new(__FILE__).parent.parent.parent
 require File.join module_lib.to_s, '/util/ciscoucs/nested_hash'
-require File.join module_lib.to_s, '/util/ciscoucs/xml_formatter'
+require File.join module_lib.to_s, '/util/ciscoucs/Xmlformatter'
 
 module PuppetX::Puppetlabs::Transport
   # "Base class for authenticate"
@@ -16,7 +16,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def login
-      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaLogin")
+      formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("aaaLogin")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogin'][:inName] = @username
       parameters['/aaaLogin'][:inPassword] = @password
@@ -48,7 +48,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def refresh
-      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaRefresh")
+      formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("aaaRefresh")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaRefresh'][:inName] = @username
       parameters['/aaaRefresh'][:inPassword] = @password
@@ -80,7 +80,7 @@ module PuppetX::Puppetlabs::Transport
 
     def logout
       Puppet.debug("#{self.class} closing connection to:  #{@url}")
-      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaLogout")
+      formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("aaaLogout")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogout'][:inCookie] = @@cookie
       requestxml = formatter.command_xml(parameters)

@@ -17,7 +17,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       blademap = {}
       @facts['General Settings'] = getgeneralsettinginfo
   
-      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("discover")
+      formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("discover")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configResolveClass'][:classId] = 'computeBlade'
       parameters['/configResolveClass'][:cookie] = @transport.cookie

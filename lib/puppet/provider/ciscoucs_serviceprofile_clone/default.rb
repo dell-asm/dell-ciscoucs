@@ -6,7 +6,7 @@ require File.join(provider_path, 'ciscoucs')
 
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
+require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
@@ -18,7 +18,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     targetprofileorg = str.split("/ls-").first
     clonename = str.split("ls-").last
 
-    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createServiceProfileClone")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfileClone")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/lsClone'][:dn] = source_profile_dn
     parameters['/lsClone'][:inTargetOrg] = targetprofileorg
