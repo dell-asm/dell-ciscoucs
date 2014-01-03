@@ -8,7 +8,7 @@ transport_ciscoucs { 'ciscoucs':
 ciscoucs_vlan { 'testvlan':
   ensure    		=> present,
   transport 		=> Transport_ciscoucs['ciscoucs'],
-  id        		=> '10',
+  vlanid        		=> '10',
   mcast_policy_name => '',
   sharing	        => 'primary',
   fabric_id         => 'B',

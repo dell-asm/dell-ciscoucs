@@ -16,7 +16,7 @@ Puppet::Type.newtype(:ciscoucs_vlan) do
     end
   end
 
-  newparam(:id) do
+  newparam(:vlanid) do
     desc "vlan id to be created. Must be numeric"
     validate do |value|
       unless value =~ /^\d+$/
