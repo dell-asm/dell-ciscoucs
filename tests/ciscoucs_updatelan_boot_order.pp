@@ -9,9 +9,8 @@ transport_ciscoucs { 'ciscoucs':
 
 ciscoucs_updatelan_boot_order{ 'dn':
   
-  value => 'org-root/boot-policy-testbootpolicy',
-  lanorder =>'4',
-  #  value => 'testbootpolicy',
+  policyname => 'org-root/boot-policy-testbootpolicy',
+  lanorder =>'3',
   transport  => Transport_ciscoucs['ciscoucs'],
 }
 
