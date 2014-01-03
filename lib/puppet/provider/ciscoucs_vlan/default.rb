@@ -14,8 +14,6 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
   include PuppetX::Puppetlabs::Transport
   @doc = "Create VLAN on Cisco UCS device."
   def create
-    Puppet.info "create method call......"
-
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createvlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
