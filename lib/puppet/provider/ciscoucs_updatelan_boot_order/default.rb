@@ -18,14 +18,10 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updatelanBootOrderPolicy")
         parameters = PuppetX::Util::Ciscoucs::NestedHash.new
         parameters['/configResolveClass'][:cookie] = cookie
-   #     parameters['/configResolveClass'][:inHierarchical] = 'true'
-  #      parameters['/configResolveClass'][:classId] = 'lsbootPolicy'
- #       parameters['/configResolveClass/inFilter/eq'][:class] = 'computeItem'
-#        parameters['/configResolveClass/inFilter/eq'][:property] =resource[:dn]
-        parameters['/configResolveClass/inFilter/eq'][:value] = resource[:value] 
+        parameters['/configResolveClass/inFilter/eq'][:value] = resource[:policyname] 
     
         requestxml = formatter.command_xml(parameters);
-    #puts requestxml
+    
         if requestxml.to_s.strip.length == 0
           raise Puppet::Error, "Cannot create request xml for boot order policy"
           end
@@ -33,21 +29,17 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
         if responsexml.to_s.strip.length == 0
           raise Puppet::Error, "No response obtained from boot order policy"
         end
-    
        
-      puts "response XML ::::::::::::::" +responsexml
-   
     ucsbootorderDoc = REXML::Document.new(responsexml)
     
     @rnarray = Array.new
     
-      if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"]
+    if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"]
       
     lanorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"].attributes["order"]
       puts "lannn ::::"+ lanorder
       @rnarray[lanorder.to_i-1] = "lan"
-      puts resource[:value] 
-      
+           
         end 
       
         if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"]
@@ -105,13 +97,6 @@ puts "Lan required order ::::::::"+resource[:lanorder]
   lancurorder=@rnarray.find_index { |e| e.match( /lan/ ) }.to_i
 puts "Lan Current order :::::::::::::::::::::"+lancurorder.to_s
 
-=begin
-arr = [ "i","ro","s","l","rw" ] 
-arr.insert(1, arr.delete_at(3))
-#arr.shuffle! until arr[1] == 'a' && arr[0]=='b'
-#p arr #=> ["b", "a", "c"]
-puts arr
-=end
 puts "------------------------------------------------------------------Re-Ordered Array"
 @rnarray.insert(resource[:lanorder].to_i-1, @rnarray.delete_at(lancurorder.to_i))
 puts "#{@rnarray}"
@@ -121,8 +106,8 @@ temp_doc = REXML::Document.new(xml_content)
 policyElem = temp_doc.elements["/configConfMos/inConfigs/pair/lsbootPolicy"]
 updateparameters = PuppetX::Util::Ciscoucs::NestedHash.new
 updateparameters['/configConfMos'][:cookie] = cookie
-updateparameters['/configConfMos/inConfigs/pair'][:key] = resource[:value]
-updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = resource[:value]
+updateparameters['/configConfMos/inConfigs/pair'][:key] = resource[:policyname]
+updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = resource[:policyname]
 
 for elm in @rnarray do
  puts "\n\npolicy Element ---" 
