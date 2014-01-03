@@ -10,7 +10,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/xml_formatter'
 Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
   include PuppetX::Puppetlabs::Transport
-  @doc = "Create server profile on Cisco UCS device."
+  @doc = "Modify service profile boot policy on cisco ucs device."
   def create
     # check if the boot policy exists
     if ! check_boot_policy_exists boot_policy_dn
