@@ -8,7 +8,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   @doc = "Manage association of service profile on Cisco UCS device."
 
   include PuppetX::Puppetlabs::Transport
-  @doc = "Associate or disassociate server profile on Cisco UCS device."
+  @doc = "Associate or dissociate server profile on Cisco UCS device."
   
   @error_codes_array = Array.new(9);
   
@@ -56,7 +56,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
 
-    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("disAssociateServiceProfile")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("dissociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
     parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
@@ -67,17 +67,17 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     requestxml = formatter.command_xml(parameters);
 
     if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Unable to create a request XML for the Associate Service Profile operation."
+      raise Puppet::Error, "Unable to create a request XML for the Dissociate Service Profile operation."
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
     
     if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
+      raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
     Puppet.debug "Response from associate profile: \n" + responsexml;
 
-    check_operation_state_till_disassociate_completion(profile_dn)
+    check_operation_state_till_dissociate_completion(profile_dn)
     
     disconnect
 
@@ -154,7 +154,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
 
   #check operation status till completion
-  def check_operation_state_till_disassociate_completion(profile_dn)
+  def check_operation_state_till_dissociate_completion(profile_dn)
     maxCount = 10;
     counter = 0;
 
@@ -169,13 +169,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       counter = counter+1;
     end
 
-    puts "Fails to disassociate";
+    puts "Fails to dissociate";
 
   end
 
   #call for current state
   def call_for_current_state(profile_dn)
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("getServiceProfileState")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("getServiceProfileState")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass'][:classId] = "lsServer";
