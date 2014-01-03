@@ -1,20 +1,24 @@
 include ciscoucs
 
-transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.241.131',
-}
+
+import '../data.pp'
 
 # create hardware based service profile using the api Create Service Profile from Server
 
+transport_ciscoucs { 'ciscoucs':
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
+}
+
 ciscoucs_serviceprofile { 'name':
-  name            => 'SP1',
-  org             => 'org-root',
-  dn              => ''
-  ensure          => present,
-  server_chassis_id => 'chassis-1',
-  server_slot => 'blade-1',   
-  transport       => Transport_ciscoucs['ciscoucs'],
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "${ciscoucs_serviceprofile['org']}",
+  dn         => "",
+  server_chassis_id => "${ciscoucs_serviceprofile['server_chassis_id']}",
+  server_slot => "${ciscoucs_serviceprofile['server_slot']}",
+  ensure          => "${ciscoucs_serviceprofile['ensure']}",
+  transport   => Transport_ciscoucs['ciscoucs'],
 }
 

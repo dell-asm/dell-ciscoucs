@@ -1,20 +1,22 @@
 include ciscoucs
 
-transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin', 
-  server   => '192.168.241.131',
-}
+import '../data.pp'
 
 # providing wrong organisation name to create service profile 
 
-ciscoucs_serviceprofile { 'name':
-  name            => 'TestSP',
-  org             => 'org-root/org-dummy',
-  dn              => ''
-  ensure          => present,
-  server_chassis_id => 'chassis-1',
-  server_slot => 'blade-1',   
-  transport       => Transport_ciscoucs['ciscoucs'],
+transport_ciscoucs { 'ciscoucs':
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
 }
 
+ciscoucs_serviceprofile { 'name':
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "org-root/org-dummy",
+  dn         => "",
+  server_chassis_id => "${ciscoucs_serviceprofile['server_chassis_id']}",
+  server_slot => "${ciscoucs_serviceprofile['server_slot']}",
+  ensure          => "${ciscoucs_serviceprofile['ensure']}",
+  transport   => Transport_ciscoucs['ciscoucs'],
+}
