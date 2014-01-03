@@ -1,18 +1,21 @@
 include ciscoucs
 
+import '../data.pp'
+
+# Power On Service Profile operation -when org and name is provided.
+
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.114.131',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
 }
 
-
 ciscoucs_serviceprofile { 'name':
-  name        => 'testServiceProfile',
-  org         => '',
-  dn          => '',
-  #ensure      => present,
-  power_state => 'up',
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "${ciscoucs_serviceprofile['org']}",
+  dn         => "",
+  power_state => "${ciscoucs_serviceprofile['power_state_on']}",
   transport   => Transport_ciscoucs['ciscoucs'],
 }
 

@@ -2,7 +2,7 @@ include ciscoucs
 
 import '../data.pp'
 
-# As a user I want to see proper error message when user enters invalid value(ProfileDN) in input and executes the operation.
+# Error message when executing power off for already powered off server profile created from template.
 
 transport_ciscoucs { 'ciscoucs':
   username => "${ciscoucs['username']}",
@@ -12,9 +12,9 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile { 'name':
-  name        => "",
-  org         => "",
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "${ciscoucs_serviceprofile['org']}",
   dn         => "",
-  power_state => "${ciscoucs_serviceprofile['power_state_on']}",
+  power_state => "${ciscoucs_serviceprofile['power_state_off']}",
   transport   => Transport_ciscoucs['ciscoucs'],
 }

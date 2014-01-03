@@ -1,18 +1,21 @@
 include ciscoucs
 
+# Power Off Service Profile - for profile created from template.
+
+import '../data.pp'
+
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.114.131',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
 }
 
-
 ciscoucs_serviceprofile { 'name':
-  name        => 'testServiceProfile',
-  org         => 'org-root',
-  dn          => '',
-  #ensure      => present,
-  power_state => 'down',
+  name        => "${ciscoucs_serviceprofile['name']}",
+  org         => "${ciscoucs_serviceprofile['org']}",
+  dn         => "",
+  power_state => "${ciscoucs_serviceprofile['power_state_on']}",
   transport   => Transport_ciscoucs['ciscoucs'],
 }
 
