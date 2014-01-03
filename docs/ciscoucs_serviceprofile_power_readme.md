@@ -1,8 +1,8 @@
 # --------------------------------------------------------------------------
-# Access Mechanism 
+# Access Mechanism
 # --------------------------------------------------------------------------
 
-This module uses the rest-client gem ( Version 1.6.7) to interact with the ciscoucs.
+This module uses the rest-client gem ( Version 1.6.7) to interact with the Ciscou UCS.
 
 # --------------------------------------------------------------------------
 #  Supported Functionality
@@ -16,11 +16,11 @@ This module uses the rest-client gem ( Version 1.6.7) to interact with the cisco
 # Functionality Description
 # -------------------------------------------------------------------------
 
-  1. Power ON
-     The Power on method changes the power state to down for a service profile.  
+  1. Power On
+     The Power On method changes the power state from down to up for a service profile.  
    
   2. Power Off
-     The Power off method changes the power state to up for a service profile.
+     The Power off method changes the power state from up to down for a service profile.
 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
@@ -30,29 +30,29 @@ This module uses the rest-client gem ( Version 1.6.7) to interact with the cisco
     
 	password: (Required) This parameter defines the password as a part of the credentials of the host.  
 	
-	server: (Required) This parameter defines the ip address the host.   
+	server: (Required) This parameter defines the IP address of the host.   
 	
     name: This parameter defines the name of the service profile.
     
-    org: Source service profile path.
+    org: This parameter defines the source service profile path.
     
-    dn: Complete path of source service profile including service profile name.
+    dn: This pparameter defines the complete path of the source service profile including service profile name.
     
-	power_state: Initial state of the service profile that needs to be changed.
-	             Up to change the initial state to On
-	             Down to change the initial state to Off
+	power_state: This parameter defines the initial state of the service profile that needs to be changed as follows:
+
+     Up to change the initial state to On.
+     Down to change the initial state to Off.
 	             
 	             
-	Note:- dn is a combination of name and org, hence user needs to give values of either dn or both name and 
-          org as a parameter. 
-          If dn is not given by user than dn will be internally automatically created by combination of org and name.
+	Note:- dn is a combination of the name and org, so the user needs to provide the values of either the dn or both the name and the org as a parameter.
+          If a dn is not given by user, then the dn gets created automatically internally by the combination of org and the name, for example:
    
-    Example:- if org is ' org-root' and name is 'testServiceProfile' then dn will be org-root/ls-testServiceProfile'
+    if org is ' org-root' and name is 'testServiceProfile', then the dn shall be org-root/ls-testServiceProfile'
    
 
             
 # -------------------------------------------------------------------------
-# Parameter Signature 
+# Parameter Signature
 # -------------------------------------------------------------------------
 
 For Power on:
@@ -65,9 +65,9 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_serviceprofile { 'name':
-   name  => ${ciscoucs_serviceprofile['name']}, 
-   org   => ${ciscoucs_serviceprofile['org']}, 
-   dn    => ${ciscoucs_serviceprofile['dn']}, 
+   name  => ${ciscoucs_serviceprofile['name']},
+   org   => ${ciscoucs_serviceprofile['org']},
+   dn    => ${ciscoucs_serviceprofile['dn']},
    power_state   => ${ciscoucs_serviceprofile['power_state_on']},  
    transport   => Transport_ciscoucs['ciscoucs'],
 }
@@ -96,7 +96,7 @@ ciscoucs_serviceprofile { 'name':
 # Usage
 # --------------------------------------------------------------------------
    
-   Refer in the test directory.
+   Refer to the test directory.
    
    # puppet apply power_off.pp
    # puppet apply power_on.pp
@@ -104,3 +104,4 @@ ciscoucs_serviceprofile { 'name':
 #-------------------------------------------------------------------------------------------------------------------------
 # End
 #-------------------------------------------------------------------------------------------------------------------------   
+

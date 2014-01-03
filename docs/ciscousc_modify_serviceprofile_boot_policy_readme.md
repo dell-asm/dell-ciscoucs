@@ -1,35 +1,35 @@
 # --------------------------------------------------------------------------
-# Access Mechanism 
+# Access Mechanism
 # --------------------------------------------------------------------------
  
-   This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Ciscousc.
+   This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Cisco UCS.
  
 # --------------------------------------------------------------------------
 # Supported Functionality
 # --------------------------------------------------------------------------
 
-- modify serviceprofile boot policy
+- Modify Serviceprofile Boot Policy
 
 # -------------------------------------------------------------------------
 # Functionality Description
 # -------------------------------------------------------------------------
        
-    It assigns an existing boot policy to the service profile. If you choose this option, Cisco UCS Manager displays the details of the policy.
-	 
+    This method assigns an existing boot policy to the service profile. If a user selects this option, the Cisco UCS Manager displays the details of the policy.
+	
 # -------------------------------------------------------------------------
 # Summary of Parameters.
 # -------------------------------------------------------------------------
-    bootpolicyname - Name of the boot policy which user wants to modify.
-    bootpolicyorganization - Source boot policy path.
+    bootpolicyname - This parameter defines the name of the boot policy that is to be modified.
+    bootpolicyorganization - This parameter defines the source boot policy path.
     ensure -   
         value: modify   
-    bootpolicydn - It's a combination of bootpolicyorganization and bootpolicyname. Either user have to provide value of bootpolicydn or values of bootpolicyorganization and bootpolicyname  as an input.
-    serviceprofilename -  Name of the service profile which user wants to apply.
-    serviceprofileorganization - Source service profile path.
-    serviceprofiledn - It's a combination of serviceprofileorganization and serviceprofilename. Either user have to provide value of serviceprofiledn or values of serviceprofileorganization and serviceprofilename as an input.
+    bootpolicydn - This parameter is a combination of the  bootpolicyorganization and the bootpolicyname. Either a user is required to provide the value of bootpolicydn or the values of bootpolicyorganization and bootpolicyname  as an input.
+    serviceprofilename -  This parameter describes the name of the service profile that is to be applied.
+    serviceprofileorganization - This parameter describes the source service profile path.
+    serviceprofiledn - This parameter defines a combination of the serviceprofileorganization and serviceprofilename. Either a user is required to provide the value of the serviceprofiledn or the values of serviceprofileorganization and serviceprofilename as an input.
  
 # -------------------------------------------------------------------------
-# Parameter Signature 
+# Parameter Signature
 # -------------------------------------------------------------------------
  
 transport_ciscoucs { 'ciscoucs':
@@ -52,7 +52,7 @@ ciscoucs_modify_serviceprofile_boot_policy { 'serviceprofilename':
 # --------------------------------------------------------------------------
 # Usage
 # --------------------------------------------------------------------------
-    Refer in the test directory.
+    Refer to the test directory.
    
    # puppet apply ciscoucs_modify_serviceprofile_boot_policy.pp
    

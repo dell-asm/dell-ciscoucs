@@ -1,31 +1,31 @@
 # --------------------------------------------------------------------------
-# Access Mechanism 
+# Access Mechanism
 # --------------------------------------------------------------------------
  
-   This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Ciscousc.
+   This module uses the  Ruby Rest Client Gem ( Version 1.6) to interact with the Cisco UCS.
  
 # --------------------------------------------------------------------------
 # Supported Functionality
 # --------------------------------------------------------------------------
 
-- update LAN boot order
+- Update LAN Boot Order
 
 # -------------------------------------------------------------------------
 # Functionality Description
 # -------------------------------------------------------------------------
        
-     It describes how to set the server boot order.
-	 
+    This method describes how to set the server boot order.
+	
 # -------------------------------------------------------------------------
 # Summary of Parameters.
 # -------------------------------------------------------------------------
-    bootpolicyname - Name of the boot policy which user wants to modify.
-    bootpolicyorganization - Source boot policy path.    
-    bootpolicydn - It's a combination of bootpolicyorganization and bootpolicyname. Either user have to provide value of bootpolicydn or values of bootpolicyorganization and bootpolicyname  as an input.
-	lanorder - Priority of LAN in order to boot a server within available multiple boot options (such as SAN)      
+    bootpolicyname - This parameter defines the name of the boot policy that is to be modified.
+    bootpolicyorganization - This parameter defines the source boot policy path.    
+    bootpolicydn - This parameter defines the combination of bootpolicyorganization and bootpolicyname. Either a user is required to provide a value of the bootpolicydn or the values of the bootpolicyorganization and bootpolicyname as an input.
+	lanorder - This parameter defines the priority of LAN to boot a server within the available multiple boot options (such as SAN).      
  
 # -------------------------------------------------------------------------
-# Parameter Signature 
+# Parameter Signature
 # -------------------------------------------------------------------------
  
 transport_ciscoucs { 'ciscoucs':
@@ -45,7 +45,7 @@ cciscoucs_updatelan_boot_order{ 'dn':
 # --------------------------------------------------------------------------
 # Usage
 # --------------------------------------------------------------------------
-    Refer in the test directory.
+    Refer to the test directory.
    
    # puppet apply ciscoucs_updatelan_boot_order.pp
    
