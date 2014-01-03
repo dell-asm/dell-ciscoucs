@@ -70,7 +70,8 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
           
              end
 
-    if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
+    if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"] && 
+      ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
       ucsbootorderDoc.elements.each("/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia") {
                 |media|
                 
@@ -115,10 +116,61 @@ puts "------------------------------------------------------------------Re-Order
 @rnarray.insert(resource[:lanorder].to_i-1, @rnarray.delete_at(lancurorder.to_i))
 puts "#{@rnarray}"
 
+xml_content = xml_template "updateBootPolicyOrder"
+temp_doc = REXML::Document.new(xml_content)
+policyElem = temp_doc.elements["/configConfMos/inConfigs/pair/lsbootPolicy"]
+updateparameters = PuppetX::Util::Ciscoucs::NestedHash.new
+updateparameters['/configConfMos'][:cookie] = cookie
+updateparameters['/configConfMos/inConfigs/pair'][:key] = resource[:value]
+updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = resource[:value]
 
+for elm in @rnarray do
+ puts "\n\npolicy Element ---" 
+ puts policyElem
+  if elm == "iscsi"
+    policyElem.add_element 'lsbootIScsi', {'rn' => '', 'order' => ''}
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = @rnarray.find_index { |e| e.match( /iscsi/ ) }.to_i + 1
+  end
+  if elm == "lan"
+    policyElem.add_element 'lsbootLan', {'rn' => '', 'order' => ''}
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootLan'][:rn] = "lan"
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootLan'][:order] = @rnarray.find_index { |e| e.match( /lan/ ) }.to_i + 1
+  end
+  if elm == "storage"
+    policyElem.add_element 'lsbootStorage', {'rn' => '', 'order' => ''}
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootStorage'][:rn] = "storage"
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootStorage'][:order] = @rnarray.find_index { |e| e.match( /storage/ ) }.to_i + 1
+  end
+  #if elm == "read-write-vm"
+   # policyElem.add_element 'lsbootVirtualMedia', {'rn' => '', 'order' => ''}
+   # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
+   # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = @rnarray.find_index { |e| e.match( /iscsi/ ) }.to_i
+  #end
+  #if elm == "read-only-vm"
+   # policyElem.add_element 'lsbootVirtualMedia', {'rn' => '', 'order' => ''}
+  # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
+  # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = @rnarray.find_index { |e| e.match( /iscsi/ ) }.to_i
+  #end
+end
 
-
-
+puts temp_doc
+  temp_file_path = File.join xml_template_path, "temp_update_boot_policy"
+  temp_file_path+= ".xml"
+  File.open(temp_file_path,"w") do |data|
+     data<<temp_doc
+   end
+   
+  temp_formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("temp_update_boot_policy")
+  temp_requestxml = temp_formatter.command_xml(updateparameters);
+  puts " the new request xml ----" + temp_requestxml
+  
+  temp_responsexml = post temp_requestxml
+  puts " the new response xml ----" + temp_responsexml
+  
+   # todo: delete temporary xml file 
+  # todo: order exceed the limit
+=begin
 
 for elm in @rnarray do
   if elm == "iscsi"
@@ -144,7 +196,7 @@ for elm in @rnarray do
     puts  @rnarray.find_index { |e| e.match( /read-only-vm/ ) }.to_i
     element = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"]
     $i = 0
-      while ! element.attributes["access"].eql?('read-only')
+      unless element.attributes["access"].eql?('read-only')
         puts("Inside the loop i =>>>>>>>>>>>>>>>>>>>>> #$i" )
         element = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"]
       end
@@ -163,9 +215,31 @@ end
   responsexml1 = post ucsbootorderDoc
   puts"#########################################################################################################################3"
   puts responsexml1
+  
+=end
+
 end 
      
-    
+def xml_template_path
+          module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
+          puts "module_lib" + module_lib.to_s
+          File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
+
+        end
+
+        def xml_template (filename)
+          content = ""
+          xml_path = File.join xml_template_path, filename
+          xml_path+= ".xml"
+          if File.exists?(xml_path)
+            # read file in block will close the file handle internally when block terminates
+            content = File.open(xml_path, 'r') { |file| file.read }
+          else
+            raise Puppet::Error, "Cannot read request xml template from location: " + xml_path
+          end
+          return content
+        end
+        
       #check If exist
       def exists?
         ens = resource[:ensure]
