@@ -135,13 +135,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
             end
           end
           
+          Puppet.notice(@error_code.to_s);
+          
           return @error_code;
 
           
           else
             failConfigCount = failConfigCount+1;
           
-          sleep(1);
+          sleep(60);
           next;
         end
 
@@ -152,7 +154,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
         break;
       end
 
-      sleep(1);
+      sleep(60);
       counter = counter  +  1;
     end
 
@@ -175,7 +177,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
         Puppet.notice('successfully dissociated!');
         return;
       end
-      sleep(1);
+      sleep(60);
       counter = counter+1;
     end
 
