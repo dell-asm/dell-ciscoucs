@@ -8,7 +8,7 @@ $ciscoucs = {
 
 
 $ciscoucs_serviceprofile = { 
-  'name'        => 'abhijServiceProfile',
+  'name'        => 'testServiceProfile',
   'org'         => 'org-root',
   'dn'        => '',
   'power_state_on' => 'up',
@@ -54,5 +54,5 @@ $ciscoucs_profile_association_dissociation = {
   server_slot_id => 'blade-3',   
   server_dn => '',
   transport  => Transport_ciscoucs['ciscoucs'],
->>>>>>> .r6306
+
 }
