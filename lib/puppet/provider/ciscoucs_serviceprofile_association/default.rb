@@ -170,10 +170,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     while counter < maxCount  do
       response_xml = call_for_current_state(profile_dn);
       parseState(response_xml);
-
+      Puppet.notice(response_xml);
+      
       if @state == "none"
-        break;
-      else 
         Puppet.notice('successfully dissociated!');
         return;
       end
