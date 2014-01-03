@@ -19,7 +19,7 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
 
     str = boot_policy_dn
     bootpolicyname = str.split("boot-policy-").last
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("modifyBootPolicy")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("modifyBootPolicy")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/lsServer'][:bootPolicyName] = bootpolicyname
     parameters['/configConfMos/inConfigs/pair'][:key] = service_profile_dn

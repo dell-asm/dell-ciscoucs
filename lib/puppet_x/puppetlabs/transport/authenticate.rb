@@ -16,7 +16,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def login
-      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaLogin")
+      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaLogin")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogin'][:inName] = @username
       parameters['/aaaLogin'][:inPassword] = @password
@@ -48,7 +48,7 @@ module PuppetX::Puppetlabs::Transport
     end
 
     def refresh
-      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaRefresh")
+      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaRefresh")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaRefresh'][:inName] = @username
       parameters['/aaaRefresh'][:inPassword] = @password
@@ -80,7 +80,7 @@ module PuppetX::Puppetlabs::Transport
 
     def logout
       Puppet.debug("#{self.class} closing connection to:  #{@url}")
-      formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("aaaLogout")
+      formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("aaaLogout")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/aaaLogout'][:inCookie] = @@cookie
       requestxml = formatter.command_xml(parameters)

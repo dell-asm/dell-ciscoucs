@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
   include PuppetX::Puppetlabs::Transport
   @doc = "Create VLAN on Cisco UCS device."
   def create
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createvlan")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createvlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
     parameters['/configConfMos/inConfigs/pair'][:key] = get_dn
@@ -54,7 +54,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
 
   def destroy
     Puppet.debug("destroy method call")
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("deletevlan")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("deletevlan")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:dn] = get_dn
     parameters['/configConfMos/inConfigs/pair'][:key] = get_dn

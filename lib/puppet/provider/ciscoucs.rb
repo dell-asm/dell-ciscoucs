@@ -42,7 +42,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_profile_exists(dn)
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("VerifyElementExists")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("VerifyElementExists")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveDn'][:cookie] = cookie
     parameters['/configResolveDn'][:dn] = dn
@@ -145,7 +145,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_boot_policy_exists(dn)
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("verifyBootPolicy")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyBootPolicy")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = dn

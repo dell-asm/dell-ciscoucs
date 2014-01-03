@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
   @doc = "Create server profile on Cisco UCS device."
   def create
        
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updatelanBootOrderPolicy")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("updatelanBootOrderPolicy")
         parameters = PuppetX::Util::Ciscoucs::NestedHash.new
         parameters['/configResolveClass'][:cookie] = cookie
         parameters['/configResolveClass/inFilter/eq'][:value] = resource[:policyname] 
@@ -114,7 +114,7 @@ puts temp_doc
      data<<temp_doc
    end
    
-  temp_formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("temp_update_boot_policy")
+  temp_formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("temp_update_boot_policy")
   temp_requestxml = temp_formatter.command_xml(updateparameters);
   
   temp_responsexml = post temp_requestxml

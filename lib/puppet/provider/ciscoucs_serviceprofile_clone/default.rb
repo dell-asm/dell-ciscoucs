@@ -18,7 +18,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     targetprofileorg = str.split("/ls-").first
     clonename = str.split("ls-").last
 
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("createServiceProfileClone")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("createServiceProfileClone")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/lsClone'][:dn] = source_profile_dn
     parameters['/lsClone'][:inTargetOrg] = targetprofileorg

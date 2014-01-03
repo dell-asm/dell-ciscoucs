@@ -3,7 +3,7 @@ require 'rexml/document'
 module  PuppetX
   module Util
     module Ciscoucs
-      class Xml_formatter
+      class xmlformatter
         def initialize(command_name)
           @command = command_name
         end

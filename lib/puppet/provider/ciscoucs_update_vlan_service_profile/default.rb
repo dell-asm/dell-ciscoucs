@@ -14,7 +14,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
   def create
     source_profile_dn = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}/ether-#{@resource[:vnic]}"
     source_profile_rn = "if-#{resource[:vlanname]}"
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updateVLANServiceProfile")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("updateVLANServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/vnicEther'][:dn] = "#{source_profile_dn}"
     parameters['/configConfMos/inConfigs/pair/vnicEther/vnicEtherIf'][:defaultNet] = @resource[:defaultnet]
@@ -57,7 +57,7 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
   end
 
   def checkvlan
-    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("verifyVLAN")
+    formatter = PuppetX::Util::Ciscoucs::xmlformatter.new("verifyVLAN")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
     parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:vlanname]
