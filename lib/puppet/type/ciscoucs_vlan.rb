@@ -3,7 +3,7 @@ Puppet::Type.newtype(:ciscoucs_vlan) do
   ensurable
 
   newparam(:name) do
-    desc "vlan Name/Prefix. It must be unique. Valid characters are a-z, 1-9. Max length is 33"
+    desc "vlan Name/Prefix. It must be unique. Valid characters are all non white space string characters (a-z, 0-9,-,_). Max length is 33"
     isnamevar
     validate do |value|
       if value.strip.length > 33
