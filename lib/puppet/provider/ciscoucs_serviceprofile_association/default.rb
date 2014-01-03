@@ -73,7 +73,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
-    Puppet.debug "Response from associate profile: \n" + responsexml;
+    Puppet.debug "Response from dissociate profile: \n" + responsexml;
 
     check_operation_state_till_dissociate_completion(profile_dn)
 
@@ -139,7 +139,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       end
 
       if @state == "associated"
-        puts 'associated!';
+        puts 'successfully associated!';
         break;
       end
 
@@ -147,7 +147,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       counter = counter +1;
     end
 
-    puts "Fails to associate";
+    puts "Fails to associate service profile";
 
   end
 
@@ -162,13 +162,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
       if @state == "none"
         break;
+      else 
+        puts 'successfully dissociated!';
+        return;
       end
       sleep(60);
       counter = counter+1;
     end
 
-    puts "Fails to dissociate";
-
+    puts "Fails to dissociate service profile";
   end
 
   #call for current state
