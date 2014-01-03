@@ -13,8 +13,7 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
   include PuppetX::Puppetlabs::Transport
   @doc = "Create server profile on Cisco UCS device."
   def create
-    puts "inside create method"
-   
+       
     formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("updatelanBootOrderPolicy")
         parameters = PuppetX::Util::Ciscoucs::NestedHash.new
         parameters['/configResolveClass'][:cookie] = cookie
@@ -35,71 +34,40 @@ Puppet::Type.type(:ciscoucs_updatelan_boot_order).provide(:default, :parent => P
     @rnarray = Array.new
     
     if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"]
+       lanorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"].attributes["order"]
+       @rnarray[lanorder.to_i-1] = "lan"
+    end 
       
-    lanorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootLan"].attributes["order"]
-      puts "lannn ::::"+ lanorder
-      @rnarray[lanorder.to_i-1] = "lan"
-           
-        end 
-      
-        if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"]
-        
-    sanorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"].attributes["order"]
-          puts "sannn ::::::::"+sanorder
+    if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"]
+       sanorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootStorage"].attributes["order"]
+       @rnarray[sanorder.to_i-1] = "storage"
+    end
           
-          @rnarray[sanorder.to_i-1] = "storage"
-          
-          
-          end
-          
-           if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"]
-          
-    iscsiorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"].attributes["order"]
-          puts "iscsi ::::::::::::::"+iscsiorder
-          
-             @rnarray[iscsiorder.to_i-1] = "iscsi"
-            
-          
-             end
+    if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"]
+       iscsiorder = ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"].attributes["order"]
+       @rnarray[iscsiorder.to_i-1] = "iscsi"
+    end
 
     if ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"] && 
-      ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
-      ucsbootorderDoc.elements.each("/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia") {
+       ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
+       ucsbootorderDoc.elements.each("/configResolveClass/outConfigs/lsbootPolicy/lsbootVirtualMedia") {
                 |media|
-                
                  rn = media.attributes["rn"]
                 
-                   if rn=="read-write-vm"
+                 if rn=="read-write-vm"
                      worder = media.attributes["order"]
-                     puts "write      media order:::::::::::: " + worder
-                     
                      @rnarray[worder.to_i-1] = "read-write-vm"
-                     
-                   end
-                   
-        if rn=="read-only-vm"
-          rorder = media.attributes["order"]
-          puts "read       media order:::::::::::::::::::::::::::: " + rorder
-          
-          @rnarray[rorder.to_i-1] = "read-only-vm"
-          
-        end
+                 end
+                 if rn=="read-only-vm"
+                     rorder = media.attributes["order"]
+                     @rnarray[rorder.to_i-1] = "read-only-vm"
+                 end
                    
         }           
-           
-        
     end 
              
-puts "#{@rnarray}"
-
-puts "Lan required order ::::::::"+resource[:lanorder] 
-
-  lancurorder=@rnarray.find_index { |e| e.match( /lan/ ) }.to_i
-puts "Lan Current order :::::::::::::::::::::"+lancurorder.to_s
-
-puts "------------------------------------------------------------------Re-Ordered Array"
-@rnarray.insert(resource[:lanorder].to_i-1, @rnarray.delete_at(lancurorder.to_i))
-puts "#{@rnarray}"
+    lancurorder=@rnarray.find_index { |e| e.match( /lan/ ) }.to_i
+    @rnarray.insert(resource[:lanorder].to_i-1, @rnarray.delete_at(lancurorder.to_i))
 
 xml_content = xml_template "updateBootPolicyOrder"
 temp_doc = REXML::Document.new(xml_content)
@@ -110,8 +78,8 @@ updateparameters['/configConfMos/inConfigs/pair'][:key] = resource[:policyname]
 updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = resource[:policyname]
 
 for elm in @rnarray do
- puts "\n\npolicy Element ---" 
- puts policyElem
+ 
+
   if elm == "iscsi"
     policyElem.add_element 'lsbootIScsi', {'rn' => '', 'order' => ''}
     updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
@@ -148,15 +116,12 @@ puts temp_doc
    
   temp_formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("temp_update_boot_policy")
   temp_requestxml = temp_formatter.command_xml(updateparameters);
-  puts " the new request xml ----" + temp_requestxml
   
   temp_responsexml = post temp_requestxml
-  puts " the new response xml ----" + temp_responsexml
   
    # todo: delete temporary xml file 
   # todo: order exceed the limit
 =begin
-
 for elm in @rnarray do
   if elm == "iscsi"
   ucsbootorderDoc.elements["/configResolveClass/outConfigs/lsbootPolicy/lsbootIScsi"].attributes['order'] = @rnarray.find_index { |e| e.match( /iscsi/ ) }.to_i
@@ -189,52 +154,39 @@ for elm in @rnarray do
     element.attributes['order'] = @rnarray.find_index { |e| e.match( /read-only-vm/ ) }.to_i
     
   end
-  
+ end
 
-end
-  
-  
-  puts "seding ---------"
-  ucsbootorderDoc.context[:attribute_quote] = :quote
-  puts ucsbootorderDoc
-  responsexml1 = post ucsbootorderDoc
-  puts"#########################################################################################################################3"
-  puts responsexml1
-  
 =end
 
 end 
      
 def xml_template_path
           module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
-          puts "module_lib" + module_lib.to_s
           File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
+end
 
-        end
-
-        def xml_template (filename)
-          content = ""
-          xml_path = File.join xml_template_path, filename
-          xml_path+= ".xml"
-          if File.exists?(xml_path)
+   def xml_template (filename)
+         content = ""
+         xml_path = File.join xml_template_path, filename
+         xml_path+= ".xml"
+         if File.exists?(xml_path)
             # read file in block will close the file handle internally when block terminates
             content = File.open(xml_path, 'r') { |file| file.read }
-          else
+         else
             raise Puppet::Error, "Cannot read request xml template from location: " + xml_path
-          end
-          return content
-        end
+         end
+         return content
+    end
         
-      #check If exist
-      def exists?
+#check If exist
+ def exists?
         ens = resource[:ensure]
-                  result = false;
-                  if (ens.to_s =="absent")       
-                    result = true;
-                  elsif (ens.to_s =="absent")        
-                    result = true;
-                  end  
-                 
-                  return result;
-              end
-        end
+        result = false;
+        if (ens.to_s =="absent")       
+            result = true;
+        elsif (ens.to_s =="absent")        
+            result = true;
+        end  
+        return result;
+  end
+end
