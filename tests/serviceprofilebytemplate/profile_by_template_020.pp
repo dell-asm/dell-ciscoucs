@@ -2,7 +2,7 @@ include ciscoucs
 
 import '../data.pp'
 
-# As a user I want to create "Service Profile from Template" ,when the existing template is present in nested organisation. ( root->finance->gale->SPT)
+# As a user I want to create Service Profile from Template when user enters source template and organisation name.
 
 transport_ciscoucs { 'ciscoucs':
   username => "${ciscoucs['username']}",

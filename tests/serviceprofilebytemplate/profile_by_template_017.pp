@@ -2,12 +2,12 @@ include ciscoucs
 
 import '../data.pp'
 
-# As a user I want to create "Service Profile from Template" ,when the existing template is present in nested organisation. ( root->finance->gale->SPT)
+# As a user I want to see proper error message when user enters invalid value in UCS Connection Information(Hostname)
 
 transport_ciscoucs { 'ciscoucs':
   username => "${ciscoucs['username']}",
   password => "${ciscoucs['password']}",
-  server   => "${ciscoucs['server']}",
+  server   => "",
  
 }
 

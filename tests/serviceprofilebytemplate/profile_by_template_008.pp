@@ -2,7 +2,7 @@ include ciscoucs
 
 import '../data.pp'
 
-# As a user I want to create "Service Profile from Template" ,when the existing template is present in nested organisation. ( root->finance->gale->SPT)
+# As a user I want to see proper error message when user enters invalid value(number of instances 256) in input and executes the operation.
 
 transport_ciscoucs { 'ciscoucs':
   username => "${ciscoucs['username']}",
@@ -15,8 +15,9 @@ transport_ciscoucs { 'ciscoucs':
 ciscoucs_serviceprofile { 'name':
   name        => "${ciscoucs_serviceprofile['name']}",
   org         => "${ciscoucs_serviceprofile['org']}",
-  dn         => "${ciscoucs_serviceprofile['dn']}",
+  dn         => "",
   ensure  => "${ciscoucs_serviceprofile['ensure']}",
   source_template => "${ciscoucs_serviceprofile['source_template']}",
+  number_of_profiles => "256",
   transport   => Transport_ciscoucs['ciscoucs'],
 }
