@@ -117,37 +117,46 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     failConfigMaxCount = 5;
     counter = 0;
     failConfigCount = 0;
+    
 
     while counter < maxCount  do
       response_xml = call_for_current_state(profile_dn);
+      Puppet.notice(response_xml);
+      
       parseState(response_xml);
 
       if @config_state == "failed-to-apply"
         if failConfigCount >= failConfigMaxCount
-
+          
           if @error_code != ''
             if parse_error_code(@error_code)
+              Puppet.notice("here I come");
               next;
             end
           end
+          
           return @error_code;
-        elsif
-        failConfigCount = failConfigCount+1;
-          sleep(60);
+
+          
+          else
+            failConfigCount = failConfigCount+1;
+          
+          sleep(1);
           next;
         end
+
       end
 
       if @state == "associated"
-        puts 'successfully associated!';
+        Puppet.notice('successfully associated!');
         break;
       end
 
-      sleep(60);
-      counter = counter +1;
+      sleep(1);
+      counter = counter  +  1;
     end
 
-    puts "Fails to associate service profile";
+    Puppet.notice("Fails to associate service profile");
 
   end
 
@@ -163,14 +172,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       if @state == "none"
         break;
       else 
-        puts 'successfully dissociated!';
+        Puppet.notice('successfully dissociated!');
         return;
       end
-      sleep(60);
+      sleep(1);
       counter = counter+1;
     end
 
-    puts "Fails to dissociate service profile";
+    Puppet.notice("Fails to dissociate service profile");
   end
 
   #call for current state
