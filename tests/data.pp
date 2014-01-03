@@ -31,14 +31,13 @@ $ciscoucs_clone = {
    'targetorganization' => 'org-root/org-Finance/org-test1',
 }
 
-$ciscoucs_modify_serviceprofile_boot_policy = { 
+$ciscoucs_modify_boot_policy = { 
    'ensure'    => 'modify',
-   'transport'  => Transport_ciscoucs['ciscoucs'],
-   'bootpolicydn' => 'org-root/boot-policy-test_boot_policy',
-   'bootpolicyname' => 'test_boot_policy',
+   'bootpolicydn' => 'org-root/boot-policy-testbootpolicy',
+   'bootpolicyname' => 'testbootpolicy',
    'bootpolicyorganization' => 'org-root',
-   'serviceprofiledn' => 'org-root/ls-testing',
-   'serviceprofilename' => 'testing',
+   'serviceprofiledn' => 'org-root/ls-template1',
+   'serviceprofilename' => 'template1',
    'serviceprofileorganization' => 'org-root',
 
 }

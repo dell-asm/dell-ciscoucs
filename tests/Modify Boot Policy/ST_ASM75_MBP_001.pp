@@ -11,12 +11,12 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_modify_serviceprofile_boot_policy { 'serviceprofilename':
-   ensure    => "${ciscoucs_modify_serviceprofile_boot_policy['ensure']}",,
+   ensure    => "${ciscoucs_modify_boot_policy['ensure']}",
    transport  => Transport_ciscoucs['ciscoucs'],
-   bootpolicydn => "${ciscoucs_modify_serviceprofile_boot_policy['bootpolicydn']}",
+   bootpolicydn => "${ciscoucs_modify_boot_policy['bootpolicydn']}",
    bootpolicyname => "",
    bootpolicyorganization => "",
-   serviceprofiledn => "${ciscoucs_modify_serviceprofile_boot_policy['serviceprofiledn']}",
+   serviceprofiledn =>"${ciscoucs_modify_boot_policy['serviceprofiledn']}",
    serviceprofilename => "",
    serviceprofileorganization => "",
 }
