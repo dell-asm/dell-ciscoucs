@@ -9,7 +9,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Associate or disassociate server profile on Cisco UCS device."
+  
+  @error_codes_array = Array.new(9);
+  
+  
 
+  @state = "";
+  @config_state = "";
+  @error_code = "";
   def create
     # check if the profile exists
     if ! check_profile_exists profile_dn
@@ -31,12 +38,16 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
-    disconnect
+    
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
-    Puppet.debug "Response from associate profile: \n" + responsexml
-    # todo: error handling
+    Puppet.debug "Response from associate profile: \n" + responsexml;
+
+    check_operation_state_till_associate_completion(profile_dn);
+    
+    disconnect;
+
   end
 
   def destroy
@@ -44,7 +55,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if ! check_profile_exists profile_dn
       raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
-    
+
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("disAssociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
@@ -60,12 +71,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
-    disconnect
+    
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
-    Puppet.debug "Response from associate profile: \n" + responsexml
-    # todo: error handling
+    Puppet.debug "Response from associate profile: \n" + responsexml;
+
+    check_operation_state_till_disassociate_completion(profile_dn)
+    
+    disconnect
 
   end
 
@@ -94,6 +108,124 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       source_dn = resource[:server_dn]
     end
     return source_dn
+  end
+
+  #check operation status till completion
+  def check_operation_state_till_associate_completion(profile_dn)
+    
+    @error_codes_array = ['connection-placement','vhba-capacity', 'vnic-capacity', 'mac-address-assignment', 'system-uuid-assignment', 'empty-pool', 'named-policy-unresolved', 'wwpn-assignment', 'wwnn-assignment'];
+    
+    maxCount = 60;
+    failConfigMaxCount = 5;
+    counter = 0;
+    failConfigCount = 0;
+
+    while counter < maxCount  do
+      response_xml = call_for_current_state(profile_dn);
+      parseState(response_xml);
+
+      if @config_state == "failed-to-apply"
+        if failConfigCount >= failConfigMaxCount
+          
+          if @error_code != '' 
+            if parse_error_code(@error_code)
+              next;
+            end
+          end          
+          return @error_code;
+        elsif
+        failConfigCount = failConfigCount+1;
+          sleep(60);
+          next;
+        end
+      end
+
+      if @state == "associated"
+        puts 'associated!';
+        break;
+      end
+
+      sleep(60);
+      counter = counter +1;
+    end
+
+    puts "Fails to associate";
+
+  end
+
+  #check operation status till completion
+  def check_operation_state_till_disassociate_completion(profile_dn)
+    maxCount = 10;
+    counter = 0;
+
+    while counter < maxCount  do
+      response_xml = call_for_current_state(profile_dn);
+      parseState(response_xml);
+
+      if @state == "none"
+        break;
+      end
+      sleep(60);
+      counter = counter+1;
+    end
+
+    puts "Fails to disassociate";
+
+  end
+
+  #call for current state
+  def call_for_current_state(profile_dn)
+    formatter = PuppetX::Util::Ciscoucs::Xml_formatter.new("getServiceProfileState")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveClass'][:cookie] = cookie
+    parameters['/configResolveClass'][:classId] = "lsServer";
+    parameters['/configResolveClass'][:inHierarchical] = "false";
+    parameters['/configResolveClass/inFilter/eq'][:class] = "lsServer"
+    parameters['/configResolveClass/inFilter/eq'][:property] = "dn";
+    parameters['/configResolveClass/inFilter/eq'][:value] = profile_dn;
+    requestxml = formatter.command_xml(parameters);
+    responsexml = post requestxml;
+    return responsexml;
+  end
+
+  #parse the state of association
+  def parseState(response_xml)
+    myelement = REXML::Document.new(response_xml);
+    root = myelement.root
+    myelement.elements.each("/configResolveClass/outConfigs/lsServer") {
+      |e|
+
+      @state = e.attributes['assocState'].to_s;
+      @config_state = e.attributes['configState'].to_s;
+      @error_code = e.attributes['configQualifier'].to_s;
+
+    }
+
+  end
+  
+  #parse error and check
+  def parse_error_code(error_code)
+    result = false;
+    
+    output_errors = error_code.split(',');
+    
+    puts error_code;
+    puts output_errors;
+    puts @error_codes_array;
+    
+    
+    output_errors.each { 
+      |x|
+      @error_codes_array.each{
+        |y|
+        
+        if x.to_s == y.to_s
+          result = true;
+        end
+        
+      }
+    }    
+    return result;
   end
 
   #check If exist
