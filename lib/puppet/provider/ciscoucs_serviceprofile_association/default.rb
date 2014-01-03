@@ -172,7 +172,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       parseState(response_xml);
       Puppet.notice(response_xml);
       
-      if @state == "none"
+      if @state == "unassociated"
         Puppet.notice('successfully dissociated!');
         return;
       end
