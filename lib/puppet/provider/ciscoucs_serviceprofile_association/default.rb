@@ -207,12 +207,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def parse_error_code(error_code)
     result = false;
     
-    output_errors = error_code.split(',');
-    
-    puts error_code;
-    puts output_errors;
-    puts @error_codes_array;
-    
+    output_errors = error_code.split(',');  
     
     output_errors.each { 
       |x|
