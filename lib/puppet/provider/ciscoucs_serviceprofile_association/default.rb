@@ -9,10 +9,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   include PuppetX::Puppetlabs::Transport
   @doc = "Associate or dissociate server profile on Cisco UCS device."
-  
+
   @error_codes_array = Array.new(9);
-  
-  
 
   @state = "";
   @config_state = "";
@@ -38,14 +36,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
-    
+
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
     Puppet.debug "Response from associate profile: \n" + responsexml;
 
     check_operation_state_till_associate_completion(profile_dn);
-    
+
     disconnect;
 
   end
@@ -71,14 +69,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
     Puppet.debug "Sending associate profile request xml: \n" + requestxml
     responsexml = post requestxml
-    
+
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
     Puppet.debug "Response from associate profile: \n" + responsexml;
 
     check_operation_state_till_dissociate_completion(profile_dn)
-    
+
     disconnect
 
   end
@@ -112,9 +110,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   #check operation status till completion
   def check_operation_state_till_associate_completion(profile_dn)
-    
+
     @error_codes_array = ['connection-placement','vhba-capacity', 'vnic-capacity', 'mac-address-assignment', 'system-uuid-assignment', 'empty-pool', 'named-policy-unresolved', 'wwpn-assignment', 'wwnn-assignment'];
-    
+
     maxCount = 60;
     failConfigMaxCount = 5;
     counter = 0;
@@ -126,12 +124,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
       if @config_state == "failed-to-apply"
         if failConfigCount >= failConfigMaxCount
-          
-          if @error_code != '' 
+
+          if @error_code != ''
             if parse_error_code(@error_code)
               next;
             end
-          end          
+          end
           return @error_code;
         elsif
         failConfigCount = failConfigCount+1;
@@ -202,24 +200,24 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     }
 
   end
-  
+
   #parse error and check
   def parse_error_code(error_code)
     result = false;
-    
-    output_errors = error_code.split(',');  
-    
-    output_errors.each { 
+
+    output_errors = error_code.split(',');
+
+    output_errors.each {
       |x|
       @error_codes_array.each{
         |y|
-        
+
         if x.to_s == y.to_s
           result = true;
         end
-        
+
       }
-    }    
+    }
     return result;
   end
 
