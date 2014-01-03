@@ -9,15 +9,20 @@ Puppet::Type.newtype(:ciscoucs_updatelan_boot_order) do
     defaultto(:present)
   end
 
-  newparam(:dn, :namevar => true) do
+  newparam(:policyname, :namevar => true ) do
+    desc "Boot Policy name"
+    end
+     
+  newparam(:dn) do
     desc "Service profile dn"
-  end
-    
-  newparam(:value) do
-      desc "Service profile dn"
-   end
- 
-  newparam(:lanorder) do
-     desc "Order number of LAN"
+    end
+     
+   newparam(:organization) do
+      desc "Service profile org"
+      end
+   
+   newparam(:lanorder) do
+      desc "Order number of LAN"
+      end
 end
-end
+
