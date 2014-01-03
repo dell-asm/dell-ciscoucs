@@ -54,7 +54,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
 
-    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("dissociateServiceProfile")
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("disAssociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
     parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
