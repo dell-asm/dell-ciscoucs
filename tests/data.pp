@@ -16,7 +16,8 @@ $ciscoucs_serviceprofile = {
   'ensure'          => 'present',
   'source_template' => 'testing',
   'server_chassis_id' => 'chassis-1',
-  'server_slot' => 'blade-1',   
+  'server_slot' => 'blade-1',  
+  'number_of_profiles' => '1', 
 }
 
 

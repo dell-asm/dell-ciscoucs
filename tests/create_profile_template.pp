@@ -17,6 +17,7 @@ ciscoucs_serviceprofile { 'name':
   ensure  => "${ciscoucs_serviceprofile['ensure']}",
   source_template => "${ciscoucs_serviceprofile['source_template']}",
   transport   => Transport_ciscoucs['ciscoucs'],
+  number_of_profiles => => "${ciscoucs_serviceprofile['number_of_profiles']}",
 }
 
 

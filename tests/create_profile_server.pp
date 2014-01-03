@@ -15,6 +15,7 @@ ciscoucs_serviceprofile { 'name':
   dn         => "${ciscoucs_serviceprofile['dn']}",
   server_chassis_id => "${ciscoucs_serviceprofile['server_chassis_id']}",
   server_slot => "${ciscoucs_serviceprofile['server_slot']}",
+  ensure          => "${ciscoucs_serviceprofile['ensure']}",
   transport   => Transport_ciscoucs['ciscoucs'],
 }
 
