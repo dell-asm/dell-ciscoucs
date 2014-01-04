@@ -55,3 +55,15 @@ $ciscoucs_profile_association_dissociation = {
   transport  => Transport_ciscoucs['ciscoucs'],
 
 }
+
+
+$ciscoucs_modify_lan_bootorder= { 
+   'ensure'    => 'present',
+   'dn' => 'org-root/boot-policy-test_boot_policy',
+   'bootpolicyname' => 'test_boot_policy',
+   'organization' => 'org-root',
+   'lanorder' => '2',
+}
+
+
+
