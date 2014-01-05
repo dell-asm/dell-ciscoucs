@@ -1,7 +1,5 @@
 include ciscoucs
 
-# Power Off Service Profile - for profile created from template.
-
 import '../data.pp'
 
 transport_ciscoucs { 'ciscoucs':

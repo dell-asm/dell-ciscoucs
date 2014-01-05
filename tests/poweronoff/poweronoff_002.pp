@@ -11,8 +11,8 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile { 'name':
-  name        => "",
-  org         => "",
+  #name        => "",
+  #org         => "",
   dn         => "${ciscoucs_serviceprofile['dn']}",
   power_state => "${ciscoucs_serviceprofile['power_state_on']}",
   transport   => Transport_ciscoucs['ciscoucs'],

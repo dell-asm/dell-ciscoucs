@@ -1,21 +1,23 @@
 include ciscoucs
+import '../data.pp'
 
 transport_ciscoucs { 'ciscoucs':
-  username => 'admin',
-  password => 'admin',
-  server   => '192.168.40.13                                                                                                                                          1',
+  username => "${ciscoucs['username']}",
+  password => "${ciscoucs['password']}",
+  server   => "${ciscoucs['server']}",
+ 
 }
-
-# providing Sourceprofiledn and Targetprofiledn 
 
 ciscoucs_serviceprofile_clone { 'sourceprofilename':
-   ensure    => present,
+   ensure         => "${ciscoucs_serviceprofile_clone['ensure']}",
    transport  => Transport_ciscoucs['ciscoucs'],
-   sourceprofiledn => 'org-root/org-Finance/testing',
-   targetprofiledn => 'org-root/org-Finance/org-test1/org-test2/clone', 
-   sourceserviceprofilename      => '',
-   sourceorganization => '',
-   targetserviceprofilename      => '',
-   targetorganization => '',
+   #sourceprofiledn => "${ciscoucs_serviceprofile_clone['sourceprofiledn']}",
+   targetprofiledn => "${ciscoucs_serviceprofile_clone['targetprofiledn']}", 
+   sourceserviceprofilename      => "${ciscoucs_serviceprofile_clone['sourceserviceprofilename']}",
+   sourceorganization => "${ciscoucs_serviceprofile_clone['sourceorganization']}",
+   #targetserviceprofilename      => "${ciscoucs_serviceprofile_clone['targetserviceprofilename']}",
+   #targetorganization => "${ciscoucs_serviceprofile_clone['targetorganization']}",
 }
-     
+
+
+
