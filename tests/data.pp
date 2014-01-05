@@ -21,27 +21,27 @@ $ciscoucs_serviceprofile = {
 }
 
 
-$ciscoucs_clone = { 
-   'ensure'    => 'present',
-   'sourceprofiledn' => '',
-   'targetprofiledn' => '', 
-   'sourceserviceprofilename'      => 'testServiceProfile',
-   'sourceorganization' => 'org-root',
-   'targetserviceprofilename'      => 'testclone',
-   'targetorganization' => 'org-root/org-Finance/org-test1',
+$ciscoucs_serviceprofile_clone = { 
+   'ensure'=> 'present',
+   'sourceprofiledn'=> 'org-root/ls-SP1',
+   'targetprofiledn'=> 'org-root/ls-gk1', 
+   'sourceserviceprofilename'=> 'SP1',
+   'sourceorganization'=> 'org-root',
+   'targetserviceprofilename' => 'testclone',
+   'targetorganization'    => 'org-root',
 }
 
-$ciscoucs_modify_boot_policy = { 
-   'ensure'    => 'modify',
-   'bootpolicydn' => 'org-root/boot-policy-testbootpolicy',
-   'bootpolicyname' => 'testbootpolicy',
-   'bootpolicyorganization' => 'org-root',
-   'serviceprofiledn' => 'org-root/ls-template1',
-   'serviceprofilename' => 'template1',
+
+$ciscoucs_modify_serviceprofile_boot_policy = { 
+   'ensure'=> 'modify',
+   'bootpolicydn'=> 'org-root/boot-policy-testbootpolicy',
+   'bootpolicyname'=> 'gk',
+   'bootpolicyorganization'=> 'org-root/org-gk',
+   'serviceprofiledn'=> 'org-root/ls-SP1',
+   'serviceprofilename'=> 'SP1',
    'serviceprofileorganization' => 'org-root',
 
 }
-
 
 $ciscoucs_profile_association_dissociation = {
   ensure_present    => present, 
@@ -55,7 +55,6 @@ $ciscoucs_profile_association_dissociation = {
   transport  => Transport_ciscoucs['ciscoucs'],
 
 }
-
 
 $ciscoucs_modify_lan_bootorder= { 
    'ensure'    => 'present',
