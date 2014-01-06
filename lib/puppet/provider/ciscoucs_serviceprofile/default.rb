@@ -36,7 +36,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML for the Create Service Profile from Server operation"
     end
-    Puppet.debug "Sending create service profile from server request xml: \n" + requestxml
+    
     responsexml = post requestxml
     disconnect
     #parse response xml to check for errors
@@ -70,12 +70,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if verify_temp_request_xml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML to verify the template"
     end
-    Puppet.debug "Sending request xml: \n" + verify_temp_request_xml
+   
     verify_temp_response_xml = post verify_temp_request_xml
     if verify_temp_response_xml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the verify template operation."
     end
-    Puppet.debug "Response from verify template: \n" + verify_temp_response_xml
+   
     # parse and verify template response
 
     begin
@@ -110,13 +110,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Create Profile from Template operation."
     end
-    Puppet.debug "Sending create profile from template request xml: \n" + requestxml
+    
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response for the Create Profile from Template operation."
     end
-    Puppet.debug "Response from create profile from template: \n" + responsexml
+ 
 
     #parser response xml to check for errors
     begin
