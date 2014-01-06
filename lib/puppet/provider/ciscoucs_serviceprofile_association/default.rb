@@ -34,13 +34,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Associate Service Profile operation."
     end
-    Puppet.debug "Sending associate profile request xml: \n" + requestxml
+    
     responsexml = post requestxml
 
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Associate Service Profile operation."
     end
-    Puppet.debug "Response from associate profile: \n" + responsexml;
+  
 
     check_operation_state_till_associate_completion(profile_dn);
 
@@ -67,13 +67,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Dissociate Service Profile operation."
     end
-    Puppet.debug "Sending associate profile request xml: \n" + requestxml
+    
     responsexml = post requestxml
 
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
-    Puppet.debug "Response from dissociate profile: \n" + responsexml;
+   
 
     check_operation_state_till_dissociate_completion(profile_dn)
 
