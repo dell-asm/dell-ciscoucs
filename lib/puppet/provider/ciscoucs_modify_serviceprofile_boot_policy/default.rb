@@ -12,6 +12,15 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
   include PuppetX::Puppetlabs::Transport
   @doc = "Modify service profile boot policy on cisco ucs device."
   def create
+
+	# Check if the user is trying to apply the boot policy which is not applicable to that particular service profile
+	serviceprofile_organization = service_profile_dn.split("/ls-").first
+	serviceprofile_name = service_profile_dn.split("/ls-").last
+	bootpolicy_organization = boot_policy_dn.split("/boot-policy-").first
+	bootpolicy_name = boot_policy_dn.split("/boot-policy-").last
+	if serviceprofile_organization.to_s.strip.length < bootpolicy_organization.to_s.strip.length
+      raise Puppet::Error, "The boot policy " +bootpolicy_name+ " can't be applied to the service profile: " +serviceprofile_name
+    end
     # check if the boot policy exists
     if ! check_boot_policy_exists boot_policy_dn
       raise Puppet::Error, "The " + boot_policy_dn + " boot policy does not exist." 
