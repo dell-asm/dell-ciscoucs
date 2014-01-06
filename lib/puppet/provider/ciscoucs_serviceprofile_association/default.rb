@@ -23,12 +23,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if ! check_profile_exists profile_dn
       raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
     end
+    
+    @result = "";
    
     # check if blade is already associated with service profile
     check_server_already_associated server_dn
     
-    if @result != ""
-          raise Puppet::Error, "Service Profile already associated with '"+server_dn+"' is '"+@result ;
+    
+    if @result.to_s != ""
+          raise Puppet::Error, "Service Profile already associated with '"+server_dn+"' is '"+@result.to_s ;
           return;
     end
 
@@ -136,11 +139,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       raise Puppet::Error, "Unable to create a request XML for the check associated service profile to server."
     end
 
-    responsexml = post requestxml
+    responsexml = post requestxml;
 
-    parse_associated_service_profile(responsexml);
-
-    
+    parse_associated_service_profile(responsexml);   
 
   end
 
@@ -252,10 +253,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def parse_associated_service_profile(response_xml)
     myelement = REXML::Document.new(response_xml);
     root = myelement.root
-    myelement.elements.each("/configResolveClass/outConfigs/lsServer") {
+    
+    
+    myelement.elements.each("/configResolveClass/outConfigs/") {
       |e|
-
-      @result = e.attributes['dn'].to_s;
+    
+      if e.elements['lsServer'] != nil
+        puts "check if there";
+        @result = e.elements['lsServer'].attributes['dn'].to_s;
+      end
 
     }
 
