@@ -121,8 +121,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
     while counter < maxCount  do
       response_xml = call_for_current_state(profile_dn);
-      Puppet.notice(response_xml);
-      
+           
       parseState(response_xml);
 
       if @config_state == "failed-to-apply"
@@ -130,7 +129,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
           
           if @error_code != ''
             if parse_error_code(@error_code)
-              Puppet.notice("here I come");
+              Puppet.notice(@error_code.to_s);
               next;
             end
           end
