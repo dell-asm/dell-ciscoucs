@@ -258,8 +258,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     myelement.elements.each("/configResolveClass/outConfigs/") {
       |e|
     
-      if e.elements['lsServer'] != nil
-        puts "check if there";
+      if e.elements['lsServer'] != nil;
         @result = e.elements['lsServer'].attributes['dn'].to_s;
       end
 
