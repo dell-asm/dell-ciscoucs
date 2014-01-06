@@ -41,7 +41,7 @@ module PuppetX::Puppetlabs::Transport
         end
         @firmwareversion= root.attributes['outVersion']
         @@cookie = root.attributes['outCookie']
-        
+
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing login response" +  msg.to_s
       end
@@ -106,10 +106,13 @@ module PuppetX::Puppetlabs::Transport
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing logout response" +  msg.to_s
       end
+      @@cookie = ""
     end
+
     def getfirmwareversion
       @firmwareversion
     end
+
     def getcookie
       if !@@cookie || @@cookie.strip.length == 0
         login
@@ -120,7 +123,6 @@ module PuppetX::Puppetlabs::Transport
         end
       end
       return @@cookie
-      #      login
     end
   end
 end
