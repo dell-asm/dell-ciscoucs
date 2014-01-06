@@ -78,15 +78,39 @@ Puppet::Type.type(:ciscoucs_update_vlan_service_profile).provide(:default, :pare
 
   end
 
+  def checkvnic
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyVnic")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveClass'][:cookie] = cookie
+    parameters['/configResolveClass/inFilter/eq'][:value] = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}/ether-#{@resource[:vnic]}"
+    requestxml = formatter.command_xml(parameters)
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Cannot create request xml for verify vnic operation"
+    end
+    responsexml = post requestxml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from  verify vnic"
+    end
+    doc = REXML::Document.new(responsexml)
+    if doc.elements["/configResolveClass/outConfigs"].has_elements?
+      return true
+    else
+      raise Puppet::Error, "vNIC does not exist"
+    end
+
+  end
+
   def exists?
     # check if the source profile exists
     if checkvlan
-      source_profile_dn = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}"
-      if check_vlan_exist_service_profile(source_profile_dn,@resource[:vlanname],@resource[:defaultnet])
-        Puppet.debug("VLAN already updated in service profile")
-        return true
-      else
-        return false
+      if checkvnic
+        source_profile_dn = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}"
+        if check_vlan_exist_service_profile(source_profile_dn,@resource[:vlanname],@resource[:defaultnet])
+          Puppet.debug("VLAN already updated in service profile")
+          return true
+        else
+          return false
+        end
       end
     end
   end

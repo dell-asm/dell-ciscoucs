@@ -1,0 +1,5 @@
+<configResolveClass cookie="" inHierarchical="false" classId="vnicEther">
+    <inFilter>
+        <eq class="vnicEther" property="dn" value="" />
+    </inFilter>
+</configResolveClass>
