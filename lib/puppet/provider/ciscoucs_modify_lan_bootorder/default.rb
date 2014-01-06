@@ -23,55 +23,58 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML for the Modify Boot Policy order operation."
     end
-    puts requestxml
     responsexml = post requestxml
-    puts responsexml
-    #disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get response from the Modify Boot Policy order operation."
     end
 
-    rn = Array.new
+    order_array = Array.new
+
     begin
       doc = REXML::Document.new(responsexml)
       if !doc.elements["/configResolveClass/outConfigs/lsbootPolicy"]
         raise Puppet::Error, "Invalid response from the Modify Boot Policy order operation."
       end
-      boot_element = doc.elements["/configResolveClass/outConfigs/lsbootPolicy"]
 
-      if boot_element.elements["lsbootLan"]
-        lanorder = boot_element.elements["lsbootLan"].attributes["order"]
-        rn[lanorder.to_i-1] = "lan"
-      end
-      if boot_element.elements["lsbootStorage"]
-        sanorder = boot_element.elements["lsbootStorage"].attributes["order"]
-        rn[sanorder.to_i-1] = "storage"
-      end
-      if boot_element.elements["lsbootIScsi"]
-        iscsiorder = boot_element.elements["lsbootIScsi"].attributes["order"]
-        rn[iscsiorder.to_i-1] = "iscsi"
-      end
-      if boot_element.elements["lsbootVirtualMedia"] && boot_element.elements["lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
-        boot_element.elements.each("lsbootVirtualMedia") {
-          |media|
-          rn = media.attributes["rn"]
-          if rn=="read-write-vm"
-            worder = media.attributes["order"]
-            rn[worder.to_i-1] = "read-write-vm"
-          end
-          if rn=="read-only-vm"
-            rorder = media.attributes["order"]
-            rn[rorder.to_i-1] = "read-only-vm"
-          end
-        }
-      end
+      doc.elements.each("/configResolveClass/outConfigs/lsbootPolicy/") { |element|
+        if element.elements["lsbootLan"]
+          lanorder = element.elements["lsbootLan"].attributes["order"]
+          order_array[lanorder.to_i-1] = "lan"
+        end
+        if element.elements["lsbootStorage"]
+          sanorder = element.elements["lsbootStorage"].attributes["order"]
+          order_array[sanorder.to_i-1] = "storage"
+        end
+        if element.elements["lsbootIScsi"]
+          iscsiorder = element.elements["lsbootIScsi"].attributes["order"]
+          order_array[iscsiorder.to_i-1] = "iscsi"
+        end
+        if element.elements["lsbootVirtualMedia"] && element.elements["lsbootVirtualMedia"].attributes["type"].eql?('virtual-media')
+          element.elements.each("lsbootVirtualMedia") {
+            |media|
+            rn1 = media.attributes["rn"]
+            if rn1 == "read-write-vm"
+              worder = media.attributes["order"]
+              order_array[worder.to_i-1] = "read-write-vm"
+            end
+            if rn1 == "read-only-vm"
+              rorder = media.attributes["order"]
+              order_array[rorder.to_i-1] = "read-only-vm"
+            end
+          }
+        end
+      }
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the Modify Boot Policy order response. " +  msg.to_s
     end
 
+    # check if lan boot order is already same
+    lancurorder = order_array.find_index { |e| e.match( /lan/ ) }.to_i
+    if lancurorder+1 == resource[:lanorder].to_i
+      raise Puppet::Error, "LAN order is already "+ resource[:lanorder]
+    end
     # re-ordering
-    lancurorder=rn.find_index { |e| e.match( /lan/ ) }.to_i
-    rn.insert(resource[:lanorder].to_i-1, rn.delete_at(lancurorder.to_i))
+    order_array.insert(resource[:lanorder].to_i-1, order_array.delete_at(lancurorder.to_i))
 
     xml_content = xml_template "updateBootPolicyOrder"
     temp_doc = REXML::Document.new(xml_content)
@@ -81,33 +84,41 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     updateparameters['/configConfMos/inConfigs/pair'][:key] = boot_policy_dn
     updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = boot_policy_dn
 
-    for elm in rn do
+    for elm in order_array do
+      case (elm)
+      when "iscsi"
+        policyElem.add_element 'lsbootIScsi', {'rn' => 'iscsi', 'order' => order_array.find_index { |e| e.match( /iscsi/ ) }.to_i + 1}
+      when "lan"
+        policyElem.add_element 'lsbootLan', {'rn' => 'lan', 'order' => order_array.find_index { |e| e.match( /lan/ ) }.to_i + 1}
+      when "storage"
+        policyElem.add_element 'lsbootStorage', {'rn' => 'storage', 'order' => order_array.find_index { |e| e.match( /storage/ ) }.to_i + 1}
+      when "read-write-vm"
+        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-write-vm', 'order' =>  order_array.find_index { |e| e.match( /read-write-vm/ ) }.to_i + 1}
+      when "read-only-vm"
+        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
+      end
+      
+=begin
       if elm == "iscsi"
-        policyElem.add_element 'lsbootIScsi', {'rn' => '', 'order' => ''}
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = rn.find_index { |e| e.match( /iscsi/ ) }.to_i + 1
+        policyElem.add_element 'lsbootIScsi', {'rn' => 'iscsi', 'order' => order_array.find_index { |e| e.match( /iscsi/ ) }.to_i + 1}
       end
       if elm == "lan"
-        policyElem.add_element 'lsbootLan', {'rn' => '', 'order' => ''}
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootLan'][:rn] = "lan"
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootLan'][:order] = rn.find_index { |e| e.match( /lan/ ) }.to_i + 1
+        policyElem.add_element 'lsbootLan', {'rn' => 'lan', 'order' => order_array.find_index { |e| e.match( /lan/ ) }.to_i + 1}
       end
       if elm == "storage"
-        policyElem.add_element 'lsbootStorage', {'rn' => '', 'order' => ''}
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootStorage'][:rn] = "storage"
-        updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootStorage'][:order] = rn.find_index { |e| e.match( /storage/ ) }.to_i + 1
+        policyElem.add_element 'lsbootStorage', {'rn' => 'storage', 'order' => order_array.find_index { |e| e.match( /storage/ ) }.to_i + 1}
       end
-      #if elm == "read-write-vm"
-      # policyElem.add_element 'lsbootVirtualMedia', {'rn' => '', 'order' => ''}
-      # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
-      # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = rn.find_index { |e| e.match( /iscsi/ ) }.to_i
-      #end
-      #if elm == "read-only-vm"
-      # policyElem.add_element 'lsbootVirtualMedia', {'rn' => '', 'order' => ''}
-      # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:rn] = "iscsi"
-      # updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy/lsbootIScsi'][:order] = rn.find_index { |e| e.match( /iscsi/ ) }.to_i
-      #end
+      if elm == "read-write-vm"
+        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-write-vm', 'order' =>  order_array.find_index { |e| e.match( /read-write-vm/ ) }.to_i + 1}
+      end
+      if elm == "read-only-vm"
+        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
+      end
+=end
+      
     end
+
+
 
     temp_file_path = File.join xml_template_path, "temp_update_boot_policy"
     temp_file_path+= ".xml"
@@ -115,61 +126,62 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
       data<<temp_doc
     end
 
-      temp_formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("temp_update_boot_policy")
-      temp_requestxml = temp_formatter.command_xml(updateparameters);
-
-      temp_responsexml = post temp_requestxml
-
-      # todo: delete temporary xml file
-      # todo: order exceed the limit
-
+    temp_formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("temp_update_boot_policy")
+    temp_requestxml = temp_formatter.command_xml(updateparameters);
+    temp_responsexml = post temp_requestxml
+    if temp_responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "Unable to get response from the Modify Boot Policy order operation."
     end
+    # delete temporary xml file
+    File.delete(temp_file_path) if File.exist?(temp_file_path)
 
-    def xml_template_path
-      module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
-      File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
-    end
-
-    def xml_template (filename)
-      content = ""
-      xml_path = File.join xml_template_path, filename
-      xml_path+= ".xml"
-      if File.exists?(xml_path)
-        # read file in block will close the file handle internally when block terminates
-        content = File.open(xml_path, 'r') { |file| file.read }
-      else
-        raise Puppet::Error, "Cannot read xml template from location: " + xml_path
-      end
-      return content
-    end
-
-    def boot_policy_dn
-      policy_dn = ""
-      if (resource[:bootpolicyname] && resource[:bootpolicyname].strip.length > 0) &&
-      (resource[:organization] && resource[:organization].strip.length > 0)
-        policy_name = resource[:bootpolicyname]
-        if ! policy_name.start_with?('boot-policy-')
-          policy_name= "boot-policy-" + policy_name
-        end
-        policy_dn = resource[:organization] +"/"+ policy_name
-      elsif (resource[:dn] && resource[:dn].strip.length > 0)
-        policy_dn = resource[:dn]
-      end
-      return policy_dn
-    end
-
-    def exists?
-      # check if the boot policy exists
-      puts  "1"
-      if check_boot_policy_exists boot_policy_dn
-      puts  "2"
-        # check the ensure input value
-        if (resource[:ensure].to_s =="present")
-          return false;
-        end
-        return true;
-      end
-      # error
-      raise Puppet::Error, "The " + boot_policy_dn + " boot policy does not exist."
-    end
+    # disconnect cookie
+    disconnect
   end
+
+  def xml_template_path
+    module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
+    File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
+  end
+
+  def xml_template (filename)
+    content = ""
+    xml_path = File.join xml_template_path, filename
+    xml_path+= ".xml"
+    if File.exists?(xml_path)
+      # read file in block will close the file handle internally when block terminates
+      content = File.open(xml_path, 'r') { |file| file.read }
+    else
+      raise Puppet::Error, "Cannot read xml template from location: " + xml_path
+    end
+    return content
+  end
+
+  def boot_policy_dn
+    policy_dn = ""
+    if (resource[:bootpolicyname] && resource[:bootpolicyname].strip.length > 0) &&
+    (resource[:organization] && resource[:organization].strip.length > 0)
+      policy_name = resource[:bootpolicyname]
+      if ! policy_name.start_with?('boot-policy-')
+        policy_name= "boot-policy-" + policy_name
+      end
+      policy_dn = resource[:organization] +"/"+ policy_name
+    elsif (resource[:dn] && resource[:dn].strip.length > 0)
+      policy_dn = resource[:dn]
+    end
+    return policy_dn
+  end
+
+  def exists?
+    # check if the boot policy exists
+    if check_boot_policy_exists boot_policy_dn
+      # check the ensure input value
+      if (resource[:ensure].to_s =="present")
+        return false;
+      end
+      return true;
+    end
+    # error
+    raise Puppet::Error, "The " + boot_policy_dn + " boot policy does not exist."
+  end
+end
