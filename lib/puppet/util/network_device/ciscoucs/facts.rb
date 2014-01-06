@@ -16,7 +16,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       collectionMap = {}
       blademap = {}
       @facts['General Settings'] = getgeneralsettinginfo
-  
+
       formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("discover")
       parameters = PuppetX::Util::Ciscoucs::NestedHash.new
       parameters['/configResolveClass'][:classId] = 'computeBlade'
@@ -51,7 +51,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
           bladeSlotId = blade.attributes["slotId"]
           bladeChassisId = blade.attributes["chassisId"]
           serviceProfile = blade.attributes["assignedToDn"]
-          
+
           collectionMap = {}
           collectionMap['bladeDN'] = bladeName
           collectionMap['serialNumber'] = bladeSerialNum
@@ -60,25 +60,21 @@ module Puppet::Util::NetworkDevice::Ciscoucs
           collectionMap['serviceProfile'] =  serviceProfile
           blade_name = "Blade_"+count.to_s
           blademap[blade_name] = collectionMap
-          
+
           count+=1
-
-
         }
         @facts['ServerData'] = blademap
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing discovery response" +  msg.to_s
-      end     
-      puts @facts.to_s
+      end
       return  @facts
     end
 
     def getgeneralsettinginfo
       generalMap = {}
-           generalMap['UCS IP'] = @transport.host
-           generalMap['UCS Version'] =  @transport.firmwareversion
-     
-          return  generalMap
-     end
+      generalMap['UCS IP'] = @transport.host
+      generalMap['UCS Version'] =  @transport.firmwareversion
+      return  generalMap
+    end
   end
 end

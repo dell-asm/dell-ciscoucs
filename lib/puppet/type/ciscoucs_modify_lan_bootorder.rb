@@ -41,14 +41,15 @@ Puppet::Type.newtype(:ciscoucs_modify_lan_bootorder) do
     validate do |value|
       if value && value.strip.length != 0
         # value should be an integer
-#        unless value =~ /\A[0-9]+\Z/
- #         raise ArgumentError, "%s is invalid." % value
-  #      end
+        unless value =~ /\A[1-5]\Z/
+          raise ArgumentError, "Allowed values for lan order is from 1 to 5"
+        end
+      else
+        raise ArgumentError, "Empty or no value given for lanorder parameter."
       end
     end
   end
   
-=begin
 
   validate do
     if !self[:dn] || self[:dn].strip.length==0
@@ -58,7 +59,7 @@ Puppet::Type.newtype(:ciscoucs_modify_lan_bootorder) do
       end
     end
   end
-=end
+
 
 end
 

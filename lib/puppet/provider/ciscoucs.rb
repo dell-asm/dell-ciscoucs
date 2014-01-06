@@ -6,26 +6,6 @@ module_lib = Pathname.new(__FILE__).parent.parent.parent
 require File.join module_lib.to_s, '/puppet_x/puppetlabs/transport'
 require  File.join module_lib.to_s, '/puppet_x/puppetlabs/transport/ciscoucs'
 
-=begin
-
-begin
-  require 'puppet_x/puppetlabs/transport'
-rescue LoadError => error
-  require 'pathname'
-  ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
-  require File.join ucs_module.path, 'lib/puppet_x/puppetlabs/transport'
-end
-
-begin
-  require 'puppet_x/puppetlabs/transport/ciscoucs'
-rescue LoadError => error
-  require 'pathname'
-  module_lib = Pathname.new(__FILE__).parent.parent.parent
-  require File.join module_lib, 'puppet_x/puppetlabs/transport/ciscoucs'
-end
-
-=end
-
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
     @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')

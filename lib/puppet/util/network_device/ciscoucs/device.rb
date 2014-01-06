@@ -20,7 +20,6 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       res_hash[:server] = @host
       @transport = PuppetX::Puppetlabs::Transport::Ciscoucs.new(res_hash)
       @transport.connect
-
     end
 
     def parse(url)
