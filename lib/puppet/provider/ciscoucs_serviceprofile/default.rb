@@ -45,7 +45,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/error"].attributes["errorDescr"]
       else
-        Puppet.info("Successfully created service profile:"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+        Puppet.notice("Successfully created service profile:"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response" +  msg.to_s
@@ -124,7 +124,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creatng a profile: "+  create_doc.elements["/error"].attributes["errorDescr"]
       else
-        Puppet.info("Successfully created the profile: "+ resource[:name]+ " from template " + resource[:source_template])
+        Puppet.notice("Successfully created the profile: "+ resource[:name]+ " from template " + resource[:source_template])
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following error occurred while parsing the Create Profile from the Template response" +  msg.to_s
@@ -167,9 +167,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       Puppet.debug "Getting power state of the Service Profile."
       power = current_power_state
       if power == 'up' && resource[:power_state].to_s == 'up'
-        Puppet.info ("The power is already in the running state.")
+        Puppet.notice ("The power is already in the running state.")
       elsif power == 'down' and resource[:power_state].to_s == 'down'
-        Puppet.info ("The power state is already off.")
+        Puppet.notice ("The power state is already off.")
       end
       return power
     rescue Exception => exception
