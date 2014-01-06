@@ -29,13 +29,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML for the Clone Profile operation."
     end
-    Puppet.debug "Sending clone profile request xml: \n" + requestxml
+    
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Clone Profile operation."
     end
-    Puppet.debug "Response from clone profile: \n" + responsexml
+    
 
     #parser response xml to check for errors
     begin
