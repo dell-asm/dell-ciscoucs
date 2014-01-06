@@ -15,10 +15,21 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   @state = "";
   @config_state = "";
   @error_code = "";
+  
+  @result = "";
+  
   def create
     # check if the profile exists
     if ! check_profile_exists profile_dn
       raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
+    end
+   
+    # check if blade is already associated with service profile
+    check_server_already_associated server_dn
+    
+    if @result != ""
+          raise Puppet::Error, "Service Profile already associated with '"+server_dn+"' is '"+@result ;
+          return;
     end
 
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("associateServiceProfile")
@@ -106,6 +117,31 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       source_dn = resource[:server_dn]
     end
     return source_dn
+  end
+  
+  #get associated service profile
+  def check_server_already_associated(server_dn)
+
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("lsServerSingle")
+    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    parameters['/configResolveClass'][:cookie] = cookie;
+    parameters['/configResolveClass'][:classId] = "lsServer";
+    parameters['/configResolveClass'][:inHierarchical] = "yes";
+    parameters['/configResolveClass/inFilter/eq'][:class] = "lsServer";
+    parameters['/configResolveClass/inFilter/eq'][:property] = "pnDn";
+    parameters['/configResolveClass/inFilter/eq'][:value] = server_dn;
+    requestxml = formatter.command_xml(parameters);
+    
+    if requestxml.to_s.strip.length == 0
+      raise Puppet::Error, "Unable to create a request XML for the check associated service profile to server."
+    end
+
+    responsexml = post requestxml
+
+    parse_associated_service_profile(responsexml);
+
+    
+
   end
 
   #check operation status till completion
@@ -211,6 +247,21 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     }
 
   end
+  
+  #parse the state of association
+  def parse_associated_service_profile(response_xml)
+    myelement = REXML::Document.new(response_xml);
+    root = myelement.root
+    myelement.elements.each("/configResolveClass/outConfigs/lsServer") {
+      |e|
+
+      @result = e.attributes['dn'].to_s;
+
+    }
+
+  end
+  
+    
 
   #parse error and check
   def parse_error_code(error_code)

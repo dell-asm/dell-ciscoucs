@@ -1,0 +1,5 @@
+<configResolveClass classId="lsServer" cookie="" inHierarchical="yes">
+    <inFilter>
+        <eq class="lsServer" property="pnDn" value=""/>
+    </inFilter>
+</configResolveClass>
