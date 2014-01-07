@@ -168,5 +168,34 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     #Puppet.debug "Cisco UCS Post: #{url} \n Request:\n#{request_xml} Response:\n#{result.inspect}"
 
   end
+
+  [:profile_dn, :bootpolicy_dn].each do |m|
+    define_method(m) do |name, organization, dn|
+      source_dn = ""
+      if (dn && dn.strip.length > 0)
+        source_dn = dn
+      elsif (organization && organization.strip.length > 0) && (name  && name.strip.length > 0)
+        # check if the profile name contains 'ls-'
+        if m.to_s == "profile_dn" && (! name.start_with?('ls-'))
+          name = "ls-" + name
+        elsif m.to_s == "boot_policy_dn" && (! name.start_with?('boot-policy-'))
+          name= "boot-policy-" + name
+        end
+        source_dn = organization +"/"+ name
+      end
+      source_dn
+    end
+  end
+
+  def server_dn(dn, chassis_id, slot_id)
+    source_dn = ""
+    if (dn && dn.strip.length > 0)
+      source_dn = dn
+    elsif (chassis_id && chassis_id.strip.length > 0) && (slot_id  && slot_id.strip.length > 0)
+      source_dn = 'sys/'+chassis_id+'/'+slot_id
+    end
+    return source_dn
+  end
+  # end of class
 end
 

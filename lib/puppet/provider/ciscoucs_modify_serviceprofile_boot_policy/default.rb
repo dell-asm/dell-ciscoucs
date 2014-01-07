@@ -63,34 +63,11 @@ Puppet::Type.type(:ciscoucs_modify_serviceprofile_boot_policy).provide(:default,
   end
 
   def boot_policy_dn
-    policy_dn = ""
-    if (resource[:bootpolicyname] && resource[:bootpolicyname].strip.length > 0) &&
-    (resource[:bootpolicyorganization] && resource[:bootpolicyorganization].strip.length > 0)
-      policy_name = resource[:bootpolicyname]
-      if ! policy_name.start_with?('boot-policy-')
-        policy_name= "boot-policy-" + policy_name
-      end
-      policy_dn = resource[:bootpolicyorganization] +"/"+ policy_name
-    elsif (resource[:bootpolicydn] && resource[:bootpolicydn].strip.length > 0)
-      policy_dn = resource[:bootpolicydn]
-    end
-    return policy_dn
+    bootpolicy_dn resource[:bootpolicyname], resource[:bootpolicyorganization], resource[:bootpolicydn]
   end
 
   def service_profile_dn
-    profile_dn = ""
-    if (resource[:serviceprofilename] && resource[:serviceprofilename].strip.length > 0) &&
-    (resource[:serviceprofileorganization]  && resource[:serviceprofileorganization].strip.length > 0)
-      # check if the profile name contains 'ls-'
-      profile_name = resource[:serviceprofilename]
-      if ! profile_name.start_with?('ls-')
-        profile_name = "ls-" + profile_name
-      end
-      profile_dn = resource[:serviceprofileorganization] +"/"+ profile_name
-    elsif (resource[:serviceprofiledn] && resource[:serviceprofiledn].strip.length > 0)
-      profile_dn = resource[:serviceprofiledn]
-    end
-    return profile_dn
+    profile_dn resource[:bootpolicyname], resource[:bootpolicyorganization], resource[:bootpolicydn]
   end
 
   def exists?

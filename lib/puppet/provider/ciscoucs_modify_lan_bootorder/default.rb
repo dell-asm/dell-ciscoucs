@@ -18,7 +18,7 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("updatelanBootOrderPolicy")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
-    parameters['/configResolveClass/inFilter/eq'][:value] = boot_policy_dn
+    parameters['/configResolveClass/inFilter/eq'][:value] = dn
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML for the Modify Boot Policy order operation."
@@ -81,8 +81,8 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     policyElem = temp_doc.elements["/configConfMos/inConfigs/pair/lsbootPolicy"]
     updateparameters = PuppetX::Util::Ciscoucs::NestedHash.new
     updateparameters['/configConfMos'][:cookie] = cookie
-    updateparameters['/configConfMos/inConfigs/pair'][:key] = boot_policy_dn
-    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = boot_policy_dn
+    updateparameters['/configConfMos/inConfigs/pair'][:key] = dn
+    updateparameters['/configConfMos/inConfigs/pair/lsbootPolicy'][:dn] = dn
 
     for elm in order_array do
       case (elm)
@@ -97,11 +97,7 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
       when "read-only-vm"
         policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
       end
-      
-     
     end
-
-
 
     temp_file_path = File.join xml_template_path, "temp_update_boot_policy"
     temp_file_path+= ".xml"
@@ -117,7 +113,7 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     end
     # delete temporary xml file
     File.delete(temp_file_path) if File.exist?(temp_file_path)
-    Puppet.notice("Successfully modified the Lan Boot Order Policy: "+ boot_policy_dn)
+    Puppet.notice("Successfully modified the Lan Boot Order Policy: "+ dn)
     # disconnect cookie
     disconnect
   end
@@ -140,24 +136,13 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     return content
   end
 
-  def boot_policy_dn
-    policy_dn = ""
-    if (resource[:bootpolicyname] && resource[:bootpolicyname].strip.length > 0) &&
-    (resource[:organization] && resource[:organization].strip.length > 0)
-      policy_name = resource[:bootpolicyname]
-      if ! policy_name.start_with?('boot-policy-')
-        policy_name= "boot-policy-" + policy_name
-      end
-      policy_dn = resource[:organization] +"/"+ policy_name
-    elsif (resource[:dn] && resource[:dn].strip.length > 0)
-      policy_dn = resource[:dn]
-    end
-    return policy_dn
+  def dn
+    bootpolicy_dn(resource[:bootpolicyname], resource[:organization], resource[:dn])
   end
 
   def exists?
     # check if the boot policy exists
-    if check_boot_policy_exists boot_policy_dn
+    if check_boot_policy_exists dn
       # check the ensure input value
       if (resource[:ensure].to_s =="present")
         return false;
@@ -165,6 +150,6 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
       return true;
     end
     # error
-    raise Puppet::Error, "The " + boot_policy_dn + " boot policy does not exist."
+    raise Puppet::Error, "The " + dn + " boot policy does not exist."
   end
 end
