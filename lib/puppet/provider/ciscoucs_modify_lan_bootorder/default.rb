@@ -98,24 +98,7 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
         policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
       end
       
-=begin
-      if elm == "iscsi"
-        policyElem.add_element 'lsbootIScsi', {'rn' => 'iscsi', 'order' => order_array.find_index { |e| e.match( /iscsi/ ) }.to_i + 1}
-      end
-      if elm == "lan"
-        policyElem.add_element 'lsbootLan', {'rn' => 'lan', 'order' => order_array.find_index { |e| e.match( /lan/ ) }.to_i + 1}
-      end
-      if elm == "storage"
-        policyElem.add_element 'lsbootStorage', {'rn' => 'storage', 'order' => order_array.find_index { |e| e.match( /storage/ ) }.to_i + 1}
-      end
-      if elm == "read-write-vm"
-        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-write-vm', 'order' =>  order_array.find_index { |e| e.match( /read-write-vm/ ) }.to_i + 1}
-      end
-      if elm == "read-only-vm"
-        policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
-      end
-=end
-      
+     
     end
 
 
@@ -134,7 +117,7 @@ Puppet::Type.type(:ciscoucs_modify_lan_bootorder).provide(:default, :parent => P
     end
     # delete temporary xml file
     File.delete(temp_file_path) if File.exist?(temp_file_path)
-
+    Puppet.notice("Successfully modified the Lan Boot Order Policy: "+ boot_policy_dn)
     # disconnect cookie
     disconnect
   end
