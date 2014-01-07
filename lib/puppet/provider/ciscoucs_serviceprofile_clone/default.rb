@@ -57,35 +57,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   end
 
   def target_profile_dn
-    target_dn = ""
-    if (resource[:targetserviceprofilename] && resource[:targetserviceprofilename].strip.length > 0) &&
-    (resource[:targetorganization] && resource[:targetorganization].strip.length > 0)
-      # check if the profile name contains 'ls-'
-      profile_name = resource[:targetserviceprofilename]
-      if ! profile_name.start_with?('ls-')
-        profile_name = "ls-" + profile_name
-      end
-      target_dn = resource[:targetorganization] +"/"+ profile_name
-    elsif (resource[:targetprofiledn] && resource[:targetprofiledn].strip.length > 0)
-      target_dn = resource[:targetprofiledn]
-    end
-    return target_dn
+    profile_dn resource[:targetserviceprofilename], resource[:targetorganization], resource[:targetprofiledn]
   end
 
   def source_profile_dn
-    source_dn = ""
-    if (resource[:sourceserviceprofilename] && resource[:sourceserviceprofilename].strip.length > 0) &&
-    (resource[:sourceorganization]  && resource[:sourceorganization].strip.length > 0)
-      # check if the profile name contains 'ls-'
-      profile_name = resource[:sourceserviceprofilename]
-      if ! profile_name.start_with?('ls-')
-        profile_name = "ls-" + profile_name
-      end
-      source_dn = resource[:sourceorganization] +"/"+ profile_name
-    elsif (resource[:sourceprofiledn] && resource[:sourceprofiledn].strip.length > 0)
-      source_dn = resource[:sourceprofiledn]
-    end
-    return source_dn
+    profile_dn resource[:sourceserviceprofilename], resource[:sourceorganization], resource[:sourceprofiledn]
   end
 
   def exists?
