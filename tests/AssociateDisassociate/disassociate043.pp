@@ -13,7 +13,7 @@ ciscoucs_serviceprofile_association { 'name':
   organization_name => "${ciscoucs_profile_association_dissociation['organization_name']}",
   service_profile_name => "${ciscoucs_profile_association_dissociation['service_profile_name']}",
   server_chassis_id => "${ciscoucs_profile_association_dissociation['server_chassis_id']}",
-  server_slot_id => "${ciscoucs_profile_association_dissociation['orrt']}",
+  server_slot_id => "orrt",
 
   #profile_dn => "${ciscoucs_profile_association_dissociation['profile_dn']}",
   #server_dn => "${ciscoucs_profile_association_dissociation['server_dn']}",
