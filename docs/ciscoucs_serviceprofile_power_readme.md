@@ -28,17 +28,17 @@ This module uses the rest-client gem ( Version 1.6.7) to interact with the Cisco
     
     username: (Required) This parameter defines the username as a part of the credentials of the host.            
     
-	password: (Required) This parameter defines the password as a part of the credentials of the host.  
+    password: (Required) This parameter defines the password as a part of the credentials of the host.  
 	
-	server: (Required) This parameter defines the IP address of the host.   
+    server: (Required) This parameter defines the IP address of the host.   
 	
-    name: This parameter defines the name of the service profile.
+    serviceprofile_name: This parameter defines the name of the service profile.
     
-    org: This parameter defines the source service profile path.
+    organization: This parameter defines the source service profile path.
     
-    dn: This pparameter defines the complete path of the source service profile including service profile name.
+    profile_dn: This pparameter defines the complete path of the source service profile including service profile name.
     
-	power_state: This parameter defines the initial state of the service profile that needs to be changed as follows:
+    power_state: This parameter defines the initial state of the service profile that needs to be changed as follows:
 
      Up to change the initial state to On.
      Down to change the initial state to Off.
@@ -65,11 +65,11 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_serviceprofile { 'name':
-   name  => ${ciscoucs_serviceprofile['name']},
-   org   => ${ciscoucs_serviceprofile['org']},
-   dn    => ${ciscoucs_serviceprofile['dn']},
-   power_state   => ${ciscoucs_serviceprofile['power_state_on']},  
-   transport   => Transport_ciscoucs['ciscoucs'],
+   serviceprofile_name  => ${ciscoucs_serviceprofile['name']},
+   organization         => ${ciscoucs_serviceprofile['org']},
+   profile_dn           => ${ciscoucs_serviceprofile['dn']},
+   power_state          => ${ciscoucs_serviceprofile['power_state_on']},  
+   transport            => Transport_ciscoucs['ciscoucs'],
 }
 
 
@@ -84,11 +84,11 @@ transport_ciscoucs { 'ciscoucs':
 
 
 ciscoucs_serviceprofile { 'name':
-  name   => ${ciscoucs_serviceprofile['name']},
-  org    => ${ciscoucs_serviceprofile['org']},
-  dn     => ${ciscoucs_serviceprofile['dn']},
-  power_state   => ${ciscoucs_serviceprofile['power_state_off']},
-  transport   => Transport_ciscoucs['ciscoucs'],
+  serviceprofile_name   => ${ciscoucs_serviceprofile['name']},
+  organization          => ${ciscoucs_serviceprofile['org']},
+  profile_dn            => ${ciscoucs_serviceprofile['dn']},
+  power_state           => ${ciscoucs_serviceprofile['power_state_off']},
+  transport             => Transport_ciscoucs['ciscoucs'],
 }
 
 
