@@ -2,7 +2,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   @doc = 'Create Service Profile on cisco ucs device'
   ensurable
 
-  newparam(:org) do
+  newparam(:organization) do
     desc "Name of the service profile Organization"
     validate do |value|
       if value && value.strip.length != 0
@@ -13,7 +13,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     end
   end
 
-  newparam(:name, :namevar => true) do
+  newparam(:serviceprofile_name, :namevar => true) do
     desc "Name of the service profile"
     validate do |value|
       if value && value.strip.length != 0
@@ -24,7 +24,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     end
   end
 
-  newparam(:dn) do
+  newparam(:profile_dn) do
     desc "Service profile dn"
     validate do |value|
       if value  &&  value.strip.length != 0
@@ -86,28 +86,12 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   validate do
-    if !self[:dn] || self[:dn].strip.length==0
-      # if dn is empty then both org or profile name should exists.
-      if (!self[:org] || self[:org].strip.length == 0) || (!self[:name] || self[:name].strip.length == 0)
-        raise ArgumentError, "Either dn or both org and profile name should be given in input."
+    if !self[:profile_dn] || self[:profile_dn].strip.length==0
+      # if profile_dn is empty then both organization or profile name should exists.
+      if (!self[:organization] || self[:organization].strip.length == 0) || (!self[:serviceprofile_name] || self[:serviceprofile_name].strip.length == 0)
+        raise ArgumentError, "Either profile_dn or both organization and profile name should be given in input."
       end
     end
   end
 
 end
-
-=begin
-"Template Name - Name of the Service Profile Template
-Organization Name - Organization name (e.g root)
-Profile name prefix - Profile Name Prefix
-Server Profile Template DN (Optional) - DN of the service profile (e.g. /org-root/ls-Template1)
-Count of Profile - Number of profiles to be initiated.
-UCS Connection Information - IP Address/Hostname, Username, Password"
-
-"Server Org Name - Server Organization name
-Server Chassis Id - Server Chassis ID
-Server Slot - Server Slot
-Server DN (optional) - Server DN
-UCS Connection Information - IP Address/Hostname, Username, Password"
-
-=end

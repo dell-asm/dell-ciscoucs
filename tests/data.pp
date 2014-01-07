@@ -3,14 +3,14 @@
 $ciscoucs = {
   'username' => 'admin',
   'password' =>  'admin',
-  'server'   => '192.168.40.131',  
+  'server'   => '192.168.241.131',  
 }
 
 
 $ciscoucs_serviceprofile = { 
-  'name'        => 'testServiceProfile',
-  'org'         => 'org-root',
-  'dn'        => '',
+  'serviceprofile_name'        => 'testServiceProfile',
+  'organization'         => 'org-root',
+  'profile_dn'        => '',
   'power_state_on' => 'up',
   'power_state_off' => 'down',
   'ensure'          => 'present',
@@ -47,7 +47,7 @@ $ciscoucs_profile_association_dissociation = {
   ensure_present    => present, 
   ensure_absent    => absent, 
   organization_name => 'org-root',
-  service_profile_name => 'testing',
+  service_profile_name => 'SP1',
   profile_dn => '',
   server_chassis_id => 'chassis-1',
   server_slot_id => 'blade-3',   

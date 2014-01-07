@@ -45,7 +45,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/error"].attributes["errorDescr"]
       else
-        Puppet.notice("Successfully created service profile:"+ resource[:name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+        Puppet.notice("Successfully created service profile:"+ resource[:serviceprofile_name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response" +  msg.to_s
@@ -58,7 +58,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if ! resource[:source_template].start_with?('ls-')
       template_name = "ls-" + resource[:source_template]
     end
-    prof_dn = resource[:org]+"/"+ template_name
+    prof_dn = resource[:organization]+"/"+ template_name
 
     # check if the template exists
     verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -102,8 +102,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/lsInstantiateNTemplate'][:dn] = prof_dn
     parameters['/lsInstantiateNTemplate'][:cookie] = cookie
-    parameters['/lsInstantiateNTemplate'][:inTargetOrg] = resource[:org]
-    parameters['/lsInstantiateNTemplate'][:inServerNamePrefixOrEmpty] = resource[:name]
+    parameters['/lsInstantiateNTemplate'][:inTargetOrg] = resource[:organization]
+    parameters['/lsInstantiateNTemplate'][:inServerNamePrefixOrEmpty] = resource[:serviceprofile_name]
     parameters['/lsInstantiateNTemplate'][:inNumberOf] = count
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfile")
     requestxml = formatter.command_xml(parameters)
@@ -124,7 +124,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creatng a profile: "+  create_doc.elements["/error"].attributes["errorDescr"]
       else
-        Puppet.notice("Successfully created the profile: "+ resource[:name]+ " from template " + resource[:source_template])
+        Puppet.notice("Successfully created the profile: "+ resource[:serviceprofile_name]+ " from template " + resource[:source_template])
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following error occurred while parsing the Create Profile from the Template response" +  msg.to_s
@@ -136,7 +136,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def dn
-    profile_dn resource[:name], resource[:org], resource[:dn]    
+    profile_dn resource[:serviceprofile_name], resource[:organization], resource[:profile_dn]    
   end
 
   def power_dn
