@@ -12,10 +12,10 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 
-ciscoucs_serviceprofile { 'name':
-  name        => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  org         => "${ciscoucs_serviceprofile['org']}",
-  #dn         => "${ciscoucs_serviceprofile['dn']}",
+ciscoucs_serviceprofile { 'serviceprofile_name':
+  serviceprofile_name        => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  organization         => "${ciscoucs_serviceprofile['organization']}",
+  #profile_dn         => "${ciscoucs_serviceprofile['profile_dn']}",
   ensure  => "${ciscoucs_serviceprofile['ensure']}",
   source_template => "${ciscoucs_serviceprofile['source_template']}",
   transport   => Transport_ciscoucs['ciscoucs'],

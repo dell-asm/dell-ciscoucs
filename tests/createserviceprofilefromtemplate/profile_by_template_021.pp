@@ -12,12 +12,12 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 
-ciscoucs_serviceprofile { 'name':
-  #name        => "${ciscoucs_serviceprofile['name']}",
-  #org         => " ",
-  dn         => "${ciscoucs_serviceprofile['dn']}",
+ciscoucs_serviceprofile { 'serviceprofile_name':
+  #serviceprofile_name        => "${ciscoucs_serviceprofile['serviceprofile_name']}",
+  #organization         => " ",
+  profile_dn         => "${ciscoucs_serviceprofile['profile_dn']}",
   ensure  => "${ciscoucs_serviceprofile['ensure']}",
-  source_template => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  source_template => "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   transport   => Transport_ciscoucs['ciscoucs'],
   number_of_profiles => "${ciscoucs_serviceprofile['number_of_profiles']}",
 }
