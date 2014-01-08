@@ -48,20 +48,8 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     end
   end
 
-  def check_vlan_exist(dn)
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" />'
-    response_xml = post request_xml
-    doc = REXML::Document.new(response_xml)
-    if doc.elements["/configResolveDn/outConfig"].has_elements?
-      return true
-    else
-      return false
-    end
-  end
-
   def check_vlan_exist_service_profile(dn,vlanname,defaultnet)
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" '"inHierarchical=true"'/>'
-    responsexml = post request_xml
+    responsexml = element_exists_response_xml(dn)
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from service profile"
     end
@@ -95,8 +83,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
   end
 
   def check_vlan_exist_vnic_template(dn,vlanname,defaultnet)
-    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" '"inHierarchical=true"'/>'
-    responsexml = post request_xml
+    responsexml = element_exists_response_xml(dn)
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from vnic template"
     end
