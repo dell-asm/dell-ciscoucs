@@ -10,7 +10,7 @@ transport_ciscoucs { 'ciscoucs':
 ciscoucs_serviceprofile_boot_order{ 'dn':  
   bootpolicy_name => 'testbootpolicy',
   organization   => 'org-root',
-  lan_order       =>'4',
+  lan_order       =>'1',
   transport      => Transport_ciscoucs['ciscoucs'],
   ensure         => 'present',
 }
