@@ -6,11 +6,21 @@ Puppet::Type.newtype(:transport_ciscoucs) do
   end
 
   newparam(:username) do 
-	desc "User name for ciscoucs device"
+    desc "User name for ciscoucs device"
+    validate do |value|
+        if value && value.strip.length == 0            
+              raise ArgumentError, "Username can not be blank"         
+         end
+     end
   end
 
   newparam(:password) do
     desc "Password for ciscoucs device"
+    validate do |value|
+          if value && value.strip.length == 0            
+              raise ArgumentError, "Password can not be blank"            
+          end
+        end
   end
 
   newparam(:server) do
