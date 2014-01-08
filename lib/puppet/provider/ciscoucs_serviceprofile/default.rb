@@ -44,13 +44,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       create_doc = REXML::Document.new(responsexml)
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/error"].attributes["errorDescr"]
-      elsif  create_doc.elements["configConfMos/outConfigs/pair/lsServer"].attributes["assignState"].to_s=="failed" 
+      elsif  create_doc.elements["configConfMos/outConfigs/pair/lsServer"].attributes["operState"].to_s=="config-failure" 
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/configConfMos/outConfigs/pair/lsServer"].attributes["configQualifier"] 
       else
         Puppet.notice("Successfully created service profile:"+ resource[:serviceprofile_name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
       end
     rescue Exception => msg
-      raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response" +  msg.to_s
+      raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response \n" +  msg.to_s
     end
   end
 
