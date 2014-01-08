@@ -10,8 +10,8 @@ transport_ciscoucs { 'ciscoucs':
 
 ciscoucs_serviceprofile_association { 'name':
   ensure    => "${ciscoucs_profile_association_dissociation['ensure_absent']}", 
-  #organization_name => "${ciscoucs_profile_association_dissociation['organization_name']}",
-  #service_profile_name => "${ciscoucs_profile_association_dissociation['service_profile_name']}",
+  #organization => "${ciscoucs_profile_association_dissociation['organization']}",
+  #serviceprofile_name => "${ciscoucs_profile_association_dissociation['serviceprofile_name']}",
   server_chassis_id => "${ciscoucs_profile_association_dissociation['server_chassis_id']}",
   server_slot_id => "#",   
   
