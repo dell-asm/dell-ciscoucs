@@ -8,14 +8,14 @@ transport_ciscoucs { 'ciscoucs':
  
 }
 
-ciscoucs_serviceprofile_clone { 'sourceprofilename':
+ciscoucs_serviceprofile_clone { 'source_profile_name':
    ensure    =>  "${ciscoucs_serviceprofile_clone['ensure']}",
    transport  => Transport_ciscoucs['ciscoucs'],
-   sourceprofiledn => "${ciscoucs_serviceprofile_clone['sourceprofiledn']}",
-   targetprofiledn => "${ciscoucs_serviceprofile_clone['targetprofiledn']}", 
-   sourceserviceprofilename      => "${ciscoucs_serviceprofile_clone['sourceserviceprofilename']}",
-   sourceorganization => "${ciscoucs_serviceprofile_clone['sourceorganization']}",
-   targetserviceprofilename   => "${ciscoucs_serviceprofile_clone['targetserviceprofilename']}",
-   targetorganization => "${ciscoucs_serviceprofile_clone['targetorganization']}",
+   source_profile_dn => "${ciscoucs_serviceprofile_clone['source_profile_dn']}",
+   target_profile_dn => "${ciscoucs_serviceprofile_clone['target_profile_dn']}", 
+   source_serviceprofile_name      => "${ciscoucs_serviceprofile_clone['source_serviceprofile_name']}",
+   source_organization => "${ciscoucs_serviceprofile_clone['source_organization']}",
+   target_serviceprofile_name   => "${ciscoucs_serviceprofile_clone['target_serviceprofile_name']}",
+   target_organization => "${ciscoucs_serviceprofile_clone['target_organization']}",
 }
 

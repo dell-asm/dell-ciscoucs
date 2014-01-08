@@ -3,14 +3,14 @@ include ciscoucs
 transport_ciscoucs { 'ciscoucs':
   username => 'admin',
   password => 'admin',
-  server   => '192.168.24.130',
+  server   => '192.168.199.131',
 }
 
 
-ciscoucs_modify_lan_bootorder{ 'dn':  
-  bootpolicyname => 'testbootpolicy',
+ciscoucs_serviceprofile_boot_order{ 'dn':  
+  bootpolicy_name => 'testbootpolicy',
   organization   => 'org-root',
-  lanorder       =>'2',
+  lan_order       =>'4',
   transport      => Transport_ciscoucs['ciscoucs'],
   ensure         => 'present',
 }
