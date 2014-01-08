@@ -14,7 +14,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
     end
   end
 
-  newparam(:boot_) do
+  newparam(:bootpolicy_dn) do
     desc "Boot policy DN .Valid format is org-root/boot-policy-[policy name]"
     validate do |value|
       if value  &&  value.strip.length != 0
@@ -52,7 +52,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
   
 
   validate do
-    if !self[:dn] || self[:dn].strip.length==0
+    if !self[:bootpolicy_dn] || self[:bootpolicy_dn].strip.length==0
       # if dn is empty then both org or profile name should exists.
       if (!self[:organization] || self[:organization].strip.length == 0) || (!self[:bootpolicy_name] || self[:bootpolicy_name].strip.length == 0)
         raise ArgumentError, "Either dn or both organization and policy name should be given in input."
