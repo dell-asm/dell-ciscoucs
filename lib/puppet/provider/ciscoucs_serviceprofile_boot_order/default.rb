@@ -141,7 +141,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
   end
 
   def boot_policy_dn
-    bootpolicy_dn(resource[:bootpolicy_name], resource[:organization], resource[:dn])    
+    bootpolicy_dn(resource[:bootpolicy_name], resource[:organization], resource[:bootpolicy_dn])    
   end
 
   def exists?
