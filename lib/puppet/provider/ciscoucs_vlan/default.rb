@@ -79,7 +79,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
   end
 
   def exists?
-    if check_vlan_exist(get_dn)
+    if check_element_exists(get_dn)
       Puppet.debug "VLAN Name/Prefix : #{@resource[:name]} exist in UCS."
       return true
     else
