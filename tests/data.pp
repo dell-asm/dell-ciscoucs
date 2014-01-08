@@ -3,51 +3,53 @@
 $ciscoucs = {
   'username' => 'admin',
   'password' =>  'admin',
-  'server'   => '192.168.241.131',  
+  'server'   => '192.168.199.131',  
 }
 
 
 $ciscoucs_serviceprofile = { 
-  'serviceprofile_name'        => 'testServiceProfile',
-  'organization'         => 'org-root',
-  'profile_dn'        => '',
-  'power_state_on' => 'up',
-  'power_state_off' => 'down',
-  'ensure'          => 'present',
-  'source_template' => 'testing',
-  'server_chassis_id' => 'chassis-1',
-  'server_slot' => 'blade-1',  
-  'number_of_profiles' => '1', 
+'serviceprofile_name' => 'testServiceProfile',
+'organization' => 'org-root',
+'profile_dn' => '',
+'power_state_on' => 'up',
+'power_state_off' => 'down',
+'ensure' => 'present',
+'source_template' => 'testing',
+'server_chassis_id' => 'chassis-1',
+'server_slot' => 'blade-1', 
+'number_of_profiles' => '1', 
 }
+
+
 
 
 $ciscoucs_serviceprofile_clone = { 
    'ensure'=> 'present',
-   'sourceprofiledn'=> 'org-root/ls-SP1',
-   'targetprofiledn'=> 'org-root/ls-gk1', 
-   'sourceserviceprofilename'=> 'SP1',
-   'sourceorganization'=> 'org-root',
-   'targetserviceprofilename' => 'testclone',
-   'targetorganization'    => 'org-root',
+   'source_profile_dn'=> 'org-root/ls-test',
+   'target_profile_dn'=> 'org-root/ls-testclone', 
+   'source_serviceprofile_name'=> 'test',
+   'source_organization'=> 'org-root',
+   'target_serviceprofile_name' => 'testclone',
+   'target_organization'    => 'org-root',
 }
 
 
-$ciscoucs_modify_serviceprofile_boot_policy = { 
+$ciscoucs_serviceprofile_bootpolicy = { 
    'ensure'=> 'modify',
-   'bootpolicydn'=> 'org-root/boot-policy-testbootpolicy',
-   'bootpolicyname'=> 'gk',
-   'bootpolicyorganization'=> 'org-root/org-gk',
-   'serviceprofiledn'=> 'org-root/ls-SP1',
-   'serviceprofilename'=> 'SP1',
-   'serviceprofileorganization' => 'org-root',
+   'bootpolicy_dn'=> 'org-root/boot-policy-testbootpolicy',
+   'bootpolicy_name'=> 'testbootpolicy',
+   'bootpolicy_organization'=> 'org-root',
+   'serviceprofile_dn'=> 'org-root/ls-abc',
+   'serviceprofile_name'=> 'abc',
+   'serviceprofile_organization' => 'org-root',
 
 }
 
 $ciscoucs_profile_association_dissociation = {
   ensure_present    => present, 
   ensure_absent    => absent, 
-  organization_name => 'org-root',
-  service_profile_name => 'SP1',
+  organization => 'org-root',
+  serviceprofile_name => 'testing',
   profile_dn => '',
   server_chassis_id => 'chassis-1',
   server_slot_id => 'blade-3',   
@@ -56,12 +58,12 @@ $ciscoucs_profile_association_dissociation = {
 
 }
 
-$ciscoucs_modify_lan_bootorder= { 
+$ciscoucs_serviceprofile_boot_order= { 
    'ensure'    => 'present',
-   'dn' => 'org-root/boot-policy-test_boot_policy',
-   'bootpolicyname' => 'test_boot_policy',
+   'dn' => 'org-root/boot-policy-testbootpolicy',
+   'bootpolicy_name' => 'testbootpolicy',
    'organization' => 'org-root',
-   'lanorder' => '2',
+   'lan_order' => '5',
 }
 
 
