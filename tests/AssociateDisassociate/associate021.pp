@@ -9,14 +9,14 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile_association { 'name':
-  ensure    => "${ciscoucs_profile_association_dissociation['ensure_present']}", 
-  #organization => "${ciscoucs_profile_association_dissociation['organization']}",
-  #serviceprofile_name => "${ciscoucs_profile_association_dissociation['serviceprofile_name']}",
+  ensure    => "${ciscoucs_profile_association_disassociation['ensure_present']}", 
+  #organization => "${ciscoucs_profile_association_disassociation['organization']}",
+  #serviceprofile_name => "${ciscoucs_profile_association_disassociation['serviceprofile_name']}",
   server_chassis_id => " ",
-  server_slot_id => "${ciscoucs_profile_association_dissociation['server_slot_id']}",   
+  server_slot_id => "${ciscoucs_profile_association_disassociation['server_slot_id']}",   
   
-  profile_dn => "${ciscoucs_profile_association_dissociation['profile_dn']}",
-  #server_dn => "${ciscoucs_profile_association_dissociation['server_dn']}",
+  profile_dn => "${ciscoucs_profile_association_disassociation['profile_dn']}",
+  #server_dn => "${ciscoucs_profile_association_disassociation['server_dn']}",
   
   transport      => Transport_ciscoucs['ciscoucs'],
 }

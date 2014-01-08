@@ -46,14 +46,14 @@ transport_ciscoucs { 'ciscoucs':
 }
  
 ciscoucs_serviceprofile_association { 'name':
-  ensure    => "${ciscoucs_profile_association_dissociation['ensure_present']}", 
-  organization_name => "${ciscoucs_profile_association_dissociation['organization_name']}",
-  service_profile_name => "${ciscoucs_profile_association_dissociation['service_profile_name']}",
-  profile_dn => "${ciscoucs_profile_association_dissociation['profile_dn']}",
-  server_chassis_id => "${ciscoucs_profile_association_dissociation['server_chassis_id']}",
-  server_slot_id => "${ciscoucs_profile_association_dissociation['server_slot_id']}",   
-  server_dn => "${ciscoucs_profile_association_dissociation['server_dn']}",
-  transport  => "${ciscoucs_profile_association_dissociation['transport']}",
+  ensure    => "${ciscoucs_profile_association_disassociation['ensure_present']}", 
+  organization_name => "${ciscoucs_profile_association_disassociation['organization_name']}",
+  service_profile_name => "${ciscoucs_profile_association_disassociation['service_profile_name']}",
+  profile_dn => "${ciscoucs_profile_association_disassociation['profile_dn']}",
+  server_chassis_id => "${ciscoucs_profile_association_disassociation['server_chassis_id']}",
+  server_slot_id => "${ciscoucs_profile_association_disassociation['server_slot_id']}",   
+  server_dn => "${ciscoucs_profile_association_disassociation['server_dn']}",
+  transport  => "${ciscoucs_profile_association_disassociation['transport']}",
 }
 
 
@@ -67,14 +67,14 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile_association { 'name':
-  ensure    => "${ciscoucs_profile_association_dissociation['ensure_absent']}", 
-  organization_name => "${ciscoucs_profile_association_dissociation['organization_name']}",
-  service_profile_name => "${ciscoucs_profile_association_dissociation['service_profile_name']}",
-  profile_dn => "${ciscoucs_profile_association_dissociation['profile_dn']}",
-  server_chassis_id => "${ciscoucs_profile_association_dissociation['server_chassis_id']}",
-  server_slot_id => "${ciscoucs_profile_association_dissociation['server_slot_id']}",   
-  server_dn => "${ciscoucs_profile_association_dissociation['server_dn']}",
-  transport  => "${ciscoucs_profile_association_dissociation['transport']}",
+  ensure    => "${ciscoucs_profile_association_disassociation['ensure_absent']}", 
+  organization_name => "${ciscoucs_profile_association_disassociation['organization_name']}",
+  service_profile_name => "${ciscoucs_profile_association_disassociation['service_profile_name']}",
+  profile_dn => "${ciscoucs_profile_association_disassociation['profile_dn']}",
+  server_chassis_id => "${ciscoucs_profile_association_disassociation['server_chassis_id']}",
+  server_slot_id => "${ciscoucs_profile_association_disassociation['server_slot_id']}",   
+  server_dn => "${ciscoucs_profile_association_disassociation['server_dn']}",
+  transport  => "${ciscoucs_profile_association_disassociation['transport']}",
 }
  
 # --------------------------------------------------------------------------

@@ -45,7 +45,7 @@ $ciscoucs_serviceprofile_bootpolicy = {
 
 }
 
-$ciscoucs_profile_association_dissociation = {
+$ciscoucs_profile_association_disassociation = {
   ensure_present    => present, 
   ensure_absent    => absent, 
   organization => 'org-root',
