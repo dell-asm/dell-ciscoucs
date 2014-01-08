@@ -8,13 +8,13 @@
 #  Supported Functionality
 # --------------------------------------------------------------------------
 
-	Update VLAN vNIC Template
+	Update VLAN Service Profile
  
 # -------------------------------------------------------------------------
 # Functionality Description
 # -------------------------------------------------------------------------
        
-	Update VLAN vNIC Template: This operation updates the specified VLAN in the vNIC template.
+	Update VLAN Service Profile: This operation updates the specified VLAN in the vNIC of the service profile.
 
 # -------------------------------------------------------------------------
 # Summary of Parameters.
@@ -29,11 +29,13 @@
     
 	password: (Required) This parameter defines the password of the host.            
 
-	vnictemplateorg: (Required) This parameter defines the name of the organization to which the vNIC template belongs. 
+	serviceprofileorg: (Required) This parameter defines the name of the organisation to which the service profile belongs.
 
-	vlanname: (Required) This parameter defines the VLAN name which is updated in the vNIC template. 
+	vnic: (Required) This parameter defines the name of the vNIC present in THE service profile.
 
-	defaultnet: (Required) This parameter defines whether or not the native VLAN is updated.
+	vlanname: (Required) This parameter defines the name of the VLAN to be updated in the service profile.
+
+	defaultnet: (Required) This parameter defines whether or not the native VLAN gets updated.
 		Possible values: Yes/No
 
 # -------------------------------------------------------------------------
@@ -48,14 +50,14 @@ Include Cisco UCS
 		server   => '172.16.103.176',
 	}
 
-	ciscoucs_update_vlan_vnic_template { 'Test1234':
-		vnictemplateorg		=> 'org-root',
-		vlanname			=> 'test123456',
+	ciscoucs_vlan_service_profile { 'test1231':
+		serviceprofileorg	=> 'org-root',
+		vlanname			=> 'test12345678',
 		defaultnet			=> 'no',
+		vnic				=> 'eth0',
 		ensure				=> present,
-		transport			=> Transport_ciscoucs['ciscoucs'],
-	} 
-   
+		transport			=> Transport_ciscoucs['ciscoucs']
+	}    
  
 #-------------------------------------------------------------------------------------------------------------------------
 # End
