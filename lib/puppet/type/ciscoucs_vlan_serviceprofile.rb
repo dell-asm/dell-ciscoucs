@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:ciscoucs_vlan_service_profile) do
+Puppet::Type.newtype(:ciscoucs_vlan_serviceprofile) do
   @doc = 'Update VLAN in Service Profile Cisco UCS device.'
   ensurable
   newparam(:name) do
