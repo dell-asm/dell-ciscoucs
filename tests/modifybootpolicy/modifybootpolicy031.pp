@@ -8,17 +8,17 @@ transport_ciscoucs { 'ciscoucs':
  
 }
 
-ciscoucs_modify_serviceprofile_boot_policy{'serviceprofiledn': 
-  #serviceprofiledn =>"${ciscoucs_modify_serviceprofile_boot_policy['serviceprofiledn']}",
+ciscoucs_serviceprofile_bootpolicy{'serviceprofile_dn': 
+  #serviceprofile_dn =>"${ciscoucs_serviceprofile_bootpolicy['serviceprofile_dn']}",
   transport      => Transport_ciscoucs['ciscoucs'],
-  ensure         => "${ciscoucs_modify_serviceprofile_boot_policy['ensure']}",
-  #bootpolicydn   => "${ciscoucs_modify_serviceprofile_boot_policy['bootpolicydn']}",
+  ensure         => "${ciscoucs_serviceprofile_bootpolicy['ensure']}",
+  #bootpolicy_dn   => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_dn']}",
   
-   bootpolicyname => "${ciscoucs_modify_serviceprofile_boot_policy['bootpolicyname']}",
-   bootpolicyorganization => "${ciscoucs_modify_serviceprofile_boot_policy['bootpolicyorganization']}",
+   bootpolicy_name => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_name']}",
+   bootpolicy_organization => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_organization']}",
    
-   serviceprofilename => "${ciscoucs_modify_serviceprofile_boot_policy['serviceprofilename']}",
-   serviceprofileorganization => "${ciscoucs_modify_serviceprofile_boot_policy['serviceprofileorganization']}",
+   serviceprofile_name => "${ciscoucs_serviceprofile_bootpolicy['serviceprofile_name']}",
+   serviceprofile_organization => "${ciscoucs_serviceprofile_bootpolicy['serviceprofile_organization']}",
 }
 
 

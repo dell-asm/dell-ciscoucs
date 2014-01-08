@@ -9,13 +9,13 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 
-ciscoucs_modify_lan_bootorder{'dn': 
- dn             => "${ciscoucs_modify_lan_bootorder['dn']}",  
+ciscoucs_serviceprofile_boot_order{'bootpolicy_dn': 
+ bootpolicy_dn             => "${ciscoucs_serviceprofile_boot_order['bootpolicy_dn']}",  
   transport      => Transport_ciscoucs['ciscoucs'],
-  ensure         => "${ciscoucs_modify_lan_bootorder['ensure']}",
-  bootpolicyname => "${ciscoucs_modify_lan_bootorder['bootpolicyname']}",
-  organization   => "${ciscoucs_modify_lan_bootorder['organization']}",
-  lanorder       => "999",
+  ensure         => "${ciscoucs_serviceprofile_boot_order['ensure']}",
+  bootpolicy_name => "${ciscoucs_serviceprofile_boot_order['bootpolicy_name']}",
+  organization   => "${ciscoucs_serviceprofile_boot_order['organization']}",
+  lan_order       => "999",
 
 }
 
