@@ -8,10 +8,10 @@ transport_ciscoucs { 'ciscoucs':
  
 }
 
-ciscoucs_serviceprofile { 'name':
-  #name        => "${ciscoucs_serviceprofile['name']}",
-  #org         => "  ",
-  dn         => "A",
+ciscoucs_serviceprofile { 'serviceprofile_name':
+  #serviceprofile_name        => "${ciscoucs_serviceprofile['serviceprofile_name']}",
+  #organization         => "  ",
+  profile_dn         => "A",
   server_chassis_id => "${ciscoucs_serviceprofile['server_chassis_id']}",
   server_slot => "${ciscoucs_serviceprofile['server_slot']}",
   ensure          => "${ciscoucs_serviceprofile['ensure']}",
