@@ -108,14 +108,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   def profile_dn
     source_dn = ""
-    if (resource[:organization_name] && resource[:organization_name].strip.length > 0) &&
-    (resource[:service_profile_name]  && resource[:service_profile_name].strip.length > 0)
+    if (resource[:organization] && resource[:organization].strip.length > 0) &&
+    (resource[:serviceprofile_name]  && resource[:serviceprofile_name].strip.length > 0)
       # check if the profile name contains 'ls-'
-      profile_name = resource[:service_profile_name]
+      profile_name = resource[:serviceprofile_name]
       if ! profile_name.start_with?('ls-')
         profile_name = "ls-" + profile_name
       end
-      source_dn = resource[:organization_name] +"/"+ profile_name
+      source_dn = resource[:organization] +"/"+ profile_name
     elsif (resource[:server_dn] && resource[:server_dn].strip.length > 0)
       source_dn = resource[:server_dn]
     end

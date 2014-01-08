@@ -3,7 +3,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
 
   ensurable
 
-  newparam(:service_profile_name, :namevar => true) do
+  newparam(:serviceprofile_name, :namevar => true) do
     desc "Name of the service profile"
     validate do |value|
       if value && value.strip.length != 0
@@ -14,7 +14,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
     end
   end
 
-  newparam(:organization_name) do
+  newparam(:organization) do
     desc "Name of the organization"
     validate do |value|
       if value && value.strip.length != 0
@@ -72,8 +72,8 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
   validate do
     if !self[:profile_dn] || self[:profile_dn].strip.length==0
       # if dn is empty then both org or profile name should exists.
-      if (!self[:organization_name] || self[:organization_name].strip.length == 0) ||
-      (!self[:service_profile_name] || self[:service_profile_name].strip.length == 0)
+      if (!self[:organization] || self[:organization].strip.length == 0) ||
+      (!self[:serviceprofile_name] || self[:serviceprofile_name].strip.length == 0)
         raise ArgumentError, "Either dn or both profile organization and profile name should be given as input."
       end
     end
