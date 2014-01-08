@@ -57,11 +57,11 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
   end
 
   def target_profile_dn
-    profile_dn resource[:targetserviceprofilename], resource[:targetorganization], resource[:targetprofiledn]
+    profile_dn resource[:target_serviceprofile_name], resource[:target_organization], resource[:target_profile_dn]
   end
 
   def source_profile_dn
-    profile_dn resource[:sourceserviceprofilename], resource[:sourceorganization], resource[:sourceprofiledn]
+    profile_dn resource[:source_serviceprofile_name], resource[:source_organization], resource[:source_profile_dn]
   end
 
   def exists?
