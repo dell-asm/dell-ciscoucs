@@ -20,27 +20,27 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   
   def create
     # check if the profile exists
-    if ! check_profile_exists profile_dn
-      raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
+    if ! check_profile_exists profile_dn_name
+      raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
     
     @result = "";
    
     # check if blade is already associated with service profile
-    check_server_already_associated server_dn
+    check_server_already_associated server_dn_name
     
     
     if @result.to_s != ""
-          raise Puppet::Error, "Service Profile already associated with '"+server_dn+"' is '"+@result.to_s ;
+          raise Puppet::Error, "Service Profile already associated with '"+server_dn_name+"' is '"+@result.to_s ;
           return;
     end
 
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("associateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
-    parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
-    parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn
-    parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = server_dn
+    parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn_name
+    parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn_name
+    parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = server_dn_name
     parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Association";
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:rn] = "pn";
     requestxml = formatter.command_xml(parameters);
@@ -56,7 +56,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
   
 
-    check_operation_state_till_associate_completion(profile_dn);
+    check_operation_state_till_associate_completion(profile_dn_name);
 
     disconnect;
 
@@ -64,15 +64,15 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   def destroy
     # check if the profile exists
-    if ! check_profile_exists profile_dn
-      raise Puppet::Error, "The " + profile_dn + " service profile does not exist."
+    if ! check_profile_exists profile_dn_name
+      raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
 
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("disAssociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos'][:cookie] = cookie
-    parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn
-    parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn
+    parameters['/configConfMos/inConfigs/pair'][:key] = profile_dn_name
+    parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = profile_dn_name
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:status] = "deleted";
     parameters['/configConfMos/inConfigs/pair/lsServer'][:descr] = "Service Profile Disassociation";
     parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:rn] = "pn";
@@ -89,41 +89,22 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
    
 
-    check_operation_state_till_dissociate_completion(profile_dn)
+    check_operation_state_till_dissociate_completion(profile_dn_name)
 
     disconnect
 
   end
 
-  def server_dn
-    source_dn = ""
-    if (resource[:server_chassis_id] && resource[:server_chassis_id].strip.length > 0) &&
-    (resource[:server_slot_id]  && resource[:server_slot_id].strip.length > 0)
-      source_dn = 'sys/'+resource[:server_chassis_id]+'/'+resource[:server_slot_id];
-    elsif (resource[:profile_dn] && resource[:profile_dn].strip.length > 0)
-      source_dn = resource[:profile_dn]
-    end
-    return source_dn
+  def server_dn_name
+    server_dn(resource[:profile_dn], resource[:server_chassis_id], resource[:server_slot_id])
   end
 
-  def profile_dn
-    source_dn = ""
-    if (resource[:organization] && resource[:organization].strip.length > 0) &&
-    (resource[:serviceprofile_name]  && resource[:serviceprofile_name].strip.length > 0)
-      # check if the profile name contains 'ls-'
-      profile_name = resource[:serviceprofile_name]
-      if ! profile_name.start_with?('ls-')
-        profile_name = "ls-" + profile_name
-      end
-      source_dn = resource[:organization] +"/"+ profile_name
-    elsif (resource[:server_dn] && resource[:server_dn].strip.length > 0)
-      source_dn = resource[:server_dn]
-    end
-    return source_dn
+  def profile_dn_name
+    profile_dn(resource[:serviceprofile_name], resource[:organization], resource[:server_dn])
   end
   
   #get associated service profile
-  def check_server_already_associated(server_dn)
+  def check_server_already_associated(server_dn_name)
 
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("lsServerSingle")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -132,7 +113,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     parameters['/configResolveClass'][:inHierarchical] = "yes";
     parameters['/configResolveClass/inFilter/eq'][:class] = "lsServer";
     parameters['/configResolveClass/inFilter/eq'][:property] = "pnDn";
-    parameters['/configResolveClass/inFilter/eq'][:value] = server_dn;
+    parameters['/configResolveClass/inFilter/eq'][:value] = server_dn_name;
     requestxml = formatter.command_xml(parameters);
     
     if requestxml.to_s.strip.length == 0
@@ -146,7 +127,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
 
   #check operation status till completion
-  def check_operation_state_till_associate_completion(profile_dn)
+  def check_operation_state_till_associate_completion(profile_dn_name)
 
     @error_codes_array = ['connection-placement','vhba-capacity', 'vnic-capacity', 'mac-address-assignment', 'system-uuid-assignment', 'empty-pool', 'named-policy-unresolved', 'wwpn-assignment', 'wwnn-assignment'];
 
@@ -157,7 +138,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     
 
     while counter < maxCount  do
-      response_xml = call_for_current_state(profile_dn);
+      response_xml = call_for_current_state(profile_dn_name);
            
       parseState(response_xml);
 
@@ -199,12 +180,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
 
   #check operation status till completion
-  def check_operation_state_till_dissociate_completion(profile_dn)
+  def check_operation_state_till_dissociate_completion(profile_dn_name)
     maxCount = 10;
     counter = 0;
 
     while counter < maxCount  do
-      response_xml = call_for_current_state(profile_dn);
+      response_xml = call_for_current_state(profile_dn_name);
       parseState(response_xml);
       Puppet.notice(response_xml);
       
@@ -220,7 +201,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   end
 
   #call for current state
-  def call_for_current_state(profile_dn)
+  def call_for_current_state(profile_dn_name)
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("getServiceProfileState")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
@@ -228,7 +209,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     parameters['/configResolveClass'][:inHierarchical] = "false";
     parameters['/configResolveClass/inFilter/eq'][:class] = "lsServer"
     parameters['/configResolveClass/inFilter/eq'][:property] = "dn";
-    parameters['/configResolveClass/inFilter/eq'][:value] = profile_dn;
+    parameters['/configResolveClass/inFilter/eq'][:value] = profile_dn_name;
     requestxml = formatter.command_xml(parameters);
     responsexml = post requestxml;
     return responsexml;
