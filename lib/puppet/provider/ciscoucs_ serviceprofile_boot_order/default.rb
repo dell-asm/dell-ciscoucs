@@ -141,18 +141,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
   end
 
   def boot_policy_dn
-    policy_dn = ""
-    if (resource[:bootpolicy_name] && resource[:bootpolicy_name].strip.length > 0) &&
-    (resource[:organization] && resource[:organization].strip.length > 0)
-      policy_name = resource[:bootpolicy_name]
-      if ! policy_name.start_with?('boot-policy-')
-        policy_name= "boot-policy-" + policy_name
-      end
-      policy_dn = resource[:organization] +"/"+ policy_name
-    elsif (resource[:dn] && resource[:dn].strip.length > 0)
-      policy_dn = resource[:dn]
-    end
-    return policy_dn
+    bootpolicy_dn(resource[:bootpolicy_name], resource[:organization], resource[:dn])    
   end
 
   def exists?

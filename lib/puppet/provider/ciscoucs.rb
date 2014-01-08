@@ -178,7 +178,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
         # check if the profile name contains 'ls-'
         if m.to_s == "profile_dn" && (! name.start_with?('ls-'))
           name = "ls-" + name
-        elsif m.to_s == "boot_policy_dn" && (! name.start_with?('boot-policy-'))
+        elsif m.to_s == "bootpolicy_dn" && (! name.start_with?('boot-policy-'))
           name= "boot-policy-" + name
         end
         source_dn = organization +"/"+ name
