@@ -20,7 +20,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   
   def create
     # check if the profile exists
-    if ! check_profile_exists profile_dn_name
+    if ! check_element_exists profile_dn_name
       raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
     
@@ -64,7 +64,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   def destroy
     # check if the profile exists
-    if ! check_profile_exists profile_dn_name
+    if ! check_element_exists profile_dn_name
       raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
 

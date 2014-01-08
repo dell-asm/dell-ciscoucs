@@ -72,7 +72,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_bootpolicy).provide(:default, :parent
 
   def exists?
     # check if the source profile exists
-    if check_profile_exists service_profile_dn
+    if check_element_exists service_profile_dn
       # source profile exists, execute modify service profile operation
       # check the ensure input value
       if (resource[:ensure].to_s =="modify")

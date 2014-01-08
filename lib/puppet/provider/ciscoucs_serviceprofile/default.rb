@@ -144,7 +144,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def exists?
-    if ! check_profile_exists dn
+    if ! check_element_exists dn
       return false
     elsif (resource[:power_state])
       return true

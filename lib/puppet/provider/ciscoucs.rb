@@ -21,7 +21,7 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     @transport.close
   end
 
-  def check_profile_exists(dn)
+  def element_exists_response_xml(dn)
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("VerifyElementExists")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveDn'][:cookie] = cookie
@@ -32,6 +32,11 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
       raise Puppet::Error, "Cannot create request xml for checking profile"
     end
     responsexml = post requestxml
+    responsexml
+  end
+
+  def check_element_exists(dn)
+    responsexml = element_exists_response_xml dn
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from check profile"
     end
@@ -140,13 +145,10 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     end
     begin
       doc = REXML::Document.new(responsexml)
-
       if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
         return false
       end
-
       policy_dn = doc.elements["/configResolveClass/outConfigs/lsbootPolicy"].attributes["dn"]
-
       if(policy_dn != dn)
         return false
       end

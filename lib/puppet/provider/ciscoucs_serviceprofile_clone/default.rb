@@ -66,7 +66,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => P
 
   def exists?
     # check if the source profile exists
-    if check_profile_exists source_profile_dn
+    if check_element_exists source_profile_dn
       # source profile exists, execute clone operation
       return false
     end
