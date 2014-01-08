@@ -122,6 +122,10 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
     disconnect
   end
 
+def destroy
+   Puppet.notice("Method not supported")
+ end
+  
   def xml_template_path
     module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
     File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
