@@ -20,7 +20,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_bootpolicy) do
   end
 
   newparam(:serviceprofile_organization) do
-    desc "Name of the service profile organization"
+    desc "Name of the service profile organization. Valid format is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -31,7 +31,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_bootpolicy) do
   end
 
   newparam(:serviceprofile_dn) do
-    desc "Source service profile DN"
+    desc "Source service profile DN .Valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -53,7 +53,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_bootpolicy) do
   end
 
   newparam(:bootpolicy_organization) do
-    desc "Name of boot policy organization"
+    desc "Name of boot policy organization "
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -64,7 +64,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_bootpolicy) do
   end
 
   newparam(:bootpolicy_dn) do
-    desc "Boot policy DN"
+    desc "Boot policy DN. Valid format is org-root/boot-policy-[policy name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/

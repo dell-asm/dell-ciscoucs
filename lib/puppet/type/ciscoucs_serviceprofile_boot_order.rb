@@ -14,8 +14,8 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
     end
   end
 
-  newparam(:dn) do
-    desc "Boot policy DN"
+  newparam(:boot_) do
+    desc "Boot policy DN .Valid format is org-root/boot-policy-[policy name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -26,7 +26,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
   end
 
   newparam(:organization) do
-    desc "Name of the boot policy organization"
+    desc "Name of the boot policy organization. Valid format is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -37,7 +37,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
   end
 
   newparam(:lan_order) do
-    desc "New LAN order"
+    desc "New LAN order which should be integer from 1 to 5"
     validate do |value|
       if value && value.strip.length != 0
         # value should be an integer

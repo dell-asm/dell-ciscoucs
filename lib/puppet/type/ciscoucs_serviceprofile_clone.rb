@@ -14,7 +14,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:source_organization) do
-    desc "Name of the source organization"
+    desc "Name of the source organization. Valid format is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -25,7 +25,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:source_profile_dn) do
-    desc "Source service profile dn"
+    desc "Source service profile dn. Valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -47,7 +47,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:target_organization) do
-    desc "Name of the target organization"
+    desc "Name of the target organization. Valid format is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -58,7 +58,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   end
 
   newparam(:target_profile_dn) do
-    desc "Target service profile dn"
+    desc "Target service profile dn. Valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/

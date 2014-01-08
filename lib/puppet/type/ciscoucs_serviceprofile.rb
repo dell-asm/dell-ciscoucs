@@ -3,7 +3,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   ensurable
 
   newparam(:organization) do
-    desc "Name of the service profile Organization"
+    desc "Name of the service profile Organization. Valid format is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -25,7 +25,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:profile_dn) do
-    desc "Service profile dn"
+    desc "Service profile dn .Valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
