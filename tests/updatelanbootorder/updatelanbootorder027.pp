@@ -15,6 +15,6 @@ ciscoucs_modify_lan_bootorder{'dn':
   ensure         => "${ciscoucs_modify_lan_bootorder['ensure']}",
   bootpolicyname => "${ciscoucs_modify_lan_bootorder['bootpolicyname']}",
   organization   => "${ciscoucs_modify_lan_bootorder['organization']}",
-  lanorder       => "3",
+  lanorder       => "2",
 
 }
