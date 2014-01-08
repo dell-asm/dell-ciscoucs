@@ -70,6 +70,12 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
 
     # check if lan boot order is already same
     lancurorder = order_array.find_index { |e| e.match( /lan/ ) }.to_i
+
+    # if lan current order is 0 means lan doesn't exists in the boot policy, raise error
+    if lancurorder == 0
+      raise Puppet::Error, "LAN order does not exists in boot policy: "+ boot_policy_dn
+    end
+
     if lancurorder+1 == resource[:lan_order].to_i
       raise Puppet::Error, "LAN order is already "+ resource[:lan_order]
     end
@@ -97,11 +103,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
       when "read-only-vm"
         policyElem.add_element 'lsbootVirtualMedia', {'rn' => 'read-only-vm', 'order' =>  order_array.find_index { |e| e.match( /read-only-vm/ ) }.to_i + 1 }
       end
-      
-     
+
     end
-
-
 
     temp_file_path = File.join xml_template_path, "temp_update_boot_policy"
     temp_file_path+= ".xml"
@@ -122,10 +125,10 @@ Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent
     disconnect
   end
 
-def destroy
-   Puppet.notice("Method not supported")
- end
-  
+  def destroy
+    Puppet.notice("Method not supported")
+  end
+
   def xml_template_path
     module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
     File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
@@ -145,7 +148,7 @@ def destroy
   end
 
   def boot_policy_dn
-    bootpolicy_dn(resource[:bootpolicy_name], resource[:organization], resource[:bootpolicy_dn])    
+    bootpolicy_dn(resource[:bootpolicy_name], resource[:organization], resource[:bootpolicy_dn])
   end
 
   def exists?
