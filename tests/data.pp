@@ -60,7 +60,7 @@ $ciscoucs_profile_association_disassociation = {
 
 $ciscoucs_serviceprofile_boot_order= { 
    'ensure'    => 'present',
-   'dn' => 'org-root/boot-policy-testbootpolicy',
+   'bootpolicy_dn' => 'org-root/boot-policy-testbootpolicy',
    'bootpolicy_name' => 'testbootpolicy',
    'organization' => 'org-root',
    'lan_order' => '5',
