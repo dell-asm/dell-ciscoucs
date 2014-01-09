@@ -21,34 +21,67 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
   end
 
   describe "when validating values" do
-    describe "validating source profile dn param" do
-      it "should allow a valid source profile dn " do
-        described_class.new(:ensure => 'present',:source_serviceprofile_name => 'test_profile', :source_organization => 'org-root')[:source_profile_dn].should == 'org-root/test_profile'
+	describe "validating source service profile dn param" do
+      it "should allow a valid  profile dn " do
+        described_class.new( :ensure => 'present',:source_serviceprofile_name => '', :source_organization => '', :source_profile_dn => 'org-root/ls-abc')[:source_profile_dn].should_not == nil
+      end
+
+	  it "if the service profile name exist then organization name should not be blank" do
+        expect { described_class.new(:ensure => 'present',:source_serviceprofile_name => 'test', :source_organization => '') }.to raise_error Puppet::Error
+      end
+
+	  it "if the organization name exist then service profile name should not be blank" do
+        expect { described_class.new(:ensure => 'present', :source_organization => 'org-root', :source_serviceprofile_name => '') }.to raise_error Puppet::Error
       end
 	  
-      it "should not allow blank service profile dn if both source serviceprofile name and source organization name are blank" do
+      it "should not allow blank service profile dn if both serviceprofile name and Organization name are blank" do
         expect { described_class.new(:source_profile_dn => '', :ensure => 'present',:source_serviceprofile_name => '', :source_organization => '') }.to raise_error Puppet::Error
       end
-
-	  it "should not allow special characters in the source profile dn" do
-        expect { described_class.new(:source_profile_dn => '$%^&!') }.to raise_error Puppet::Error
-      end
     end
 
+	describe "validating profile dn param" do
+      it "should allow a valid  profile dn " do
+        described_class.new( :ensure => 'present',:target_serviceprofile_name => '', :target_organization => '', :target_profile_dn => 'org-root/ls-abc')[:target_profile_dn].should_not == nil
+      end
 
-	describe "validating target profile dn param" do
-      it "should allow a valid target profile dn " do
-        described_class.new( :ensure => 'present',:target_serviceprofile_name => 'test_profile', :target_organization => 'org-root')[:target_profile_dn].should == 'org-root/test_profile_clone'
+	  it "if the service profile name exist then organization name should not be blank" do
+        expect { described_class.new(:ensure => 'present',:target_serviceprofile_name => 'test', :target_organization => '') }.to raise_error Puppet::Error
+      end
+
+	  it "if the organization name exist then service profile name should not be blank" do
+        expect { described_class.new(:ensure => 'present', :target_organization => 'org-root', :target_serviceprofile_name => '') }.to raise_error Puppet::Error
       end
 	  
-      it "should not allow blank service profile dn if both target serviceprofile name and target Organization name are blank" do
+      it "should not allow blank service profile dn if both serviceprofile name and Organization name are blank" do
         expect { described_class.new(:target_profile_dn => '', :ensure => 'present',:target_serviceprofile_name => '', :target_organization => '') }.to raise_error Puppet::Error
       end
-
-	  it "should not allow special characters in the source profile dn" do
-        expect { described_class.new(:target_profile_dn => '$%^&!') }.to raise_error Puppet::Error
-      end
     end
+
+	describe "validating member param format" do
+		it "should not allow special characters in the source service profile dn" do
+			expect { described_class.new(:source_profile_dn => '$%^&!') }.to raise_error Puppet::Error
+		end
+
+		it "should not allow special characters in the source service profile name" do
+			expect { described_class.new(:source_serviceprofile_name => '$%^&!') }.to raise_error Puppet::Error
+		end
+
+	  	it "should not allow special characters in the source service profile organization" do
+			expect { described_class.new(:source_organization => '$%^&!') }.to raise_error Puppet::Error
+		end
+
+		it "should not allow special characters in the target dn" do
+			expect { described_class.new(:target_profile_dn => '$%^&!') }.to raise_error Puppet::Error
+		end
+
+		it "should not allow special characters in the target name" do
+			expect { described_class.new(:target_serviceprofile_name => '$%^&!') }.to raise_error Puppet::Error
+		end
+
+	  	it "should not allow special characters in the target organization" do
+			expect { described_class.new(:target_organization => '$%^&!') }.to raise_error Puppet::Error
+		end
+      end
 
 end
 end

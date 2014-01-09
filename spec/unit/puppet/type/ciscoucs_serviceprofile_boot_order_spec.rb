@@ -19,7 +19,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_boot_order) do
   end
 
   describe "when validating values" do
-    describe "validating source profile dn param" do
+    describe "validating source profile params" do
       it "if the boot policy name exist then organization name should not be blank" do
         expect { described_class.new(:ensure => 'present',:bootpolicy_name => 'testbootpolicy', :organization => '') }.to raise_error Puppet::Error
       end
@@ -33,19 +33,21 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_boot_order) do
       end
     end
 
-	 describe "validating member param" do
+	 describe "validating member param lan order" do
         it "should allow a valid lan_order format" do
-          described_class.new(:ensure => 'present', :bootpolicy_name => 'testbootpolicy', :organization => 'org-root')[:lan_order].should_not == nil
+          described_class.new(:ensure => 'present', :bootpolicy_name => 'testbootpolicy', :organization => 'org-root', :lan_order => '5')[:lan_order].should_not == nil
         end
 
 	   it "should allow a valid lan_order format" do
-          described_class.new(:ensure => 'present', :bootpolicy_name => '', :organization => '', :bootpolicy_dn   => 'org-root/boot-policy-testbootpolicy')[:lan_order].should_not == nil
+          described_class.new(:ensure => 'present', :bootpolicy_name => '', :organization => '', :bootpolicy_dn   => 'org-root/boot-policy-testbootpolicy', :lan_order => '5')[:lan_order].should_not == nil
         end
 
         it "should not allow special char in the lan order value" do
           expect { described_class.new(:ensure => 'present', :bootpolicy_name => '', :organization => '', :bootpolicy_dn   => 'org-root/boot-policy-testbootpolicy', :lan_order => 'a%bc') }.to raise_error Puppet::Error
         end
+      end
 
+	  describe "validating member param format" do
 		it "should not allow special characters in the bootpolicy name" do
 			expect { described_class.new(:bootpolicy_name => '$%^&!') }.to raise_error Puppet::Error
 		end
