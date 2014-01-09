@@ -5,8 +5,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
   context 'should compile with given test params' do
     let(:params) { {
 		:ensure   => 'present',
-        :source_profile_dn   => '',
-        :target_profile_dn   => '',
+        :source_profile_dn   => 'org-root/test_profile',
+        :target_profile_dn   => 'org-root/test_profile_clone',
         :source_serviceprofile_name   => 'test_profile',
 		:source_organization   => 'org-root',
         :target_serviceprofile_name   => 'test_profile_clone',
@@ -23,7 +23,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
   describe "when validating values" do
     describe "validating source profile dn param" do
       it "should allow a valid source profile dn " do
-        described_class.new(:source_profile_dn => '', :ensure => 'present',:source_serviceprofile_name => 'test_profile', :source_organization => 'org-root')[:source_profile_dn].should == ''
+        described_class.new(:ensure => 'present',:source_serviceprofile_name => 'test_profile', :source_organization => 'org-root')[:source_profile_dn].should == 'org-root/test_profile'
       end
 	  
       it "should not allow blank service profile dn if both source serviceprofile name and source organization name are blank" do
@@ -38,7 +38,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
 
 	describe "validating target profile dn param" do
       it "should allow a valid target profile dn " do
-        described_class.new(:target_profile_dn => '', :ensure => 'present',:target_serviceprofile_name => 'test_profile', :target_organization => 'org-root')[:target_profile_dn].should == ''
+        described_class.new( :ensure => 'present',:target_serviceprofile_name => 'test_profile', :target_organization => 'org-root')[:target_profile_dn].should == 'org-root/test_profile_clone'
       end
 	  
       it "should not allow blank service profile dn if both target serviceprofile name and target Organization name are blank" do
