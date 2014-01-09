@@ -54,8 +54,6 @@ $ciscoucs_profile_association_disassociation = {
   server_chassis_id => 'chassis-1',
   server_slot_id => 'blade-3',   
   server_dn => '',
-  transport  => Transport_ciscoucs['ciscoucs'],
-
 }
 
 $ciscoucs_serviceprofile_boot_order= { 
