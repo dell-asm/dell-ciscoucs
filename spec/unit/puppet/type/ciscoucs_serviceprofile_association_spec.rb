@@ -43,13 +43,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_association) do
     end
     
     describe "when validating power_state property" do
-      it "should support up" do
-        described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'up')[:power_state].should == :up
-      end
-
-      it "should support down" do
-        described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'down')[:power_state].should == :down
-      end
 
     end
   end
