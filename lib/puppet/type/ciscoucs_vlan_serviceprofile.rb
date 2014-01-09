@@ -12,7 +12,7 @@ Puppet::Type.newtype(:ciscoucs_vlan_serviceprofile) do
     end
   end
 
-  newparam(:vlanname) do
+  newparam(:vlan_name) do
     desc "Name of VLAN"
     validate do |value|
       if value && value.strip.length != 0

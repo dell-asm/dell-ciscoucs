@@ -13,12 +13,12 @@ Puppet::Type.type(:ciscoucs_vlan_vnic_template).provide(:default, :parent => Pup
   @doc = "Update VLAN in vNIC template Cisco UCS device."
   def create
     source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"
-    source_profile_rn = "if-#{resource[:vlanname]}"
+    source_profile_rn = "if-#{resource[:vlan_name]}"
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("updateVLANVNICTemplate")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl'][:dn] = "#{source_profile_dn}"
     parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:defaultNet] = @resource[:defaultnet]
-    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:name] = @resource[:vlanname]
+    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:name] = @resource[:vlan_name]
     parameters['/configConfMos'][:cookie] = cookie
     parameters['/configConfMos/inConfigs/pair'][:key] = "#{source_profile_dn}"
     parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:rn] = "#{source_profile_rn}"
@@ -60,7 +60,7 @@ Puppet::Type.type(:ciscoucs_vlan_vnic_template).provide(:default, :parent => Pup
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyVLAN")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
     parameters['/configResolveClass'][:cookie] = cookie
-    parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:vlanname]
+    parameters['/configResolveClass/inFilter/eq'][:value] = @resource[:vlan_name]
     requestxml = formatter.command_xml(parameters)
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Cannot create request xml for verify vlan operation"
@@ -103,7 +103,7 @@ Puppet::Type.type(:ciscoucs_vlan_vnic_template).provide(:default, :parent => Pup
     if checkvlan
       if checkvnictemplate
         source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"
-        if check_vlan_exist_vnic_template(source_profile_dn,@resource[:vlanname],@resource[:defaultnet])
+        if check_vlan_exist_vnic_template(source_profile_dn,@resource[:vlan_name],@resource[:defaultnet])
           Puppet.debug("VLAN already updated in vNIC Template")
           return true
         else

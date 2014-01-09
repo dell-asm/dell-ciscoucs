@@ -7,7 +7,7 @@ transport_ciscoucs { 'ciscoucs':
 
 ciscoucs_vlan_service_profile { 'test1231':
   serviceprofileorg => 'org-root',
-  vlanname 	  => 'test12345678',
+  vlan_name 	  => 'test12345678',
   defaultnet   => 'no',
   vnic      => 'eth0',
   ensure    => present,

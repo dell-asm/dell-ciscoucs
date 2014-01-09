@@ -33,7 +33,7 @@
 
 	vnic: (Required) This parameter defines the name of the vNIC present in THE service profile.
 
-	vlanname: (Required) This parameter defines the name of the VLAN to be updated in the service profile.
+	vlan_name: (Required) This parameter defines the name of the VLAN to be updated in the service profile.
 
 	defaultnet: (Required) This parameter defines whether or not the native VLAN gets updated.
 		Possible values: Yes/No
@@ -52,7 +52,7 @@ Include Cisco UCS
 
 	ciscoucs_vlan_serviceprofile { 'test1231':
 		serviceprofileorg	=> 'org-root',
-		vlanname			=> 'test12345678',
+		vlan_name			=> 'test12345678',
 		defaultnet			=> 'no',
 		vnic				=> 'eth0',
 		ensure				=> present,
