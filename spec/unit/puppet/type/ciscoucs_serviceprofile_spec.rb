@@ -30,7 +30,19 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile) do
       it "should support down" do
         described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'down')[:power_state].should == :down
       end
-
+	  
+	  it "should not allow invalid value in the serviceprofile_name" do
+          expect { described_class.new(:organization => 'org-root', :serviceprofile_name => '@#$%', :power_state => 'down') }.to raise_error Puppet::Error
+        end
+		it "should not allow invalid value in the organization name" do
+          expect { described_class.new(:organization => '@#$%', :serviceprofile_name => 'testServiceProfile', :power_state => 'down') }.to raise_error Puppet::Error
+        end
+		it "should not allow blank value in the organization name" do
+          expect { described_class.new(:organization => '', :serviceprofile_name => 'testServiceProfile', :power_state => 'down') }.to raise_error Puppet::Error
+        end
+		it "should not allow blank value in the testServiceProfile name" do
+          expect { described_class.new(:organization => 'org-root', :serviceprofile_name => '', :power_state => 'down') }.to raise_error Puppet::Error
+        end
     end
   end
   
