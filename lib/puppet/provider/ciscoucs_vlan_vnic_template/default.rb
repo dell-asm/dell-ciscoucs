@@ -5,6 +5,7 @@ Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
 ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
+$order_array = Hash.new
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
@@ -13,47 +14,94 @@ Puppet::Type.type(:ciscoucs_vlan_vnic_template).provide(:default, :parent => Pup
   @doc = "Update VLAN in vNIC template Cisco UCS device."
   def create
     source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"
-    source_profile_rn = "if-#{resource[:vlan_name]}"
+    source_profile_rn = "if-#{@resource[:vlan_name]}"
+    vlanList = populatevlan(source_profile_dn,@resource[:vlan_name],@resource[:defaultnet])
+    xml_content = xml_template "updateVLANVNICTemplate"
+    temp_doc = REXML::Document.new(xml_content)
+    policyElem = temp_doc.elements["/configConfMos/inConfigs/pair/vnicLanConnTempl"]
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("updateVLANVNICTemplate")
-    parameters = PuppetX::Util::Ciscoucs::NestedHash.new
-    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl'][:dn] = "#{source_profile_dn}"
-    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:defaultNet] = @resource[:defaultnet]
-    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:name] = @resource[:vlan_name]
-    parameters['/configConfMos'][:cookie] = cookie
-    parameters['/configConfMos/inConfigs/pair'][:key] = "#{source_profile_dn}"
-    parameters['/configConfMos/inConfigs/pair/vnicLanConnTempl/vnicEtherIf'][:rn] = "#{source_profile_rn}"
-    requestxml = formatter.command_xml(parameters)
-    if requestxml.to_s.strip.length == 0
-      raise Puppet::Error, "Cannot create request xml for update vlan vnic template operation"
-    end
-    Puppet.debug "Sending update vlan vnic template request xml: \n" + requestxml
-    responsexml = post requestxml
-    disconnect
-    if responsexml.to_s.strip.length == 0
-      raise Puppet::Error, "No response obtained from  update vlan vnic template"
-    end
-    Puppet.debug "Response from  update vlan vnic template: \n" + responsexml
-    updatevlanidresponse = REXML::Document.new(responsexml)
-    root = updatevlanidresponse.root
-    updatevlanidresponse.elements.each("/configConfMos/outConfigs/pair/vnicLanConnTempl") {
-      |e|
-      if e.attributes["status"].eql?('modified')
-        Puppet.notice "Vlan updated successfully in vNIC Template."
-      elsif e.attributes["status"].eql?('created')
-        Puppet.notice "Vlan updated successfully in newly created vNIC Template."
-      else
-        raise Puppet::Error, "Unable to update VLAN in vNIC Template"
+    updateparameters = PuppetX::Util::Ciscoucs::NestedHash.new
+    updateparameters['/configConfMos'][:cookie] = cookie
+    updateparameters['/configConfMos/inConfigs/pair'][:key] = "#{source_profile_dn}"
+    updateparameters['/configConfMos/inConfigs/pair/vnicLanConnTempl'][:dn] = "#{source_profile_dn}"
+    if (vlanList.include?("#{@resource[:vlan_name]}") && "#{@resource[:defaultnet]}" == "no")
+      policyElem.add_element 'vnicEtherIf', {'rn' => "if-#{@resource[:vlan_name]}", 'defaultNet' => $order_array["#{@resource[:vlan_name]}"], 'name' => "#{@resource[:vlan_name]}"}
+    else
+      if (!vlanList.include? "#{@resource[:vlan_name]}")
+        vlanList.push("#{@resource[:vlan_name]}")
       end
-    }
-
-    if !root.attributes['errorDescr'].nil?
-      raise Puppet::Error, root.attributes['errorDescr']
+      vlanList.each do |vlan|
+        policyElem.add_element 'vnicEtherIf', {'rn' => "if-#{vlan}", 'defaultNet' => $order_array["#{vlan}"], 'name' => "#{vlan}"}
+      end
     end
 
+    temp_file_path = File.join xml_template_path, "temp_update_vlan_vnic_template"
+    temp_file_path+= ".xml"
+    File.open(temp_file_path,"w") do |data|
+      data<<temp_doc
+    end
+    temp_formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("temp_update_vlan_vnic_template")
+    temp_requestxml = temp_formatter.command_xml(updateparameters);
+    Puppet.debug("#{temp_requestxml}")
+    temp_responsexml = post temp_requestxml
+    if temp_responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "Unable to get response from the Update VLAN in vNIC Template operation."
+    end
+    Puppet.debug("#{temp_responsexml}")
+    # delete temporary xml file
+    File.delete(temp_file_path) if File.exist?(temp_file_path)
+    # disconnect cookie
+    disconnect
+  end
+
+  def xml_template_path
+    module_lib = Pathname.new(__FILE__).parent.parent.parent.parent
+    File.join module_lib.to_s, '/puppet_x/util/ciscoucs/xml'
+  end
+
+  def xml_template (filename)
+    content = ""
+    xml_path = File.join xml_template_path, filename
+    xml_path+= ".xml"
+    if File.exists?(xml_path)
+      # read file in block will close the file handle internally when block terminates
+      content = File.open(xml_path, 'r') { |file| file.read }
+    else
+      raise Puppet::Error, "Cannot read xml template from location: " + xml_path
+    end
+    return content
   end
 
   def destroy
     # not needed
+  end
+
+  def populatevlan(dn,vlanname,defaultnet)
+    request_xml = '<configResolveDn cookie="'+cookie+'"dn="' + dn + '" '"inHierarchical=true"'/>'
+    responsexml = post request_xml
+    if responsexml.to_s.strip.length == 0
+      raise Puppet::Error, "No response obtained from vnic template"
+    end
+    vlanlist = Array.new
+    spresponse = REXML::Document.new(responsexml)
+    root = spresponse.root
+    spresponse.elements.each("/configResolveDn/outConfig/vnicLanConnTempl/vnicEtherIf") {
+      |e|
+      vlanName = "#{e.attributes["name"]}"
+      defnet = "#{e.attributes["defaultNet"]}"
+      if (!"#{vlanName}".eql?("#{vlanname}"))
+        if ("#{defnet}".eql?("#{defaultnet}"))
+          if ("#{defaultnet}" == "yes")
+            defnet = "no"
+          end
+
+        end
+      end
+      $order_array[e.attributes["name"]] = "#{defnet}"
+      vlanlist.push(vlanName)
+    }
+    $order_array[@resource[:vlan_name]] = "#{@resource[:defaultnet]}"
+    vlanlist
   end
 
   def checkvlan

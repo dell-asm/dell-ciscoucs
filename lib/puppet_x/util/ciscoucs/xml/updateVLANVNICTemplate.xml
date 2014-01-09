@@ -1,15 +1,9 @@
 <configConfMos
 	cookie=""
-	inHierarchical="false">
+	inHierarchical="true">
     	<inConfigs>
 		<pair key="">
-    			<vnicLanConnTempl
-    				dn="">
-    				<vnicEtherIf
-  					defaultNet=""
-       	   				name=""
-           				rn="">
-        			</vnicEtherIf>
+    			<vnicLanConnTempl dn="">
     			</vnicLanConnTempl>
 		</pair>
     	</inConfigs>
