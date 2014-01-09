@@ -5,7 +5,7 @@ transport_ciscoucs { 'ciscoucs':
   server   => '172.16.103.176',
 }
 
-ciscoucs_vlan_service_profile { 'test1231':
+ciscoucs_vlan_serviceprofile { 'test1231':
   serviceprofileorg => 'org-root',
   vlan_name 	  => 'test12345678',
   defaultnet   => 'no',
