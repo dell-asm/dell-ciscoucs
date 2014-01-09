@@ -21,7 +21,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:id] = @resource[:vlanid]
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:mcastPolicyName] = @resource[:mcast_policy_name]
     parameters['/configConfMos'][:cookie] = cookie
-    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:name] = @resource[:name]
+    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:name] = @resource[:vlan_name]
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:sharing] = @resource[:sharing]
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:status] = @resource[:status]
     createvlanidxml = formatter.command_xml(parameters)
@@ -45,9 +45,9 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
   def get_dn()
     dn = ""
     if @resource[:fabric_id].to_s.strip.length >0
-      dn = "fabric/lan/#{@resource[:fabric_id]}/net-#{@resource[:name]}"
+      dn = "fabric/lan/#{@resource[:fabric_id]}/net-#{@resource[:vlan_name]}"
     else
-      dn = "fabric/lan/net-#{@resource[:name]}"
+      dn = "fabric/lan/net-#{@resource[:vlan_name]}"
     end
     return dn
   end
@@ -60,7 +60,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
     parameters['/configConfMos/inConfigs/pair'][:key] = get_dn
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:id] = @resource[:vlanid]
     parameters['/configConfMos'][:cookie] = cookie
-    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:name] = @resource[:name]
+    parameters['/configConfMos/inConfigs/pair/fabricVlan'][:name] = @resource[:vlan_name]
     parameters['/configConfMos/inConfigs/pair/fabricVlan'][:status] = @resource[:status]
     createvlanidxml = formatter.command_xml(parameters)
     ucscreatevlanidresp = post createvlanidxml
@@ -80,7 +80,7 @@ Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider:
 
   def exists?
     if check_element_exists(get_dn)
-      Puppet.debug "VLAN Name/Prefix : #{@resource[:name]} exist in UCS."
+      Puppet.debug "VLAN Name/Prefix : #{@resource[:vlan_name]} exist in UCS."
       return true
     else
       Puppet.debug "VLAN id does not exist."

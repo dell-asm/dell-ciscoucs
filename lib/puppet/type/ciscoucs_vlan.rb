@@ -1,20 +1,20 @@
 Puppet::Type.newtype(:ciscoucs_vlan) do
   @doc = "cisco ucs create vlan"
   ensurable
-
-  newparam(:name) do
-    desc "vlan Name/Prefix. It must be unique. Valid characters are all non white space string characters (a-z, 0-9,-,_). Max length is 33"
-    isnamevar
-    validate do |value|
-      if value.strip.length > 33
-        raise ArgumentError, "The vlan prefix length is more than 33 characters." % value
-      else
-        unless value =~ /\S+$/
-          raise ArgumentError, "The %s is an invalid vlan prefix" % value
+  
+  newparam(:vlan_name) do
+      desc "vlan Name/Prefix. It must be unique. Valid characters are all non white space string characters (a-z, 0-9,-,_). Max length is 33"
+      isnamevar
+      validate do |value|
+        if value.strip.length > 33
+          raise ArgumentError, "The vlan prefix length is more than 33 characters." % value
+        else
+          unless value =~ /\S+$/
+            raise ArgumentError, "The %s is an invalid vlan prefix" % value
+          end
         end
       end
     end
-  end
 
   newparam(:vlanid) do
     desc "vlan id to be created. Must be numeric"
