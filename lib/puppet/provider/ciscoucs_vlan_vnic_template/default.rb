@@ -10,7 +10,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_vlan_vnic_template).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Update VLAN in vNIC template Cisco UCS device."
   def create
     source_profile_dn = "#{@resource[:vnictemplateorg]}/lan-conn-templ-#{@resource[:name]}"

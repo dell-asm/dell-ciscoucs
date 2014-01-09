@@ -9,7 +9,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
 require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_vlan_serviceprofile).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Update VLAN in Service Profile Cisco UCS device."
   def create
     source_profile_dn = "#{@resource[:serviceprofileorg]}/ls-#{@resource[:name]}/ether-#{@resource[:vnic]}"

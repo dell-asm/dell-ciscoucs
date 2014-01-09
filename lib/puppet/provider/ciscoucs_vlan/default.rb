@@ -11,7 +11,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Create VLAN on Cisco UCS device."
   def create
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createvlan")
