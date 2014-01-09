@@ -9,7 +9,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Update order in boot policy."
   def create
     # get the current boot order

@@ -3,12 +3,12 @@
 require 'rest-client'
 
 module_lib = Pathname.new(__FILE__).parent.parent.parent
-require File.join module_lib.to_s, '/puppet_x/puppetlabs/transport'
-require  File.join module_lib.to_s, '/puppet_x/puppetlabs/transport/ciscoucs'
+require File.join module_lib.to_s, '/puppet_x/puppetlabs/transportciscoucs'
+require  File.join module_lib.to_s, '/puppet_x/puppetlabs/transportciscoucs/ciscoucs'
 
 class Puppet::Provider::Ciscoucs < Puppet::Provider
   def cookie
-    @transport ||= PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
+    @transport ||= PuppetX::Puppetlabs::Transportciscoucs.retrieve(:resource_ref => resource[:transport], :catalog => resource.catalog, :provider => 'ciscoucs')
     value = @transport.cookie
     value.to_s
   end

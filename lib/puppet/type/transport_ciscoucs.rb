@@ -1,6 +1,5 @@
 Puppet::Type.newtype(:transport_ciscoucs) do
-  @doc = "Manage transport connectivity information on cisco ucs device"
-
+  @doc = "Manage transport connectivity information on cisco ucs device"  
   newparam(:name, :namevar => true) do
     desc "Name of the network transport."
   end

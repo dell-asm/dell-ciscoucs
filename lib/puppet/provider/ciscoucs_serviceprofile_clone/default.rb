@@ -10,7 +10,7 @@ require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
 
 Puppet::Type.type(:ciscoucs_serviceprofile_clone).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Clone service profile on cisco ucs device."
   def create
     # split the target dn to get the org name and clone name

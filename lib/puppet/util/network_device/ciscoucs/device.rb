@@ -4,8 +4,8 @@ require 'uri'
 require 'net/https'
 
 module_lib = Pathname.new(__FILE__).parent.parent.parent.parent.parent
-require File.join module_lib.to_s, '/puppet_x/puppetlabs/transport'
-require File.join module_lib.to_s, '/puppet_x/puppetlabs/transport/ciscoucs'
+require File.join module_lib.to_s, '/puppet_x/puppetlabs/transportciscoucs'
+require File.join module_lib.to_s, '/puppet_x/puppetlabs/transportciscoucs/ciscoucs'
 
 module Puppet::Util::NetworkDevice::Ciscoucs
   class Device
@@ -18,7 +18,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       res_hash[:username] = @user
       res_hash[:password] = @password
       res_hash[:server] = @host
-      @transport = PuppetX::Puppetlabs::Transport::Ciscoucs.new(res_hash)
+      @transport = PuppetX::Puppetlabs::Transportciscoucs::Ciscoucs.new(res_hash)
       @transport.connect
     end
 

@@ -6,11 +6,10 @@ Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
 Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
-  #confine :feature => :ssh
-
-  include PuppetX::Puppetlabs::Transport
+  #confine :feature => :ssh  
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Create server profile on Cisco UCS device."
-  def create
+  def create    
     if (resource[:server_chassis_id].to_s.strip.length != 0 && resource[:server_slot].to_s.strip.length != 0)
       # create profile from server
       create_profile_from_server

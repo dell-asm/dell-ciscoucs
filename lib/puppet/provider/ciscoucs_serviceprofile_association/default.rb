@@ -7,7 +7,7 @@ require File.join(provider_path, 'ciscoucs')
 Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
   @doc = "Manage association of service profile on Cisco UCS device."
 
-  include PuppetX::Puppetlabs::Transport
+  include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Associate or dissociate server profile on Cisco UCS device."
 
   @error_codes_array = Array.new(9);
