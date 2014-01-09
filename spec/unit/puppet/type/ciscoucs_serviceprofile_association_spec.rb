@@ -3,19 +3,39 @@ require 'spec_helper'
 describe Puppet::Type.type(:ciscoucs_serviceprofile_association) do
   let(:title) { 'ciscoucs_serviceprofile_association' }
 
-  context 'should compile with given test params' do
+  context 'should compile with given test params for association' do
     let(:params) { {
-        :organization   => 'org-root',
-        :serviceprofile_name   => 'testServiceProfile',
-        :power_state   => 'up',
+        :ensure              => 'present',
+        :organization        => 'org-root',
+        :serviceprofile_name => 'testing',
+        :profile_dn          => '',
+        :server_chassis_id   => 'chassis-1',
+        :server_slot_id      => 'blade-3',
+        :server_dn           => '',
       }}
     it do
       expect {
         should compile
       }
     end
-
   end
+  
+  context 'should compile with given test params for dissociation' do
+      let(:params) { {
+          :ensure              => 'absent',
+          :organization        => 'org-root',
+          :serviceprofile_name => 'testing',
+          :profile_dn          => '',
+          :server_chassis_id   => 'chassis-1',
+          :server_slot_id      => 'blade-3',
+          :server_dn           => '',
+        }}
+      it do
+        expect {
+          should compile
+        }
+      end  
+    end
 
   context "when validating attributes" do
     it "should have serviceprofile_name as one of its parameters for serviceprofile" do
