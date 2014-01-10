@@ -63,7 +63,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
 
           count+=1
         }
-        @facts['ServerData'] = blademap
+        @facts['ServerData'] = JSON.pretty_generate(blademap)
       rescue Exception => msg
         raise Puppet::Error, "Following error occurred while parsing discovery response" +  msg.to_s
       end
@@ -74,7 +74,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       generalMap = {}
       generalMap['UCS IP'] = @transport.host
       generalMap['UCS Version'] =  @transport.firmwareversion
-      return  generalMap
+      return  JSON.pretty_generate(generalMap)
     end
   end
 end
