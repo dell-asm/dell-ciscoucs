@@ -18,6 +18,10 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
 
   context "when ciscoucs service profile provider is created " do
    
+    it "should have parent 'Puppet::Provider::Ciscoucs'" do
+         @fixture.provider.should be_kind_of(Puppet::Provider::Ciscoucs)
+       end
+   
     it "should have create method defined for ciscoucs_serviceprofile" do
       @fixture.provider.class.instance_method(:create).should_not == nil
     end
@@ -55,6 +59,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
     end
 
   end
+  
+  
 
 
 end

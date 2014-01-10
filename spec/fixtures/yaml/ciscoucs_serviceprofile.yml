@@ -1,0 +1,16 @@
+power_on:
+  
+  name: 'testServiceProfile'
+  org: 'org-root'
+  dn: ''  
+  power_state: 'up'
+  #transport: ''
+
+power_off:
+  name: 'testServiceProfile'
+  org: 'org-root'
+  dn: ''  
+  power_state: 'down'
+  # transport: ''
+	
+	
