@@ -1,4 +1,4 @@
-class Ciscoucs_serviceprofile_fixture
+class Ciscoucs_serviceprofile_poweron_fixture
 
   attr_accessor :ciscoucs_serviceprofile, :provider
   def initialize
@@ -6,20 +6,18 @@ class Ciscoucs_serviceprofile_fixture
     @provider = ciscoucs_serviceprofile.provider
   end
 
-  private
 
   def  get_serviceprofile_poweron
     Puppet::Type.type(:ciscoucs_serviceprofile).new(
     :organization => 'root/org',
     :serviceprofile_name => 'testServiceProfile',
-    :power_state => 'up',
-    :configstate => 'disable',
+    :power_state => 'up'
     )
   end
 
   public
 
-  def get_serviceprofile_name]
+  def get_serviceprofile_name
     ciscoucs_serviceprofile[:serviceprofile_name]
   end
 
@@ -31,3 +29,4 @@ class Ciscoucs_serviceprofile_fixture
    ciscoucs_serviceprofile[:power_state] = 'down'
  end
 end
+
