@@ -1,4 +1,5 @@
 include ciscoucs
+
 import 'data.pp'
 
 transport_ciscoucs { 'ciscoucs':
@@ -8,12 +9,12 @@ transport_ciscoucs { 'ciscoucs':
 }
 
 ciscoucs_serviceprofile_bootpolicy { 'serviceprofile_name':
-   ensure    => "${ciscoucs_serviceprofile_bootpolicy['ensure']}",
-   transport  => Transport_ciscoucs['ciscoucs'],
-   bootpolicy_dn => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_dn']}",
-   bootpolicy_name =>"${ciscoucs_serviceprofile_bootpolicy['bootpolicy_name']}",
-   bootpolicy_organization => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_organization']}",
-   serviceprofile_dn =>"${ciscoucs_serviceprofile_bootpolicy['serviceprofile_dn']}",
-   serviceprofile_name =>"${ciscoucs_serviceprofile_bootpolicy['serviceprofile_name']}",
-   serviceprofile_organization => "${ciscoucs_serviceprofile_bootpolicy['serviceprofile_organization']}",
+  ensure                      => "${ciscoucs_serviceprofile_bootpolicy['ensure']}",
+  transport                   => Transport_ciscoucs['ciscoucs'],
+  bootpolicy_dn               => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_dn']}",
+  bootpolicy_name             =>"${ciscoucs_serviceprofile_bootpolicy['bootpolicy_name']}",
+  bootpolicy_organization     => "${ciscoucs_serviceprofile_bootpolicy['bootpolicy_organization']}",
+  serviceprofile_dn           =>"${ciscoucs_serviceprofile_bootpolicy['serviceprofile_dn']}",
+  serviceprofile_name         =>"${ciscoucs_serviceprofile_bootpolicy['serviceprofile_name']}",
+  serviceprofile_organization => "${ciscoucs_serviceprofile_bootpolicy['serviceprofile_organization']}",
 }
