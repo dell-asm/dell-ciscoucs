@@ -8,6 +8,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile) do
         :organization   => 'org-root',
         :serviceprofile_name   => 'testServiceProfile',
         :power_state   => 'up',
+		:number_of_profiles    => '1',
+		
       }}
     it do
       expect {
@@ -43,6 +45,16 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile) do
 		it "should not allow blank value in the testServiceProfile name" do
           expect { described_class.new(:organization => 'org-root', :serviceprofile_name => '', :power_state => 'down') }.to raise_error Puppet::Error
         end
+		it "should allow Number of profiles to be created " do
+          expect { described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'up', :number_of_profiles => 1) }.to raise_error Puppet::Error
+     	end
+		 it "should not allow number_of_profiles to be nill " do
+        described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'down',:number_of_profiles => '')[:number_of_profiles].should_not == nil
+      end
+		it "should not allow invalid value in the number_of_profiles " do
+          expect { described_class.new(:organization => 'org-root', :serviceprofile_name => 'testServiceProfile', :power_state => 'down',:number_of_profiles => '@#$%') }.to raise_error Puppet::Error
+        end	
+
     end
   end
   
