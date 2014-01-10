@@ -1,4 +1,4 @@
-class Ciscoucs_serviceprofile_poweron_fixture
+class Ciscoucs_serviceprofile_association_fixture
 
   attr_accessor :ciscoucs_serviceprofile_association, :provider
   
