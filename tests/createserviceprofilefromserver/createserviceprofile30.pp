@@ -4,7 +4,7 @@ import '../data.pp'
 
 transport_ciscoucs { 'ciscoucs':
   username => "${ciscoucs['username']}",
-  password => "${cisord']}",
+  password => 'cisord',
   server   => "${ciscoucs['server']}",
 }
 

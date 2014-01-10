@@ -3,7 +3,7 @@ include ciscoucs
 import '../data.pp'
 
 transport_ciscoucs { 'ciscoucs':
-  username => "$serviceprofile_name']}",
+  username => "serve",
   password => "${ciscoucs['password']}",
   server   => "${ciscoucs['server']}",
 }
