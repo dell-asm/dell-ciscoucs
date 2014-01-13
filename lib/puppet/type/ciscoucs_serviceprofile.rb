@@ -1,5 +1,5 @@
 Puppet::Type.newtype(:ciscoucs_serviceprofile) do
-  @doc = 'This represents create service profile on the Cisco UCS'
+  @doc = 'This represents Create Service Profile on the Cisco UCS'
   ensurable
 
   newparam(:organization) do
@@ -36,7 +36,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:source_template) do
-    desc "This parameter describes source template name from which service profile will be created"
+    desc "This parameter describes source template name from which the service profile is to be created"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -59,7 +59,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:server_chassis_id) do
-       desc "This parameter describes server chassis id from which service profile will be created"
+       desc "This parameter describes server chassis id from which the service profile is to be created"
        validate do |value|
          if value.strip.length != 0
            # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
@@ -70,7 +70,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
      end
      
    newparam(:server_slot) do
-         desc "This parameter describes server slot on which service profile needs to be created"
+         desc "This parameter describes server slot on which the service profile is to be created"
          validate do |value|
            if value.strip.length != 0
              # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
