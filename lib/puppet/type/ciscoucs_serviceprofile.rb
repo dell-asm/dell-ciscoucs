@@ -1,9 +1,9 @@
 Puppet::Type.newtype(:ciscoucs_serviceprofile) do
-  @doc = 'This represents create service profile on cisco ucs'
+  @doc = 'This represents create service profile on the Cisco UCS'
   ensurable
 
   newparam(:organization) do
-    desc "This parameter describes name of the service profile organization. A valid format is org-root/[sub-organization]/[sub-organization]...."
+    desc "This parameter describes name of the service profile organization. A valid format for service profile organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -25,7 +25,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:profile_dn) do
-    desc "This parameter describes service profile dn . A valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
+    desc "This parameter describes service profile dn . A valid format for service profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -89,7 +89,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
     if !self[:profile_dn] || self[:profile_dn].strip.length==0
       # if profile_dn is empty then both organization or profile name should exists.
       if (!self[:organization] || self[:organization].strip.length == 0) || (!self[:serviceprofile_name] || self[:serviceprofile_name].strip.length == 0)
-        raise ArgumentError, "Provide either profile_dn or both organization and profile name as input."
+        raise ArgumentError, "Either profile_dn or both organization and profile name is to be provided as an input."
       end
     end
   end
