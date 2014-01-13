@@ -1,5 +1,5 @@
 Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
-  @doc = 'This represents association or disassociation service profile on cisco ucs'
+  @doc = 'This represents the association or disassociation of service profile on the Cisco UCS.'
 
   ensurable
 
@@ -15,7 +15,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
   end
 
   newparam(:organization) do
-    desc "This parameter describes name of the organization. A Valid format is org-root/[sub-organization]/[sub-organization]...."
+    desc "This parameter describes name of the organization. A Valid format for the name of the organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -26,7 +26,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
   end
 
   newparam(:profile_dn) do
-    desc "This parameter describes Server profile dn. A Valid format is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
+    desc "This parameter describes Server profile dn. A Valid format for a service profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
       if value  &&  value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
@@ -74,14 +74,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_association) do
       # if dn is empty then both org or profile name should exists.
       if (!self[:organization] || self[:organization].strip.length == 0) ||
       (!self[:serviceprofile_name] || self[:serviceprofile_name].strip.length == 0)
-        raise ArgumentError, "Provide either the dn or both the profile organization and profile name as input."
+        raise ArgumentError, "Either the dn or both the profile organization and profile name is to be provided as an input."
       end
     end
     if !self[:server_dn] || self[:server_dn].strip.length==0
       # if dn is empty then both org or profile name should exists.
       if (!self[:server_slot_id] || self[:server_slot_id].strip.length == 0) ||
       (!self[:server_chassis_id] || self[:server_chassis_id].strip.length == 0)
-        raise ArgumentError, "Provide either dn or both server slot id and server chassis id as input."
+        raise ArgumentError, "Either the dn or both the server slot id and the server chassis id is to be provided as an input."
       end
     end
 
