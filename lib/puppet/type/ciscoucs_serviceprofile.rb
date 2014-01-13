@@ -53,6 +53,9 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
         # value should be an integer
         unless value =~ /\A[0-9]+\Z/
           raise ArgumentError, "%s is invalid." % value
+          if value.to_i > 255
+                      raise ArgumentError, "%s is invalid." % value
+          end
         end
       end
     end
