@@ -135,6 +135,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     failConfigMaxCount = 5;
     counter = 0;
     failConfigCount = 0;
+    associated = false;
     
 
     while counter < maxCount  do
@@ -167,7 +168,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       end
 
       if @state == "associated"
-        Puppet.notice('successfully associated!');
+        Puppet.notice('Successfully Associated');
+        associated = true;
         break;
       end
 
@@ -175,7 +177,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       counter = counter  +  1;
     end
 
-    Puppet.notice("Fails to associate service profile");
+    if associated == false 
+      Puppet.notice("Fails to associate service profile");
+    end
 
   end
 
@@ -190,7 +194,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       Puppet.notice(response_xml);
       
       if @state == "unassociated"
-        Puppet.notice('successfully dissociated!');
+        Puppet.notice('Successfully Dissociated');
         return;
       end
       sleep(60);
