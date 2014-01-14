@@ -1,12 +1,11 @@
-power_on:
-  
+poweron:
   name: 'testServiceProfile'
   org: 'org-root'
   dn: ''  
   power_state: 'up'
   #transport: ''
 
-power_off:
+poweroff:
   name: 'testServiceProfile'
   org: 'org-root'
   dn: ''  

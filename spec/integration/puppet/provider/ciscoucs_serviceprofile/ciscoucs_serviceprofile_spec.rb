@@ -1,74 +1,80 @@
-#! /usr/bin/env ruby
+
 
 require 'spec_helper'
+
+
 
 require 'yaml'
 require 'puppet/provider/ciscoucs'
 require 'rbvmomi'
 require 'puppet_x/puppetlabs/transport/ciscoucs'
-#require 'Puppet_x'
-#require 'puppet/resource'
+require 'fixtures/unit/puppet/provider/ciscoucs_serviceprofile/ciscoucs_serviceprofile_fixture'
+
 
 describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
 
-  # device_conf =  YAML.load_file(my_deviceurl('equallogic','device_conf.yml'))
-    before :each do
-    #Facter.stubs(:value).with(:url).returns(device_conf['url'])
-	#Facter.stubs(:value).with(:url).returns(Transport['vcenter'])
-	  described_class.stubs(:suitable?).returns true
-      Puppet::Type.type(:ciscoucs_serviceprofile).stubs(:defaultprovider).returns described_class
-    end
-
-  ciscoucs_serviceprofile_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile.yml'))
-  power_on = ciscoucs_serviceprofile_yml['power_on']  
+   ciscoucs_serviceprofile_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile.yml'))
+   poweron = ciscoucs_serviceprofile_yml['poweron']  
+   
+   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_node = transport_yml['transport']
   
-  transport_yml =  YAML.load_file(my_fixture('transport.yml'))
-  transport_node = transport_yml['transport']
-  
-  params = {:name => 'ciscoucs', :username => 'admin', :password => 'admin', :server => '172.16.100.167'} 
-  providers = 'ciscoucs'
-  let :ciscoucs_poweron do
-	Puppet::Type.type(:transport).new(
-	  :name               => transport_node['name'],
-	  :username               => transport_node['username'],
-		:password             => transport_node['password'],		
-		:server             => transport_node['server']
-			
-    )	 
-
-    transportx = PuppetX::Puppetlabs::Transport::const_get(providers.to_s.capitalize).new(params)
-	transportx.connect 
-	
-	Puppet::Type.type(:ciscoucs_serviceprofile).new(
-	  :serviceprofile_name    => power_on['serviceprofile_name'],
-		:organization     => power_on['organization'],
-		:transport        => transportx,
-		:power_state             => power_on['power_state']
-		 
-    )
-  end  
-
-  power_off = ciscoucs_serviceprofile_yml['power_off']
-  
-  let :ciscoucs_poweroff do
-    Puppet::Type.type(:transport).new(
-        :name               => transport_node['name'],
-        :username               => transport_node['username'],
-        :password             => transport_node['password'],    
-        :server             => transport_node['server']
-          
-        )  
-    
-        transportx = PuppetX::Puppetlabs::Transport::const_get(providers.to_s.capitalize).new(params)
-      transportx.connect 
-      
-      Puppet::Type.type(:ciscoucs_serviceprofile).new(
-       :serviceprofile_name    => power_off['serviceprofile_name'],
-       :organization     => power_off['organization'],
-       :transport        => transportx,
-       :power_state             => power_off['power_state']
+  let(:power_on) do
+     @catalog = Puppet::Resource::Catalog.new
+       transport = Puppet::Type.type(:transport).new({
+       :name => transport_node['name'],
+       :username => transport_node['username'],
+       :password => transport_node['password'],
+       :server   => transport_node['server'],
+     
+      })
+     @catalog.add_resource(transport)
+ 
+   Puppet::Type.type(:ciscoucs_serviceprofile).new(
+     :name               => poweron['name'],
+     :serviceprofile_name   => poweron['serviceprofile_name'],
+     :transport          => transport, 
+     :catalog            => @catalog,
+     :organization       => poweron['organization'],
+     :profile_dn         => poweron['profile_dn']
+     
+     )
+   end  
+   
+ 
+  poweroff = ciscoucs_serviceprofile_yml['poweroff']
+   
+   let :power_off do
+     @catalog = Puppet::Resource::Catalog.new
+           transport = Puppet::Type.type(:transport).new({
+           :name => transport_node['name'],
+           :username => transport_node['username'],
+           :password => transport_node['password'],
+           :server   => transport_node['server'],
          
-        )
-      end  
-
-end
+          })
+         @catalog.add_resource(transport)
+     
+       Puppet::Type.type(:ciscoucs_serviceprofile).new(
+         :name               => poweroff['name'],
+         :serviceprofile_name   => poweroff['serviceprofile_name'],
+         :transport          => transport, 
+         :catalog            => @catalog,
+         :organization       => poweroff['organization'],
+         :profile_dn         => poweroff['profile_dn']
+         
+         )
+       end  
+ 
+   describe "when changing the power state of ciscoucs to up" do     
+     it "should be able to change the state to up" do
+       power_on.provider.create
+     end
+   end
+ 
+   describe "when changing the power state of ciscoucs to down" do
+     it "should be able to change power state to down" do
+       power_off.provider.create
+     end
+   end
+ end
