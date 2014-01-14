@@ -67,6 +67,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if ! check_element_exists profile_dn_name
       raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
+    
+    check_already_dissociated profile_dn_name;
+    
+    if @result.to_s == ""
+      raise Puppet::Error, profile_dn_name + " service profile is not associated with any server." ;
+      return;
+    end
 
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("disAssociateServiceProfile")
     parameters = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -283,4 +290,10 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     return result;
   end
   #question: do we have to delete the profile
+  
+  #check if profile is already dissociated or no association ate present
+  def check_already_dissociated profile_dn_name
+    response_xml = call_for_current_state profile_dn_name;
+    parse_associated_service_profile response_xml;      
+  end
 end
