@@ -1,15 +1,10 @@
 
 
 require 'spec_helper'
-
-
-
 require 'yaml'
 require 'puppet/provider/ciscoucs'
 require 'rbvmomi'
 require 'puppet_x/puppetlabs/transport/ciscoucs'
-require 'fixtures/unit/puppet/provider/ciscoucs_serviceprofile/ciscoucs_serviceprofile_fixture'
-
 
 describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
 
@@ -36,8 +31,9 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
      :transport          => transport, 
      :catalog            => @catalog,
      :organization       => poweron['organization'],
-     :profile_dn         => poweron['profile_dn']
-     
+     :profile_dn         => poweron['profile_dn'],
+     :power_state        => poweron['power_state']
+           
      )
    end  
    
@@ -61,7 +57,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
          :transport          => transport, 
          :catalog            => @catalog,
          :organization       => poweroff['organization'],
-         :profile_dn         => poweroff['profile_dn']
+         :profile_dn         => poweroff['profile_dn'],
+         :power_state        => poweroff['power_state']
          
          )
        end  

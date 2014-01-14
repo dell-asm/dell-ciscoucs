@@ -1,0 +1,14 @@
+poweron:
+  name: 'ciscoucs'
+  serviceprofile_name: 'testServiceProfile'
+  organization: 'org-root'  
+  power_state: 'up'
+  profile_dn: 'org-root/ls-testServiceProfile'
+
+
+poweroff:
+  name: 'ciscoucs'
+  serviceprofile_name: 'testServiceProfile'
+  organization: 'org-root'  
+  power_state: 'down'
+  profile_dn: 'org-root/ls-testServiceProfile'
