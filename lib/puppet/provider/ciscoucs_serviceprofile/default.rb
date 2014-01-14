@@ -6,10 +6,10 @@ Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
 Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
-  #confine :feature => :ssh  
+  #confine :feature => :ssh
   include PuppetX::Puppetlabs::Transportciscoucs
   @doc = "Create server profile on Cisco UCS device."
-  def create    
+  def create
     if (resource[:server_chassis_id].to_s.strip.length != 0 && resource[:server_slot].to_s.strip.length != 0)
       # create profile from server
       create_profile_from_server
@@ -20,7 +20,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def create_profile_from_server
-    
+
     # check if the service profile exists
     service_profile_exist = false
     verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -28,70 +28,69 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     verify_param['/configResolveClass/inFilter/eq'][:value] = dn
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyServiceProfile")
     verify_service_profile_request_xml = formatter.command_xml(verify_param)
-    
+
     if verify_service_profile_request_xml.to_s.strip.length == 0
-        raise Puppet::Error, "Unable to create the request XML to verify the service profile"
+      raise Puppet::Error, "Unable to create the request XML to verify the service profile"
     end
-        
+
     verify_service_profile_response_xml = post verify_service_profile_request_xml
     if verify_service_profile_response_xml.to_s.strip.length == 0
-          raise Puppet::Error, "Unable to get a response from the verify service profile operation."
-     end
-     
-    # parse and verify service profile response    
+      raise Puppet::Error, "Unable to get a response from the verify service profile operation."
+    end
+
+    # parse and verify service profile response
     begin
-        doc = REXML::Document.new(verify_service_profile_response_xml)          
-        if doc.elements["/configResolveClass/outConfigs"].has_elements?
-           if doc.elements["/configResolveClass/outConfigs/lsServer"].attributes["dn"].to_s.strip.length!= 0            
-              Puppet.notice("The service profile " + resource[:serviceprofile_name] + " already exist.")
-              service_profile_exist= true
-              disconnect
-           end
-        end
-     end      
-       
-    if !service_profile_exist      
-      # creating pnDN
-          service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
-      
-          formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfileFromServer")
-          parameters = PuppetX::Util::Ciscoucs::NestedHash.new
-          parameters['/configConfMos'][:cookie] = cookie
-          parameters['/configConfMos/inConfigs/pair'][:key] = dn
-          parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = dn
-          parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = service_pnDn
-      
-          requestxml = formatter.command_xml(parameters)          
-          if requestxml.to_s.strip.length == 0
-            raise Puppet::Error, "Unable to create the request XML for the Create Service Profile from Server operation"
-          end
-          
-          responsexml = post requestxml          
+      doc = REXML::Document.new(verify_service_profile_response_xml)
+      if doc.elements["/configResolveClass/outConfigs"].has_elements?
+        if doc.elements["/configResolveClass/outConfigs/lsServer"].attributes["dn"].to_s.strip.length!= 0
+          Puppet.notice("The service profile " + resource[:serviceprofile_name] + " already exist.")
+          service_profile_exist= true
           disconnect
-          #parse response xml to check for errors
-          begin
-            create_doc = REXML::Document.new(responsexml)
-            if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
-              raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/error"].attributes["errorDescr"]
-            elsif  create_doc.elements["configConfMos/outConfigs/pair/lsServer"].attributes["operState"].to_s=="config-failure" 
-              raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/configConfMos/outConfigs/pair/lsServer"].attributes["configQualifier"] 
-            else
-              Puppet.notice("Successfully created service profile:"+ resource[:serviceprofile_name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
-            end
-          rescue Exception => msg
-            raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response \n" +  msg.to_s
-          end
-    end   
-    
+        end
+      end
+    end
+
+    if !service_profile_exist
+      # creating pnDN
+      service_pnDn = "sys/"+ resource[:server_chassis_id] +"/"+ resource[:server_slot]
+
+      formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("createServiceProfileFromServer")
+      parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+      parameters['/configConfMos'][:cookie] = cookie
+      parameters['/configConfMos/inConfigs/pair'][:key] = dn
+      parameters['/configConfMos/inConfigs/pair/lsServer'][:dn] = dn
+      parameters['/configConfMos/inConfigs/pair/lsServer/lsBinding'][:pnDn] = service_pnDn
+
+      requestxml = formatter.command_xml(parameters)
+      if requestxml.to_s.strip.length == 0
+        raise Puppet::Error, "Unable to create the request XML for the Create Service Profile from Server operation"
+      end
+
+      responsexml = post requestxml
+      disconnect
+      #parse response xml to check for errors
+      begin
+        create_doc = REXML::Document.new(responsexml)
+        if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
+          raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/error"].attributes["errorDescr"]
+        elsif  create_doc.elements["configConfMos/outConfigs/pair/lsServer"].attributes["operState"].to_s=="config-failure"
+          raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/configConfMos/outConfigs/pair/lsServer"].attributes["configQualifier"]
+        else
+          Puppet.notice("Successfully created service profile:"+ resource[:serviceprofile_name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+        end
+      rescue Exception => msg
+        raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response \n" +  msg.to_s
+      end
+    end
+
   end
 
   def create_profile_from_template
-    # check if the source template name contains 'ls-'
-    template_name = resource[:source_template]
-    if ! resource[:source_template].start_with?('ls-')
-      template_name = "ls-" + resource[:source_template]
+    # check if the source template name is a dn name
+    prof_dn = resource[:source_template]
+    if (! prof_dn.include?('ls-')) ||  (! prof_dn.start_with?('org-'))
+      raise Puppet::Error, "Invalid format of source template name. A valid format for source template name is org-root/[sub-organization]/[sub-organization]..../ls-[template name]"
     end
-    prof_dn = resource[:organization]+"/"+ template_name
 
     # check if the template exists
     verify_param = PuppetX::Util::Ciscoucs::NestedHash.new
@@ -103,27 +102,32 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if verify_temp_request_xml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create the request XML to verify the template"
     end
-   
+
     verify_temp_response_xml = post verify_temp_request_xml
     if verify_temp_response_xml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the verify template operation."
     end
-   
-    # parse and verify template response
 
+    # parse and verify template response
+    error_msg = ""
     begin
       doc = REXML::Document.new(verify_temp_response_xml)
       if ! doc.elements["/configResolveClass/outConfigs"].has_elements?
-        raise Puppet::Error, "The " + resource[:source_template] + " template does not exist."
+        error_msg = "The " + resource[:source_template] + " template does not exist."
       end
 
       template_dn = doc.elements["/configResolveClass/outConfigs/lsServer"].attributes["dn"]
 
       if(template_dn != prof_dn)
-        raise Puppet::Error, "The " + resource[:source_template] + " template does not exist."
+        error_msg = "The " + resource[:source_template] + " template does not exist."
       end
     rescue
-      raise Puppet::Error, "Unable to parse the template response XML."
+      if error_msg != ""
+        raise Puppet::Error, error_msg
+      else
+        raise Puppet::Error, "Unable to parse the template response XML."
+      end
+      
     end
     Puppet.debug "Found matching template"
 
@@ -143,21 +147,23 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Create Profile from Template operation."
     end
-    
+
     responsexml = post requestxml
     disconnect
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response for the Create Profile from Template operation."
     end
- 
 
     #parser response xml to check for errors
     begin
       create_doc = REXML::Document.new(responsexml)
       if create_doc.elements["/error"] &&  create_doc.elements["/error"].attributes["errorCode"]
         raise Puppet::Error, "Unable to perform the operation because the following issue occured while creatng a profile: "+  create_doc.elements["/error"].attributes["errorDescr"]
+      elsif create_doc.elements["/lsInstantiateNTemplate"] &&  create_doc.elements["/lsInstantiateNTemplate/outConfigs/lsServer"].attributes["dn"]
+        profile_new = create_doc.elements["/lsInstantiateNTemplate/outConfigs/lsServer"].attributes["dn"]
+        Puppet.notice("Successfully created profile: " +  profile_new  + " from template: " + resource[:source_template])
       else
-        Puppet.notice("Successfully created the profile: "+ resource[:serviceprofile_name]+ " from template " + resource[:source_template])
+        raise Puppet::Error, "Unable to create profile from template: "+  resource[:source_template]
       end
     rescue Exception => msg
       raise Puppet::Error, "Unable to perform the operation because the following error occurred while parsing the Create Profile from the Template response" +  msg.to_s
@@ -169,7 +175,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
   end
 
   def dn
-    profile_dn resource[:serviceprofile_name], resource[:organization], resource[:profile_dn]    
+    profile_dn resource[:serviceprofile_name], resource[:organization], resource[:profile_dn]
   end
 
   def power_dn
@@ -266,7 +272,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       raise Puppet::Error, "Unable to create a request XML for verifying the current power state."
     end
     responsexml = post requestxml
-    
+
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response to verify the current power state."
     end

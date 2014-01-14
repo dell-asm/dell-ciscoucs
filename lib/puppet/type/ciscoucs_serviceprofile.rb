@@ -36,7 +36,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   end
 
   newparam(:source_template) do
-    desc "This parameter describes source template name from which the service profile is to be created"
+    desc "This parameter describes source template name from which the service profile is to be created. A valid format for source template name is org-root/[sub-organization]/[sub-organization]..../ls-[template name]"
     validate do |value|
       if value && value.strip.length != 0
         unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
