@@ -20,7 +20,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provider(:defaul
 
     it "should have create method defined for ciscoucs boot policy order" do
       @fixture.provider.class.instance_method(:create).should_not == nil
-
     end
 
     it "should have destroy method defined for ciscoucs boot policy order" do
@@ -67,10 +66,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provider(:defaul
       end
 
 	  it "should raise error if xml template and xml template path in the provider are blank" do
-      #When-Then
-      @fixture.provider.xml_template.strip.length == 0 
-	  @fixture.provider.xml_template_path.strip.length == 0 
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
+      @fixture.provider.class.instance_method(:xml_template).should_not == nil
+	  @fixture.provider.class.instance_method(:xml_template_path).should_not == nil
       end
  
   end
