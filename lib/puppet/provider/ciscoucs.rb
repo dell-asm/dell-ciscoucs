@@ -40,6 +40,9 @@ class Puppet::Provider::Ciscoucs < Puppet::Provider
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "No response obtained from check profile"
     end
+    if Puppet[:noop]         
+        disconnect
+    end
     begin
       doc = REXML::Document.new(responsexml)
       return doc.elements["/configResolveDn/outConfig"].has_elements?
