@@ -1,10 +1,5 @@
-
-
 require 'spec_helper'
 require 'yaml'
-require 'puppet/provider/ciscoucs'
-require 'rbvmomi'
-require 'puppet_x/puppetlabs/transport/ciscoucs'
 
 describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
 
@@ -13,16 +8,18 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
    
    transport_yml =  YAML.load_file(my_fixture('transport.yml'))
    transport_node = transport_yml['transport']
-  
+       
   let(:power_on) do
      @catalog = Puppet::Resource::Catalog.new
-       transport = Puppet::Type.type(:transport).new({
+     
+       transport = Puppet::Type.type(:transport_ciscoucs).new({
        :name => transport_node['name'],
        :username => transport_node['username'],
        :password => transport_node['password'],
-       :server   => transport_node['server'],
-     
+       :server   => transport_node['server'],     
       })
+
+      
      @catalog.add_resource(transport)
  
    Puppet::Type.type(:ciscoucs_serviceprofile).new(
@@ -31,10 +28,10 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
      :transport          => transport, 
      :catalog            => @catalog,
      :organization       => poweron['organization'],
-     :profile_dn         => poweron['profile_dn'],
-     :power_state        => poweron['power_state']
-           
+     :power_state       => poweron['power_state'],
+     :profile_dn         => poweron['profile_dn']     
      )
+     
    end  
    
  
@@ -42,7 +39,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
    
    let :power_off do
      @catalog = Puppet::Resource::Catalog.new
-           transport = Puppet::Type.type(:transport).new({
+           transport = Puppet::Type.type(:transport_ciscoucs).new({
            :name => transport_node['name'],
            :username => transport_node['username'],
            :password => transport_node['password'],
@@ -57,8 +54,8 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
          :transport          => transport, 
          :catalog            => @catalog,
          :organization       => poweroff['organization'],
-         :profile_dn         => poweroff['profile_dn'],
-         :power_state        => poweroff['power_state']
+         :power_state       => poweroff['power_state'],
+         :profile_dn         => poweroff['profile_dn']
          
          )
        end  
