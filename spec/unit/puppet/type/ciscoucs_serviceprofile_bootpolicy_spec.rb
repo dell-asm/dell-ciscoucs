@@ -22,9 +22,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_bootpolicy) do
 
   describe "when validating values" do
     describe "validating boot policy dn param" do
-      it "should allow a valid boot policy dn " do
-        described_class.new(:ensure => 'present',:bootpolicy_name => '', :bootpolicy_organization => '', :bootpolicy_dn => 'org-root/boot-policy-testbootpolicy')[:bootpolicy_dn].should_not == nil
-      end
 	  
 	  it "if the boot policy name exist then organization name should not be blank" do
         expect { described_class.new(:ensure => 'present',:bootpolicy_name => 'testbootpolicy', :bootpolicy_organization => '') }.to raise_error Puppet::Error
@@ -41,9 +38,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_bootpolicy) do
 
 
 	describe "validating profile dn param" do
-      it "should allow a valid  profile dn " do
-        described_class.new( :ensure => 'present',:serviceprofile_name => '', :serviceprofile_organization => '', :serviceprofile_dn => 'org-root/ls-abc')[:serviceprofile_dn].should_not == nil
-      end
 
 	  it "if the service profile name exist then organization name should not be blank" do
         expect { described_class.new(:ensure => 'present',:serviceprofile_name => 'testbootpolicy', :serviceprofile_organization => '') }.to raise_error Puppet::Error

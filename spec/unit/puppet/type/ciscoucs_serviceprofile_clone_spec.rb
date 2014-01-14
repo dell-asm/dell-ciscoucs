@@ -22,9 +22,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
 
   describe "when validating values" do
 	describe "validating source service profile dn param" do
-      it "should allow a valid  profile dn " do
-        described_class.new( :ensure => 'present',:source_serviceprofile_name => '', :source_organization => '', :source_profile_dn => 'org-root/ls-abc')[:source_profile_dn].should_not == nil
-      end
 
 	  it "if the service profile name exist then organization name should not be blank" do
         expect { described_class.new(:ensure => 'present',:source_serviceprofile_name => 'test', :source_organization => '') }.to raise_error Puppet::Error
@@ -40,9 +37,6 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone) do
     end
 
 	describe "validating profile dn param" do
-      it "should allow a valid  profile dn " do
-        described_class.new( :ensure => 'present',:target_serviceprofile_name => '', :target_organization => '', :target_profile_dn => 'org-root/ls-abc')[:target_profile_dn].should_not == nil
-      end
 
 	  it "if the service profile name exist then organization name should not be blank" do
         expect { described_class.new(:ensure => 'present',:target_serviceprofile_name => 'test', :target_organization => '') }.to raise_error Puppet::Error
