@@ -12,3 +12,23 @@ poweroff:
   organization: 'org-root'  
   power_state: 'down'
   profile_dn: 'org-root/ls-testServiceProfile'
+  
+ 
+createfromtemplate:
+  name: 'ciscoucs'
+  serviceprofile_name: 'testServiceProfile'
+  organization: 'org-root'  
+  profile_dn: 'org-root/ls-testServiceProfile'
+  ensure: 'present'
+  source_template: 'testing'
+  number_of_profiles: '1'
+  
+createfromserver:
+  name: 'ciscoucs'
+  serviceprofile_name: 'testServiceProfile'
+  organization: 'org-root'  
+  profile_dn: 'org-root/ls-testServiceProfile'
+  ensure: 'present'
+  server_chassis_id: 'chassis-1'
+  
+  
