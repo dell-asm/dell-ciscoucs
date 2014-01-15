@@ -1,0 +1,12 @@
+ modifybootpolicy:
+  name: 'bootpolicy'
+  ensure: 'modify'
+  bootpolicy_dn: 'org-root/boot-policy-testbootpolicy'
+  bootpolicy_name: 'testbootpolicy'  
+  bootpolicy_organization: 'org-root'
+  serviceprofile_dn: 'org-root/ls-abc'
+  serviceprofile_name: 'abc'
+  serviceprofile_organization: 'org-root'
+
+  
+  
