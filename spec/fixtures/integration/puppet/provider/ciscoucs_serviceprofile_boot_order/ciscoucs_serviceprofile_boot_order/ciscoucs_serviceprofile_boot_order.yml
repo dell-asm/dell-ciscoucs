@@ -1,0 +1,7 @@
+ modifyboot_order:
+  name: 'boot_order'
+  ensure: 'present'
+  bootpolicy_dn: 'org-root/boot-policy-testbootpolicy'
+  bootpolicy_name: 'testbootpolicy'  
+  organization: 'org-root'
+  lan_order: '1'
