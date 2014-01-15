@@ -1,0 +1,19 @@
+associate:
+  name                  : 'ciscoucs_serviceprofile'
+  ensure                : 'present'
+  organization          : 'org-root'
+  serviceprofile_name   : 'testing'
+  profile_dn            : ''
+  server_chassis_id     : 'chassis-1'
+  server_slot_id        : 'blade-3'
+  server_dn             : ''
+
+disassociate:
+  name                  : 'ciscoucs_serviceprofile'
+  ensure                : 'absent'
+  organization          : 'org-root'
+  serviceprofile_name   : 'testing'
+  profile_dn            : ''
+  server_chassis_id     : 'chassis-1'
+  server_slot_id        : 'blade-3'
+  server_dn             : ''
