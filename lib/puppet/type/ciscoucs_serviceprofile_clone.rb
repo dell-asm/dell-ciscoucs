@@ -5,66 +5,90 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_clone) do
   newparam(:source_serviceprofile_name, :namevar => true) do
     desc "This parameter describes name of the source service profile"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:source_organization) do
     desc "This parameter describes name of the source organization. A valid format for the source organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:source_profile_dn) do
     desc "This parameter describes source service profile dn. A valid format for source profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:target_serviceprofile_name) do
     desc "This parameter describes name of the target service profile"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 
   newparam(:target_organization) do
     desc "This parameter describes name of the target organization. A valid format for target organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:target_profile_dn) do
     desc "This parameter describes target service profile dn. A valid format for target service profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 

@@ -11,66 +11,90 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_bootpolicy) do
  newparam(:serviceprofile_name, :namevar => true) do
     desc "This parameter describes name of the service profile"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:serviceprofile_organization) do
     desc "This parameter describes name of the service profile organization. A valid format for the name of the service profile organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:serviceprofile_dn) do
     desc "This parameter describes source service profile dn. A valid format for the source service profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 
   newparam(:bootpolicy_name) do
     desc "This parameter describes name of the Boot policy"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 
   newparam(:bootpolicy_organization) do
     desc "This parameter describes name of Boot policy organization. A valid format for the name of the Boot policy organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 
   newparam(:bootpolicy_dn) do
     desc "This parameter describes Boot policy dn. A valid format for the Boot polict dn is org-root/boot-policy-[policy name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 

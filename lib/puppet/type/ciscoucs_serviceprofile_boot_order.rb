@@ -6,33 +6,45 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
   newparam(:bootpolicy_name, :namevar => true ) do
     desc "This parameter describes name of the Boot policy"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:bootpolicy_dn) do
     desc "This parameter describes Boot policy dn. A valid format for the Boot policy dn is org-root/boot-policy-[policy name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+       verifyinitial = value.to_s[0,1]  
+       unless verifyinitial =~ /^[a-zA-Z]$/               
+           raise ArgumentError, "%s is invalid." % value
+       end
+       unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+           raise ArgumentError, "%s is invalid." % value
+       end          
+     end
     end
   end
 
   newparam(:organization) do
     desc "This parameter describes name of the Boot policy organization. A valid format for the Boot policy organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+         verifyinitial = value.to_s[0,1]  
+         unless verifyinitial =~ /^[a-zA-Z]$/               
+             raise ArgumentError, "%s is invalid." % value
+         end
+         unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+             raise ArgumentError, "%s is invalid." % value
+         end          
+       end
     end
   end
 
@@ -48,8 +60,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile_boot_order) do
         raise ArgumentError, "An empty or no value has been provided for the lanorder parameter."
       end
     end
-  end
-  
+  end 
 
   validate do
     if !self[:bootpolicy_dn] || self[:bootpolicy_dn].strip.length==0
