@@ -34,7 +34,7 @@ require 'puppet_spec/fixtures'
 require 'puppet_spec/deviceconf'
 require 'puppet_spec/matchers'
 require 'puppet_spec/database'
-require 'monkey_patches/alias_should_to_must'
+#require 'monkey_patches/alias_should_to_must'
 require 'puppet/test/test_helper'
 
 RSpec.configure do |config|
