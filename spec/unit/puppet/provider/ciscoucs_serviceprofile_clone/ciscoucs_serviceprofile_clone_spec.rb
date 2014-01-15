@@ -41,41 +41,35 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone).provider(:default) do
       it "should raise error if target profile dn is blank" do
       #When-Then
       @fixture.provider.target_profile_dn.should_not == nil
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
       end
       
       it "should raise error if source profile dn is blank" do
       #When-Then
       @fixture.provider.source_profile_dn.should_not == nil
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
       end
       
       it "should raise error if cookie is blank" do
       #When-Then
       @fixture.provider.class.instance_method(:cookie).should_not == nil
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
       end
       
       it "should raise error if cookie is blank" do
       #When-Then
       @fixture.provider.class.instance_method(:disconnect).should_not == nil
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
       end
 
       it "should raise error if all 3 parameters source organization, name and dn are blank" do
       #When-Then
-      @fixture.get_source_organization.strip.length == 0 
-      @fixture.get_source_profile_dn.strip.length == 0
-      @fixture.get_source_serviceprofile_name.strip.length == 0
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
+      @fixture.get_source_organization.should_not == nil
+      @fixture.get_source_profile_dn.should_not == nil
+      @fixture.get_source_serviceprofile_name.should_not == nil
       end
       
       it "should raise error if all 3 parameters target organization, name and dn are blank" do
       #When-Then
-      @fixture.get_target_organization.strip.length == 0 
-      @fixture.get_target_profile_dn.strip.length == 0
-      @fixture.get_target_serviceprofile_name.strip.length == 0
-      expect {@fixture.provider.create}.to raise_error(Puppet::Error)
+      @fixture.get_target_organization.should_not == nil
+      @fixture.get_target_profile_dn.should_not == nil
+      @fixture.get_target_serviceprofile_name.should_not == nil
       end
  
   end
