@@ -146,6 +146,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     
 
     while counter < maxCount  do
+      Puppet.notice("Profile association in progress....")
       response_xml = call_for_current_state(profile_dn_name);
            
       parseState(response_xml);
