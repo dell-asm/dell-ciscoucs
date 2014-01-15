@@ -5,10 +5,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:organization) do
     desc "This parameter describes name of the service profile organization. A valid format for service profile organization is org-root/[sub-organization]/[sub-organization]...."
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
+      if value && value.strip.length != 0        
+        verifyinitial = value.to_s[0,1]  
+        unless verifyinitial =~ /^[a-zA-Z]$/            
+            raise ArgumentError, "%s is invalid." % value
         end
+        unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/            
+            raise ArgumentError, "%s is invalid." % value
+        end          
       end
     end
   end
@@ -16,10 +20,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:serviceprofile_name, :namevar => true) do
     desc "This parameter describes name of the service profile"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
+      if value && value.strip.length != 0        
+        verifyinitial = value.to_s[0,1]  
+        unless verifyinitial =~ /^[a-zA-Z]$/            
+            raise ArgumentError, "%s is invalid." % value
         end
+        unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/            
+            raise ArgumentError, "%s is invalid." % value
+        end          
       end
     end
   end
@@ -27,10 +35,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:profile_dn) do
     desc "This parameter describes service profile dn . A valid format for service profile dn is org-root/[sub-organization]/[sub-organization]..../ls-[profile name]"
     validate do |value|
-      if value  &&  value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
+      if value && value.strip.length != 0        
+        verifyinitial = value.to_s[0,1]  
+        unless verifyinitial =~ /^[a-zA-Z]$/            
+            raise ArgumentError, "%s is invalid." % value
         end
+        unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/            
+            raise ArgumentError, "%s is invalid." % value
+        end          
       end
     end
   end
@@ -38,11 +50,15 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:source_template) do
     desc "This parameter describes source template name from which the service profile is to be created. A valid format for source template name is org-root/[sub-organization]/[sub-organization]..../ls-[template name]"
     validate do |value|
-      if value && value.strip.length != 0
-        unless value =~ /\A[a-zA-Z0-9\d_\.\:\-\/\s]{1,31}+\Z/
-          raise ArgumentError, "%s is invalid." % value
-        end
-      end
+      if value && value.strip.length != 0        
+          verifyinitial = value.to_s[0,1]  
+          unless verifyinitial =~ /^[a-zA-Z]$/             
+              raise ArgumentError, "%s is invalid." % value
+          end
+          unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/              
+              raise ArgumentError, "%s is invalid." % value
+          end          
+       end
     end
   end
 
@@ -54,7 +70,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
         unless value =~ /\A[0-9]+\Z/
           raise ArgumentError, "%s is invalid." % value
           if value.to_i > 255
-                      raise ArgumentError, "%s is invalid." % value
+              raise ArgumentError, "%s is invalid." % value
           end
         end
       end
@@ -64,10 +80,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
   newparam(:server_chassis_id) do
        desc "This parameter describes server chassis id from which the service profile is to be created"
        validate do |value|
-         if value.strip.length != 0
-           # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-           #  raise ArgumentError, "%s is invalid." % value
-           # end
+         if value && value.strip.length != 0        
+           verifyinitial = value.to_s[0,1]  
+           unless verifyinitial =~ /^[a-zA-Z]$/               
+               raise ArgumentError, "%s is invalid." % value
+           end
+           unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
+               raise ArgumentError, "%s is invalid." % value
+           end          
          end
        end
      end
@@ -75,10 +95,14 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
    newparam(:server_slot) do
          desc "This parameter describes server slot on which the service profile is to be created"
          validate do |value|
-           if value.strip.length != 0
-             # unless value =~ /\A[a-zA-Z0-9\d_\.\:]+\Z/
-             #  raise ArgumentError, "%s is invalid." % value
-             # end
+           if value && value.strip.length != 0        
+             verifyinitial = value.to_s[0,1]  
+             unless verifyinitial =~ /^[a-zA-Z]$/                 
+                 raise ArgumentError, "%s is invalid." % value
+             end
+             unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/                 
+                 raise ArgumentError, "%s is invalid." % value
+             end          
            end
          end
     end
