@@ -1,14 +1,10 @@
-
-
-require 'spec_helper'
-
 #! /usr/bin/env ruby
 
+require 'spec_helper'
 require 'yaml'
 require 'puppet/provider/ciscoucs'
 require 'rbvmomi'
 require 'puppet_x/puppetlabs/transport/ciscoucs'
-require 'fixtures/unit/puppet/provider/ciscoucs_vlan_vnic_template/ciscoucs_serviceprofile_fixture'
 
 
 describe Puppet::Type.type(:ciscoucs_vlan_vnic_template).provider(:default) do

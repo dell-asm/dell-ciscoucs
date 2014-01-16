@@ -2,8 +2,6 @@
 
 require 'spec_helper'
 require 'yaml'
-#! /usr/bin/env ruby
-
 require 'puppet/provider/ciscoucs'
 require 'rbvmomi'
 require 'puppet_x/puppetlabs/transport/ciscoucs'
