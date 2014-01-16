@@ -32,8 +32,8 @@ describe Puppet::Type.type(:ciscoucs_vlan).provider(:default) do
 			:vlanid       		=> create_vlan['vlanid'],
 			:mcast_policy_name  => create_vlan['mcast_policy_name'],
 			:sharing       		=> create_vlan['sharing'],
-			:fabric_id  		=> create_vlan['fabric_id']
-			:status  			=> create_vlan['status']
+			:fabric_id  		=> create_vlan['fabric_id'],
+			:status  			=> create_vlan['status'],
 		)
 	end  
    
@@ -58,8 +58,8 @@ describe Puppet::Type.type(:ciscoucs_vlan).provider(:default) do
 			:vlanid       		=> destroy_vlan['vlanid'],
 			:mcast_policy_name  => destroy_vlan['mcast_policy_name'],
 			:sharing       		=> destroy_vlan['sharing'],
-			:fabric_id  		=> destroy_vlan['fabric_id']
-			:status  			=> destroy_vlan['status']
+			:fabric_id  		=> destroy_vlan['fabric_id'],
+			:status  			=> destroy_vlan['status'],
 		)
 	end  
  
