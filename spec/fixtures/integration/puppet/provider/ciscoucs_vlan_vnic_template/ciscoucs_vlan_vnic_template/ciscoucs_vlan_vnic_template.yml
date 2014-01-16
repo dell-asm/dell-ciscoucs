@@ -1,0 +1,14 @@
+UpdateVlanVnicTemplate1:
+   name: newNic1        
+   vnictemplateorg: 'org-root'
+   vlanname: 'VLAN20'  		
+   defaultnet: 'yes'     	
+   ensure: present
+
+
+UpdateVlanVnicTemplate2:
+   name: newNic1        
+   vnictemplateorg: 'org-root'
+   vlanname: 'VLAN20'  		
+   defaultnet: 'no'     	
+   ensure: present

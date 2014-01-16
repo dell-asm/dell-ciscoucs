@@ -1,0 +1,18 @@
+CiscoUcsVlan1:
+  name: testvlan1092
+  ensure: present        
+  vlanid: 1092  		
+  mcast_policy_name:  ''
+  sharing: 'primary'		
+  fabric_id: 'B'
+  status: created	
+
+
+CiscoUcsVlan2:
+  name: testvlan1092
+  ensure: absent        
+  vlanid: 1092  		
+  mcast_policy_name:  ''
+  sharing: 'primary'		
+  fabric_id: 'B'
+  status: created			
