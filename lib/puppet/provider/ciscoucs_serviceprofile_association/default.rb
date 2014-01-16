@@ -31,6 +31,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     # check if blade is already associated with some service profile
     @result = "";
     check_server_already_associated server_dn_name
+    
     if @result.to_s != ""
       raise Puppet::Error, "Server: '"+server_dn_name+"' is already associated to profile: '"+@result.to_s ;
       return;
@@ -103,7 +104,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
 
-    check_operation_state_till_dissociate_completion(profile_dn_name)
+    check_operation_state_till_dissociate_completion(server_dn_name)
 
     disconnect
 
@@ -149,10 +150,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     failConfigMaxCount = 5;
     counter = 0;
     failConfigCount = 0;
-    associated = false;
 
     while counter < maxCount  do
-      Puppet.notice("Profile association in progress....")
+      Puppet.notice("Profile association is in progress....")
       response_xml = call_for_current_state(profile_dn_name);
 
       parseState(response_xml);
@@ -182,31 +182,28 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
       if @state == "associated"
         Puppet.notice('Successfully Associated');
-        associated = true;
-        break;
+        return;
       end
 
       sleep(60);
       counter = counter  +  1;
     end
 
-    if associated == false
-      Puppet.notice("Fails to associate service profile");
-    end
+    Puppet.notice("Fails to associate service profile");
 
   end
 
   #check operation status till completion
-  def check_operation_state_till_dissociate_completion(profile_dn_name)
+  def check_operation_state_till_dissociate_completion(server_dn_name)
     maxCount = 10;
     counter = 0;
 
     while counter < maxCount  do
-      response_xml = call_for_current_state(profile_dn_name);
-      parseState(response_xml);
-      Puppet.notice(response_xml);
+      Puppet.notice("Profile dissociation is in progress....");
 
-      if @state == "unassociated"
+      check_server_already_associated server_dn_name;
+      
+      if @result.to_s == ""
         Puppet.notice('Successfully Dissociated');
         return;
       end
@@ -256,6 +253,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
       |e|
       if e.elements['lsServer'] != nil;
         @result = e.elements['lsServer'].attributes['dn'].to_s;
+      else 
+        @result = "";
       end
     }
 

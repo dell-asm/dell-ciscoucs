@@ -16,5 +16,5 @@ ciscoucs_serviceprofile_association { 'name':
   server_chassis_id    => "${ciscoucs_profile_association_disassociation['server_chassis_id']}",
   server_slot_id       => "${ciscoucs_profile_association_disassociation['server_slot_id']}",
   server_dn            => "${ciscoucs_profile_association_disassociation['server_dn']}",
-  transport            => "${ciscoucs_profile_association_disassociation['transport']}",
+  transport             => Transport_ciscoucs['ciscoucs'],
 }
