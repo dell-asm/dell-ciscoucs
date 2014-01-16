@@ -184,14 +184,18 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
 
   def exists?
     if ! check_element_exists dn
-      return false
-    elsif (resource[:power_state])
-      return true
-    end
+       if (resource[:power_state])
+         msg = "No such profile exists: " + dn
+           Puppet.notice (msg)
+        disconnect
+       end
+         return false
+       elsif (resource[:power_state])
+         return true
+       end
   end
-
-  def power_state
-    begin
+  def power_state    
+    begin      
       Puppet.debug "Getting power state of the Service Profile."
       power = current_power_state
       if power == 'up' && resource[:power_state].to_s == 'up'
@@ -271,8 +275,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for verifying the current power state."
     end
-    responsexml = post requestxml
-    disconnect
+    responsexml = post requestxml    
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response to verify the current power state."
     end
