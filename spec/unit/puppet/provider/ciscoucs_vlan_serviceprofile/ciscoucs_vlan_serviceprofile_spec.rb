@@ -34,27 +34,11 @@ describe Puppet::Type.type(:ciscoucs_vlan_serviceprofile).provider(:default) do
     end
     
     it "should have create_profile_from_server method defined for ciscoucs_serviceprofile" do
-         @fixture.provider.class.instance_method(:create_profile_from_server).should_not == nil
+         @fixture.provider.class.instance_method(:checkvlan).should_not == nil
     end
     
     it "should have create_profile_from_template method defined for ciscoucs_serviceprofile" do
-            @fixture.provider.class.instance_method(:create_profile_from_template).should_not == nil
-    end
-       
-    it "should have dn method defined for ciscoucs_serviceprofile" do
-               @fixture.provider.class.instance_method(:dn).should_not == nil
-    end
-    
-    it "should have power_dn method defined for ciscoucs_serviceprofile" do
-               @fixture.provider.class.instance_method(:power_dn).should_not == nil
-    end
-    
-    it "should have power_state method defined for ciscoucs_serviceprofile" do
-               @fixture.provider.class.instance_method(:power_state).should_not == nil
-    end
-    
-    it "should have current_power_state method defined for ciscoucs_serviceprofile" do
-                   @fixture.provider.class.instance_method(:current_power_state).should_not == nil
+            @fixture.provider.class.instance_method(:checkvnic).should_not == nil
     end
 
   end
