@@ -69,7 +69,7 @@ Service profile templates are used to simplify the creation of new service profi
 
 1. serviceprofile_name: This parameter defines the name of the service profile.
 
-2. organization: This parameter defines the source service profile path.
+2. organization: This parameter defines the source service profile path. A valid format is 'org-root'.
 
 3. ensure: (Required) This parameter is required to call the Create or Destroy method.
            Possible values: Present/Absent
@@ -151,11 +151,11 @@ An error message is displayed when a user tries to create multiple Service profi
 
 5. source_serviceprofile_name: This parameter defines the name of the service profile using whih a clone is to be craeted.
 
-6. sourceorganization: This parameter defines a path till source service profile.
+6. source_organization: This parameter defines a path till source service profile. A valid format is 'org-root'.
 
 7. target_serviceprofile_name: This parameter defines the name of the clone profile.
 
-9. target_organization: This parameter defines the path till the  clone profile.
+9. target_organization: This parameter defines the path till the  clone profile. A valid format is 'org-root'.
 
 
 ####Usage
@@ -198,7 +198,7 @@ This method allows the user to disassociate a service profile on a server pool o
 
 #####Cisco UCS Associate/Disassociate service profile:
 
-1. organization: This parameter describes the source service profile path.
+1. organization: This parameter describes the source service profile path. A valid format is 'org-root'.
 
 2. ensure: This parameter makes sure that no service profile is applied to the server pool or chassis slot in case of an associate server profile.It also makes sure that a service profile is applied to the server pool or chassis slot in case of disassociate server profile.
        Possible values: present/absent
@@ -278,7 +278,7 @@ The Power off method changes the power state from up to down for a service profi
 
 1. serviceprofile_name: This parameter defines the name of the service profile.
     
-2. organization: This parameter defines the source service profile path.
+2. organization: This parameter defines the source service profile path. A valid format is 'org-root'.
     
 3. profile_dn: This pparameter defines the complete path of the source service profile including service profile name.
     
@@ -345,7 +345,7 @@ This method assigns an existing boot policy to the service profile. If a user se
 
 1. bootpolicy_name: This parameter defines the name of the boot policy that is to be modified.
 
-2. bootpolicy_organization: This parameter defines the source boot policy path.
+2. bootpolicy_organization: This parameter defines the source boot policy path. A valid format is 'org-root'.
 
 3. ensure :   
         value: modify   
@@ -354,7 +354,7 @@ This method assigns an existing boot policy to the service profile. If a user se
 
 5. serviceprofile_name: This parameter describes the name of the service profile that is to be applied.
 
-6. serviceprofile_organization: This parameter describes the source service profile path.
+6. serviceprofile_organization: This parameter describes the source service profile path. A valid format is 'org-root'.
     
 7. serviceprofile_dn: This parameter defines a combination of the serviceprofileorganization and serviceprofilename. Either a user is required to provide the value of the serviceprofiledn or the values of serviceprofileorganization and serviceprofilename as an input.
  
@@ -390,7 +390,7 @@ This method describes how to set the server boot order.
 
 1. bootpolicy_name: This parameter defines the name of the boot policy that is to be modified.
 
-2. organization: This parameter defines the source boot policy path. A valid format is 'org-root' 
+2. organization: This parameter defines the source boot policy path. A valid format is 'org-root'. 
 
 3. bootpolicy_dn: This parameter defines the combination of bootpolicyorganization and bootpolicyname. Either a user is required to provide a value of the bootpolicydn or the values of the bootpolicyorganization and bootpolicyname as an input.
 	
