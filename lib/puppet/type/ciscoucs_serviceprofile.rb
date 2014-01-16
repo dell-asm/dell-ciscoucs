@@ -40,7 +40,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
         unless verifyinitial =~ /^[a-zA-Z]$/            
             raise ArgumentError, "%s is invalid." % value
         end
-        unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/            
+        unless value =~ /^[a-zA-Z0-9\_\.\:\-\/]{2,32}$/                     
             raise ArgumentError, "%s is invalid." % value
         end          
       end
@@ -87,7 +87,7 @@ Puppet::Type.newtype(:ciscoucs_serviceprofile) do
            end
            unless value =~ /^[a-zA-Z0-9_.:-]{2,32}$/               
                raise ArgumentError, "%s is invalid." % value
-           end          
+           end                    
          end
        end
      end
