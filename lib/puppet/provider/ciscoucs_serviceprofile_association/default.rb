@@ -38,9 +38,9 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
 
     # check if profile is already associated with some server
-    @result = "";
+    @state = "";
     check_already_associated profile_dn_name
-    if @result.to_s != ""
+    if @state.to_s == "associated"
       raise Puppet::Error, "Service profile: '"+profile_dn_name+"' is already associated"
       return;
     end
@@ -190,7 +190,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     end
 
     Puppet.notice("Fails to associate service profile");
-
   end
 
   #check operation status till completion
@@ -300,7 +299,6 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   #check if profile is already associated
   def check_already_associated profile_dn_name
     response_xml = call_for_current_state profile_dn_name;
-    puts response_xml
     parse_associated_service_profile response_xml;
   end
 end
