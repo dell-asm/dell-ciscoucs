@@ -199,7 +199,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       Puppet.debug "Getting power state of the Service Profile."
       power = current_power_state
       if power == 'up' && resource[:power_state].to_s == 'up'
-        Puppet.notice ("The power is already in the running state.")
+        Puppet.notice ("The power state is already on.")
       elsif power == 'down' and resource[:power_state].to_s == 'down'
         Puppet.notice ("The power state is already off.")
       end
