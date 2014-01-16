@@ -43,7 +43,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
       doc = REXML::Document.new(verify_service_profile_response_xml)
       if doc.elements["/configResolveClass/outConfigs"].has_elements?
         if doc.elements["/configResolveClass/outConfigs/lsServer"].attributes["dn"].to_s.strip.length!= 0
-          Puppet.notice("The service profile " + resource[:serviceprofile_name] + " already exist.")
+          Puppet.notice("The service profile " + dn + " already exist.")
           service_profile_exist= true
           disconnect
         end
@@ -76,7 +76,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile).provide(:default, :parent => Puppet:
         elsif  create_doc.elements["configConfMos/outConfigs/pair/lsServer"].attributes["operState"].to_s=="config-failure"
           raise Puppet::Error, "Unable to perform the operation because the following issue occured while creating a service profile from the server: "+  create_doc.elements["/configConfMos/outConfigs/pair/lsServer"].attributes["configQualifier"]
         else
-          Puppet.notice("Successfully created service profile:"+ resource[:serviceprofile_name]+ " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
+          Puppet.notice("Successfully created service profile:"+ dn + " from chasis " + resource[:server_chassis_id] +" and server " + resource[:server_slot])
         end
       rescue Exception => msg
         raise Puppet::Error, "Unable to perform the operation because the following issue occurred while parsing the create profile from the server response \n" +  msg.to_s
