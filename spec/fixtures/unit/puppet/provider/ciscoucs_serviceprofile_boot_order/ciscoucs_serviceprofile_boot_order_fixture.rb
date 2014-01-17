@@ -8,7 +8,7 @@ class Ciscoucs_serviceprofile_boot_order_fixture
   def  get_ciscoucs_serviceprofile_boot_order
     Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).new(
    :ensure => 'present',
-   :bootpolicy_dn => 'org-root/boot-policy-testbootpolicy', 
+   :bootpolicy_dn => 'org-root/boot-policy-testpolicy', 
    :bootpolicy_name => 'test_policy',
    :organization    => 'org-root',
    :lan_order => '5',

@@ -9,7 +9,7 @@ class Ciscoucs_serviceprofile_bootpolicy_fixture
     Puppet::Type.type(:ciscoucs_serviceprofile_bootpolicy).new(
    :ensure => 'modify',
    :serviceprofile_dn => 'org-root/ls-test',
-   :bootpolicy_dn => 'org-root/boot-policy-testbootpolicy', 
+   :bootpolicy_dn => 'org-root/boot-policy-testpolicy', 
    :serviceprofile_name => 'test',
    :serviceprofile_organization => 'org-root',
    :bootpolicy_name => 'test_policy',

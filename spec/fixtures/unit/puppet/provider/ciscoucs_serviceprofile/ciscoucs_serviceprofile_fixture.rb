@@ -9,7 +9,7 @@ class Ciscoucs_serviceprofile_poweron_fixture
 
   def  get_serviceprofile_poweron
     Puppet::Type.type(:ciscoucs_serviceprofile).new(
-    :organization => 'root/org',
+    :organization => 'org-root',
     :serviceprofile_name => 'testServiceProfile',
     :power_state => 'up'
     )
