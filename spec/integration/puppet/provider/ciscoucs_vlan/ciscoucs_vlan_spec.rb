@@ -8,7 +8,7 @@ describe Puppet::Type.type(:ciscoucs_vlan).provider(:default) do
    ciscoucs_vlan_create_yml =  YAML.load_file(my_fixture('ciscoucs_vlan.yml'))
    create_vlan = ciscoucs_vlan_create_yml['CiscoUcsVlan1']  
    
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
   
 	let(:ciscoucs_vlan_create) do

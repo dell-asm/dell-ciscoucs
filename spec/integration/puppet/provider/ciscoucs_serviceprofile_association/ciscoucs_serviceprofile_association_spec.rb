@@ -5,7 +5,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_association).provider(:defau
    ciscoucs_serviceprofile_associate_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile_association.yml'))
    serviceprofileassociate = ciscoucs_serviceprofile_associate_yml['associate']
 
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
 
    let(:serviceprofile_associate) do

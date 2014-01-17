@@ -5,7 +5,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_clone).provider(:default) do
 
    ciscoucs_serviceprofile_clone_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile_clone.yml'))
    
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
         
   serviceprofileclone = ciscoucs_serviceprofile_clone_yml['serviceprofileclone'] 

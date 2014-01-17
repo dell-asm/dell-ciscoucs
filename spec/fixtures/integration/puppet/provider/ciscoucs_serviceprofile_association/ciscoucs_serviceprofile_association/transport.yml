@@ -1,5 +1,0 @@
-transport:
-  name: 'ciscoucs'
-  username : 'admin'
-  password : 'admin'
-  server   : '192.168.190.130'

@@ -8,7 +8,7 @@ describe Puppet::Type.type(:ciscoucs_vlan_vnic_template).provider(:default) do
 	ciscoucs_vlan_vnic_template_yml =  YAML.load_file(my_fixture('ciscoucs_vlan_vnic_template.yml'))
 	update_vlan1 = ciscoucs_vlan_vnic_template_yml['UpdateVlanVnicTemplate1']  
 
-	transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+	transport_yml =  YAML.load_file('transport.yml')
 	transport_node = transport_yml['transport']
   
 	let(:ciscoucs_vlan_vnic_template1) do

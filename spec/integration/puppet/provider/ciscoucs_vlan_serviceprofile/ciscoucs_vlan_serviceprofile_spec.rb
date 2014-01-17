@@ -8,7 +8,7 @@ describe Puppet::Type.type(:ciscoucs_vlan_serviceprofile).provider(:default) do
 	ciscoucs_vlan_serviceprofile_yml =  YAML.load_file(my_fixture('ciscoucs_vlan_serviceprofile.yml'))
 	update_vlan1 = ciscoucs_vlan_serviceprofile_yml['UpdateVlanServiceProfile1']  
 
-	transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+	transport_yml =  YAML.load_file('transport.yml')
 	transport_node = transport_yml['transport']
   
 	let(:update_vlan_service_profile1) do

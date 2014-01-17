@@ -6,7 +6,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_boot_order).provider(:defaul
    ciscoucs_serviceprofile_boot_order_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile_boot_order.yml'))
    modify = ciscoucs_serviceprofile_boot_order_yml['modifyboot_order']  
    
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
      
      

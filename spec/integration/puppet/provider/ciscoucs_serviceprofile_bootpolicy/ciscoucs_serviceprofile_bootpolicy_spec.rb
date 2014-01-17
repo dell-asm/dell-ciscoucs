@@ -6,7 +6,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile_bootpolicy).provider(:defaul
    ciscoucs_serviceprofile_bootpolicy_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile_bootpolicy.yml'))
    modify = ciscoucs_serviceprofile_bootpolicy_yml['modifybootpolicy']  
    
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
      
      

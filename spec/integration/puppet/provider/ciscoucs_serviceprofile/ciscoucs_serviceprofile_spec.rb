@@ -6,7 +6,7 @@ describe Puppet::Type.type(:ciscoucs_serviceprofile).provider(:default) do
    ciscoucs_serviceprofile_yml =  YAML.load_file(my_fixture('ciscoucs_serviceprofile.yml'))
    poweron = ciscoucs_serviceprofile_yml['poweron']  
    
-   transport_yml =  YAML.load_file(my_fixture('transport.yml'))
+   transport_yml =  YAML.load_file('transport.yml')
    transport_node = transport_yml['transport']
        
   let(:power_on) do
