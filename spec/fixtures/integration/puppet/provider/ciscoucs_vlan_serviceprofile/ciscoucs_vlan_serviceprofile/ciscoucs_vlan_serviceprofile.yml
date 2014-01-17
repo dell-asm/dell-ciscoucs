@@ -1,6 +1,6 @@
 UpdateVlanServiceProfile1:
    name: newtest1        
-   serviceprofileorg:'org-root'
+   serviceprofileorg: 'org-root'
    vlan_name: 'VLAN28'  	
    defaultnet: 'yes'  
    vnic: 'eth10'	
@@ -9,7 +9,7 @@ UpdateVlanServiceProfile1:
 
 UpdateVlanServiceProfile2:
    name: newtest1        
-   serviceprofileorg:'org-root'
+   serviceprofileorg: 'org-root'
    vlan_name: 'VLAN28'  	
    defaultnet: 'no'  
    vnic: 'eth10'	
