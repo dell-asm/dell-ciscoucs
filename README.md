@@ -43,7 +43,6 @@ The following items are supported:
  * Power on/off.
  * Updation of service profile boot policy.
  * Updation of service profile boot order(LAN).
-lan
 
 
 ###Service Profile
