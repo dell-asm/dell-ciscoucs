@@ -2,10 +2,6 @@
 
 require 'spec_helper'
 require 'yaml'
-require 'puppet/provider/ciscoucs'
-require 'rbvmomi'
-require 'puppet_x/puppetlabs/transport/ciscoucs'
-
 
 describe Puppet::Type.type(:ciscoucs_vlan_vnic_template).provider(:default) do
 
