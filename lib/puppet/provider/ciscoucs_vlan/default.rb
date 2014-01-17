@@ -4,10 +4,7 @@ provider_path = Pathname.new(__FILE__).parent.parent
 Puppet.debug provider_path
 require File.join(provider_path, 'ciscoucs')
 
-ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/nested_hash'
-
-require File.join ucs_module.path, 'lib/puppet_x/util/ciscoucs/Xmlformatter'
+#ucs_module = Puppet::Module.find('ciscoucs', Puppet[:environment].to_s)
 
 Puppet::Type.type(:ciscoucs_vlan).provide(:default, :parent => Puppet::Provider::Ciscoucs) do
 
