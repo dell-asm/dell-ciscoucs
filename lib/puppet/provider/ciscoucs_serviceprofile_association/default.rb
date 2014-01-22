@@ -76,10 +76,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if ! check_element_exists profile_dn_name
       raise Puppet::Error, "The " + profile_dn_name + " service profile does not exist."
     end
-
-    check_already_dissociated profile_dn_name;
-
-    if @result.to_s == ""
+    
+    # check if blade/chassis exists
+    if ! check_element_exists server_dn_name
+      raise Puppet::Error, "The " + server_dn_name + " server does not exist."
+    end
+    @state = "";
+    check_already_dissociated profile_dn_name;    
+    if @state.to_s == 'unassigned'
       raise Puppet::Error, profile_dn_name + " service profile is not associated with any server." ;
       return;
     end
@@ -97,13 +101,13 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the Dissociate Service Profile operation."
     end
-
+    
     responsexml = post requestxml
 
     if responsexml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to get a response from the Dissociate Service Profile operation."
     end
-
+    
     check_operation_state_till_dissociate_completion(server_dn_name)
 
     disconnect
@@ -134,9 +138,8 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
     if requestxml.to_s.strip.length == 0
       raise Puppet::Error, "Unable to create a request XML for the check associated service profile to server."
     end
-
-    responsexml = post requestxml;
-
+    
+    responsexml = post requestxml;    
     parse_associated_service_profile(responsexml);
 
   end
@@ -157,38 +160,33 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
       parseState(response_xml);
 
-      if @config_state == "failed-to-apply"
-        if failConfigCount >= failConfigMaxCount
-
-          if @error_code != ''
-            if parse_error_code(@error_code)
+      if @config_state == "failed-to-apply"        
+        if failConfigCount >= failConfigMaxCount 
+                   
+          if @error_code != ''            
+            if parse_error_code(@error_code)              
               Puppet.notice(@error_code.to_s);
-              next;
+              next;              
             end
           end
 
-          Puppet.notice(@error_code.to_s);
-
+          Puppet.notice(@error_code.to_s);         
           return @error_code;
 
-        else
+        else          
           failConfigCount = failConfigCount+1;
-
-          sleep(60);
+          sleep(60);          
           next;
-        end
-
+        end        
       end
 
-      if @state == "associated"
+      if @state == "associated"        
         Puppet.notice('Successfully Associated');
         return;
-      end
-
+      end      
       sleep(60);
-      counter = counter  +  1;
-    end
-
+      counter = counter  +  1;      
+    end      
     Puppet.notice("Fails to associate service profile");
   end
 
@@ -196,13 +194,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
   def check_operation_state_till_dissociate_completion(server_dn_name)
     maxCount = 10;
     counter = 0;
-
+    @result ="";
     while counter < maxCount  do
-      Puppet.notice("Profile dissociation is in progress....");
-
-      check_server_already_associated server_dn_name;
+      Puppet.notice("Profile dissociation is in progress...");     
       
-      if @result.to_s == ""
+       check_server_profile_fsm_status server_dn_name;     
+      
+      # if fsm status 100% then show successfully message
+      if @result.to_s == '100'
         Puppet.notice('Successfully Dissociated');
         return;
       end
@@ -212,7 +211,24 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
     Puppet.notice("Fails to dissociate service profile");
   end
-
+  
+  # call for fsm status 
+  def check_server_profile_fsm_status(server_dn_name)
+    formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("verifyServiceProfileStatus")
+        parameters = PuppetX::Util::Ciscoucs::NestedHash.new
+        parameters['/configResolveDns'][:cookie] = cookie        
+        parameters['/configResolveDns'][:inHierarchical] = "false";        
+        parameters['/configResolveDns/inDns/dn'][:value] = server_dn_name;
+        requestxml = formatter.command_xml(parameters);        
+        responsexml = post requestxml;        
+        myelement = REXML::Document.new(responsexml);
+        root = myelement.root
+          myelement.elements.each("/configResolveDns/outConfigs/computeBlade") {
+          |e|            
+          @result = e.attributes['fsmProgr'].to_s;         
+    
+        }
+  end
   #call for current state
   def call_for_current_state(profile_dn_name)
     formatter = PuppetX::Util::Ciscoucs::Xmlformatter.new("getServiceProfileState")
@@ -250,11 +266,14 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
     myelement.elements.each("/configResolveClass/outConfigs/") {
       |e|
-      if e.elements['lsServer'] != nil;
+      if e.elements['/configResolveClass/outConfigs/lsServer'] != nil;        
         @result = e.elements['lsServer'].attributes['dn'].to_s;
-      else 
+        @state = e.elements['lsServer'].attributes['assignState'].to_s;         
+      else         
         @result = "";
+        @state = "";        
       end
+      
     }
 
   end
@@ -292,7 +311,7 @@ Puppet::Type.type(:ciscoucs_serviceprofile_association).provide(:default, :paren
 
   #check if profile is already dissociated or no association ate present
   def check_already_dissociated profile_dn_name
-    response_xml = call_for_current_state profile_dn_name;
+    response_xml = call_for_current_state profile_dn_name;    
     parse_associated_service_profile response_xml;
   end
 
