@@ -2,6 +2,8 @@ require 'puppet/util/network_device'
 require 'puppet/util/network_device/ciscoucs/facts'
 require 'uri'
 require 'net/https'
+require '/etc/puppetlabs/puppet/modules/asm_lib/lib/security/encode'
+
 
 module_lib = Pathname.new(__FILE__).parent.parent.parent.parent.parent
 require File.join module_lib.to_s, '/puppet_x/puppetlabs/transportciscoucs'
@@ -33,7 +35,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
       password = text[0,pos]
       @host = text[pos+1, length]
       @user = URI.decode(username)
-      @password = URI.decode(password)
+	  @password = URI.decode(asm_decrypt(password))
     end
 
     def facts

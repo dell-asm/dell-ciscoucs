@@ -1,4 +1,5 @@
 require 'puppet_x/puppetlabs/transportciscoucs/authenticate'
+require '/etc/puppetlabs/puppet/modules/asm_lib/lib/security/encode'
 
 
 module PuppetX::Puppetlabs::Transportciscoucs
@@ -8,7 +9,7 @@ module PuppetX::Puppetlabs::Transportciscoucs
     attr_reader :name, :user, :password, :host
     def initialize(option)
       @user     = option[:username]
-      @password = option[:password]
+	  @password = URI.decode(asm_decrypt(option[:password]))
       @host     = option[:server]
       @url    = "https://#{@host}/nuova"
       @authenticate =  Authenticate.new(@url, @user, @password)
