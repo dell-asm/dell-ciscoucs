@@ -22,6 +22,8 @@ This module manages the resources in Cisco UCS.
 ## Overview
 
 The Cisco UCS Manager is the management system for all components in a Cisco UCS domain. A Cisco UCS Manager runs within the fabric interconnect. You can use any of the interfaces available with this management service, to access, configure, administer, and monitor the network and server resources for all chassis connected to the fabric interconnect.
+
+This module was developed by Dell which is why the name of the repo starts with dell-.   The name dell-ciscoucs does not imply a partnership, agreement or other special relationship between Dell and Cisco.  Cisco UCS® is a registered trademark of Cisco Systems, Inc.
  
  
 ## Requirements
