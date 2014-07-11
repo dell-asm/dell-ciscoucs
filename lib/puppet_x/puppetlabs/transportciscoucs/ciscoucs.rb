@@ -9,7 +9,7 @@ module PuppetX::Puppetlabs::Transportciscoucs
     attr_reader :name, :user, :password, :host
     def initialize(option)
       @user     = option[:username]
-	  @password = URI.decode(asm_decrypt(option[:password]))
+	    @password = URI.decode(option[:password])
       @host     = option[:server]
       @url    = "https://#{@host}/nuova"
       @authenticate =  Authenticate.new(@url, @user, @password)
