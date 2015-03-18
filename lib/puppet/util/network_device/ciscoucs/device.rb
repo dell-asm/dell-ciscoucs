@@ -1,6 +1,7 @@
 require 'puppet/util/network_device'
 require 'puppet/util/network_device/ciscoucs/facts'
 require 'uri'
+require 'cgi'
 require 'net/https'
 require '/etc/puppetlabs/puppet/modules/asm_lib/lib/security/encode'
 
@@ -16,6 +17,7 @@ module Puppet::Util::NetworkDevice::Ciscoucs
     def initialize(url, option = {})
       Puppet.debug("Device login started")
       parse(url)
+
       res_hash = Hash.new
       res_hash[:username] = @user
       res_hash[:password] = @password
@@ -25,17 +27,24 @@ module Puppet::Util::NetworkDevice::Ciscoucs
     end
 
     def parse(url)
-      res = url.split("//")
-      temp = res[1]
-      output = temp.split(":")
-      username = output[0]
-      text = output[1]
-      pos = text.rindex('@')
-      length = text.length()
-      password = text[0,pos]
-      @host = text[pos+1, length]
-      @user = URI.decode(username)
-	  @password = URI.decode(asm_decrypt(password))
+      @url = URI.parse(url)
+      @query = Hash.new([])
+      @query = CGI.parse(@url.query) if @url.query
+
+      @user = @url.user
+      @password = URI.decode(asm_decrypt(@url.password))
+      @host = @url.host
+
+      override_using_credential_id
+    end
+
+    def override_using_credential_id
+      if id = @query['credential_id'].first
+        require 'asm/cipher'
+        cred = ASM::Cipher.decrypt_credential(id)
+        @user = cred.username
+        @password = cred.password
+      end
     end
 
     def facts
