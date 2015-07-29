@@ -1,6 +1,4 @@
 require 'puppet_x/puppetlabs/transportciscoucs/authenticate'
-require '/etc/puppetlabs/puppet/modules/asm_lib/lib/security/encode'
-
 
 module PuppetX::Puppetlabs::Transportciscoucs
   # "Base class for ciscoucs"
